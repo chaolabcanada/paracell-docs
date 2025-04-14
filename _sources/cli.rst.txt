@@ -1,0 +1,63 @@
+Command Line Interface
+======================
+
+After installing, Paracell can be run directly through the terminal with the ``paracell`` command. This runs the ``cli.py`` file in the Paracell module.
+
+Paracell will list its commands when running ``paracell`` or the help command (``paracell --help``).
+
+Run ``paracell --help <command>`` to get more information on a command.
+
+.. _pipeline_cli:
+
+Pipeline
+--------
+.. code-block:: bash
+
+   paracell analyze [path-to-config]
+
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: align-left
+
+   * - **Argument**
+     - **Description**
+   * - ``path-to-config``
+     - | Optional path to the feature extraction/analysis yaml config file.
+       | Defaults to the ``config.yaml`` inside Paracell's code directory.
+       | See :ref:`config <analysis-pipeline-config>` for the format.
+
+**Description**:
+
+   This command does illumination correction, segmentation, and feature extraction.
+
+   1. It begins by illumination correcting all images, if enabled.
+   2. It preforms segmentation, with specified Cellpose model and channels.
+   3. Runs specified analyses on every segmented cell.
+
+Training
+--------
+.. code-block:: bash
+
+   paracell train <path-to-config>
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: align-left
+
+   * - **Argument**
+     - **Description**
+   * - ``path-to-config``
+     - | Path to the training yaml config.
+       | This is a **different** from the analysis pipeline config.
+       | See :ref:`config <training-script-config>` for format.
+
+**Description**:
+
+   This command trains a three channel Cellpose model with the Paracell training loop.
+
+Pseudolabelling
+---------------
+To be added in the future.

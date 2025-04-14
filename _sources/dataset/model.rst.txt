@@ -1,0 +1,50 @@
+Model Output
+============
+
+This is the output folder for training a model. It has the following structure.
+
+.. code-block:: text
+
+   <output folder>
+   ├── tensorboard
+   │   └── tensorboard files
+   ├── model checkpoints
+   ├── config.yaml
+   └── train.log
+
+TensorBoard Folder
+------------------
+
+This folder contains the TensorBoard data:
+
+Per epoch:
+
+   - Learning rate.
+   - Train loss.
+
+Per checkpoint epoch:
+
+- Validation loss.
+- Average precision at IoU 50, 75 and averaged between 50 to 95 (50:90). AP50, AP75, and AP respectively.
+- Average precision at IoU 50:90 for small, medium, and large objects. APs, APm, APl respectively.
+- Average recall at IoU 50:90 for 1, 10, and 100 of the most confident detections. AR1, AR10, AR100 respectively.
+- Average recall at IoU 50:90 for small, medium, and large objects. ARs, ARm, ARl respectively.
+
+AP and AR are calculated using `COCO evaluator <https://pypi.org/project/pycocotools/>`_. For more information about AP and AR, click `here <https://www.picsellia.com/post/coco-evaluation-metrics-explained>`_.
+
+Model Checkpoints
+-----------------
+
+The ``<model_name>.pt`` file is the fully trained model, after all training epochs have passed.
+
+For every checkpoint epoch, a checkpoint model, ``<model_name>_epoch_<epoch>.pt``, is saved.
+
+Config
+------
+
+A copy of the model's training config, is copied into the folder as ``config.yaml``.
+
+Logs
+----
+
+``train.log`` is a text file containing details about how the training went.

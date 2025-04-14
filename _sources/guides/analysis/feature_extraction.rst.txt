@@ -1,0 +1,87 @@
+Feature Extraction
+==================
+
+The first step, after imaging all the cells, is to run segmentation and feature extraction. Paracell's :ref:`analyze CLI command <pipeline_cli>` can be used to preform segmentation and feature extraction on the images in a plate.
+
+Create a Config File
+--------------------
+
+First, a ``config.yaml`` file is needed. Create a file named ``config.yaml``. Then copy and paste the following blueprint into it.
+
+.. code-block:: yaml
+
+   plate_name: plate_name
+   plate_type: chao_lab
+   image_dir: /path/to/raw/images
+   output_dir: /path/to/save/analysis
+   channels: [DAPI, Cyan, Cy3, Cy5, FITC]
+   is_new_plate: true
+   quality_control: true
+   well_range: [0, null]
+   n_workers: 5
+   illumination_correction_config:
+      use_illumcor: false
+      illumcor_model_path: default
+      illumcor_path: default
+   segmentation_config:
+      channels: [DAPI, Cyan, FITC]
+      seg_model_path: "/mnt/FNX/paracell2_outputs/three_channel_models/3ch_gfp_fs_v3/3ch_gfp_fs_v3.pt"
+      seg_override: false
+      save_compressed: true
+      batch_size: 5
+      load_workers: 2
+      image_cell_diam: 100
+   analyses:
+      - Texture Analysis
+      - Colocalization Analysis
+      - Basic Shape Analysis
+      - Intensity Analysis
+      - Object Analysis
+      - Compartment Analysis
+      - DINOv2
+      - RGBDINOv2
+
+The following fields should be changed every experiment:
+
+- ``plate_name``: Name of the plate, eg CDH1_KO6_Oct
+- ``image_dir``: This is the folder of the *raw* microscopy images.
+- ``output_dir``: This is the folder where the extracted features and segmentation will be saved to.
+- ``use_illumcor``: If the images need to be illumination corrected. Set this to true if they haven't been already, ie there was no ScanR illumination correction applied.
+
+The following fields may require changing:
+
+- | ``analyses``: This is a list of which analyses to run. These correspond to the names inside the Paracell `feature_extraction classes <https://github.com/chaolabcanada/paracell/blob/main/paracell/feature_extraction>`_ and are case sensitive.
+  | The example includes all of Paracell's feature extraction analyses. DINOv2 and RGBDINOv2 are deep features, while the rest are conventional features.
+- ``seg_model_path``: This can be changed to use a different GFP detection model. Set this to ``null`` to use Cyto3 and segment *all* cells.
+- ``channels`` (the one inside ``segmentation_config``): These are the channels used for segmentation. Ensure this matches the order of channels the model expects.
+
+.. note::
+
+   Most other properties don't need to be changed. If you need to change them, see more information :ref:`here <analysis_pipeline_config_fields>`.
+
+Running Paracell CLI
+--------------------
+
+After finishing the config, the CLI can be run.
+
+First, open a terminal and activate a Conda environment with Paracell installed. See :doc:`installation instructions <../../install>` to get Paracell installed in a new environment.
+
+For example:
+
+.. code-block:: bash
+
+   conda activate microscopy_experimental
+
+With the Paracell environment activated, run the Paracell CLI to analyze the images. Use the following command:
+
+.. code-block:: bash
+
+   paracell analyze /path/to/config.yaml
+
+.. caution::
+
+   Make sure to replace ``/path/to/config.yaml`` with the path to your yaml file. For more info, see the :doc:`CLI documentation <../../cli>`.
+
+.. note::
+
+   Segmentation and feature extraction often takes some time. Depending on the amount of cells in total, it may take upwards of 10 hours. The CLI will show the ETR as it process the FOVs.

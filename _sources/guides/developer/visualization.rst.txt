@@ -1,0 +1,140 @@
+Visualization
+=============
+
+So far, we worked with FOVs and segmentors, but we haven't been able to visually inspect the quality of the segmentations.
+
+The ``paracell.improcess.plotting`` module offers tools for visualizing cells and FOVs.
+
+Channel Stacking
+----------------
+
+Individual channels are grayscale images. We can typically stack 3 grayscale images into the RGB channels of a coloured image and preview a falsely coloured cell image. This helps visualize how different things inside the cell relate to one another.
+
+Assuming we have an FOV with channels loaded, they can be stacked with the following code.
+
+.. code-block:: python
+
+   from paracell.improcess.plotting import get_merged_fov_image
+   from paracell.improcess.ops import RGBColor
+
+   merged_image = get_merged_fov_image(fov, {
+      "FITC": RGBColor.RED,
+      "Cyan": RGBColor.GREEN,
+      "DAPI": RGBColor.BLUE,
+   })
+
+   plt.imshow(merged_image)
+   plt.show()
+
+The results should look like:
+
+.. figure:: ../_images/stacked_fov.png
+   :width: 50%
+   :alt: Image of FOV with three stacked channels, FITC, Cyan and, DAPI.
+
+This code stacks the FITC, Cyan, and DAPI channel into the red, green, and blue channels respectively. You can see that the blue is the cell nucleus, the green around it is the cytoplasm, and red cells are GFP+ cells.
+
+Get ``get_merged_fov_image`` can support stacking more than three colours, and the colour map can contain overlaps.
+
+.. caution::
+
+   Often FOVs in Paracell use ``uint16`` images, instead of typical ``uint8`` images. Pixel values on FOV may go from 0 to 65535 instead of 0 to 255.
+
+.. note::
+
+   For clarity, the channel colours are specified. The channel colours can be omitted and Paracell will stack the channels, like the example, by default.
+
+Outlines
+--------
+
+It's often helpful to outline the cells in an image, based on the cell segmentation. For the following example, we will assume that ``fov`` has channels loaded and the cells are segmented. In the example, it will be segmented with the three channel model to only detect GFP+ cells.
+
+.. code-block::
+
+   from paracell.improcess.plotting import get_merged_fov_image, get_outlined_image
+
+   stacked_image = get_merged_fov_image(fov)
+   outlined_image = get_outlined_image(stacked_image, fov.outlines, thickness=5)
+
+   plt.imshow(outlined_image)
+   plt.show()
+
+The output will look similar to:
+
+.. figure:: ../_images/cell_outlines.png
+   :width: 50%
+   :alt: Image of stacked FOV with cell outline.
+
+
+Colourful Outlines
+------------------
+
+The outline function is able to colour cells with different colours, making it easier to visualize cells with different properties. Using the same variables defined in the previous example, the following example will colour all cells with a segmentation probability of over 60% white and those under 60% yellow.
+
+.. caution::
+
+   ``mask_probabilities`` is a new property in Paracell. Many old seg files may not have it. It's recommended to use a segmentor to segment an FOV for preview instead of loading a preexisting one.
+
+.. code-block:: python
+
+   # The cells aren't automatically constructed after segmentation.
+   # Here the seg.mask_probabilities argument is required so we can filter cells.
+   FOVManager.construct_cells(fov, seg.mask_probabilities)
+
+   # Initially colour all cells white.
+   # See docs on `get_outlined_image` for more details.
+   cell_colourings = np.full((len(fov.cells), 3), 255)
+
+   # Get incidies of low likelihood cells.
+   # Subtract one since the first cell has outline_idx == 1.
+   cell_indices = [
+      (cell.outline_idx-1) for cell in fov.cells
+      if cell.get_statistic("METADATA__Segmentation_Probability") < 0.6
+   ]
+
+   # Colour bad cells yellow.
+   cell_colourings[cell_indices] = (255, 255, 0)
+
+   outlined_image = get_outlined_image(merged_image, fov.outlines, 5, cell_colourings)
+
+   plt.imshow(outlined_image)
+   plt.show()
+
+Output:
+
+.. figure:: ../_images/coloured_fov.png
+   :width: 50%
+   :alt: Image of stacked FOV with cells outlined in colour.
+
+Depending on which model you used, your output may vary.
+
+It turns out, for all ourlines white, there was a function that does the entire process in one go. However, the other method allows more flexibility in picking which channels to stack and what to colour the cells.
+
+.. code-block:: python
+
+   from paracell.improcess.plotting import get_outlined_fov
+
+   plt.imshow(get_outlined_fov(fov))
+   plt.show()
+
+
+Cell Gallery
+------------
+
+You can create a square gallery of cell plots of a random subset of cells, using the ``get_cell_gallery`` function. Assuming we have an ``fov`` with channels and cells loaded, the following code will create a cell gallery.
+
+.. code-block:: python
+
+   from paracell.improcess.plotting import get_cell_gallery
+
+   get_cell_gallery(fov.cells, 9, mask_cells=True)
+
+It will output something similar to:
+
+.. figure:: ../_images/cell_gallery.png
+   :width: 50%
+   :alt: Image of 9 cells arranged in a grid.
+
+.. note::
+
+   Your output may look different, depending on the segmentor you used, the FOV you created, and the random shuffle of ``get_cell_gallery``.

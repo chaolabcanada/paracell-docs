@@ -1,0 +1,23 @@
+Training Dataset
+================
+
+This dataset is typically used to train and validate three channel Cellpose models, trained by Paracell. The dataset consist of image and seg pairs. For example, ``name.tif`` would have a corresponding ``name_seg.npy`` file.
+
+Images
+------
+
+These are single ``.tif`` files where the image channels correspond to specific fluorescence channels. The order channels are stacked is *arbitrary*, so the colouring in RGB is also arbitrary.
+
+Typically, the red channel is DAPI, and the green channel is Cyan. This is the structure of images in the `cyto2 dataset <https://www.cellpose.org/dataset>`_. Paracell's three channel model puts FITC in the blue channel.
+
+.. warning::
+
+   Older Paracell models have DAPI in the blue channel and FITC in the red channel. Double check image channels are what you expect them to be when training and evaluating.
+
+Seg Files
+---------
+
+Segmentation files containing at least ``masks``. It's highly recommended that ``cl_computed_flows`` is included as well. These fils typically have the format described :doc:`here <seg>`, however, only ``masks`` and ``cl_computed_flows`` are required for the Paracell training script.
+
+.. caution::
+   Training recomputes ``cl_computed_flows`` if not present, but this happens every epoch. Computing flows is a slow operation.

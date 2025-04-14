@@ -1,0 +1,67 @@
+Plates, Wells, and Bulk Processing
+==================================
+
+Wells
+-----
+
+- A container of FOVs.
+- Represents a physical well on a plate.
+- Aren't used much other than being an FOV container.
+
+The rows are lettered and the columns are numbered. So the wells generally have names being letter number, eg ``A1``. On the 24 well plates, often used in Paracell, we have the wells named ``A1``, ``A2``, ..., ``A6``, ``B1``, ..., ``B6``, ..., ``D1``, ..., ``D6``.
+
+Plates
+------
+
+- Container for a collection of wells.
+- Represents a physical plate.
+- Bulk analysis is typically done on plates.
+
+Both plates and wells can be found inside ``paracell.paradata``.
+
+Loading Plates
+^^^^^^^^^^^^^^
+
+Raw microscopy image folders in :doc:`this <../../dataset/raw_image_dir>` format can be turned directly into plates.
+
+.. code-block:: python
+
+   from paracell.manager import PlateFactory
+
+   plate = PlateFactory.from_dir(
+      "plate_name",
+      RAW_IMAGE_DIR
+   )
+
+This will create a plate, which has a ``wells`` property, being a list of wells. Each well will have an ``fovs`` property, being a list of FOVs.
+
+.. caution:: python
+
+   This does not load channels, masks, or create cells on the FOVs. Those must be done after plate creation. Often wells contain numerous plates and may consume significant memory, which is why the FOVs do not have channels or cells loaded.
+
+Bulk-processing
+---------------
+
+The ``paracell.pipeline`` module provides many utility functions for bulk processing plates and FOVs. Although it was designed for the analysis CLI, it can be used for other bulk-processing as well.
+
+Torch Dataloader
+^^^^^^^^^^^^^^^^
+
+``paracell.pipeline.FOVTorchDataset`` can be used with PyTorch Dataloader to efficiently load FOvs on other processes (CPU cores). The dataset takes in either a plate, well, or list of wells. It will act as a container that's a PyTorch dataset, which can load FOVs.
+
+.. code-block:: python
+
+   from torch.utils.data import DataLoader
+   from paracell.pipeline import FOVTorchDataset, collate_fovs
+
+   dataset = FOVTorchDataset(plate)
+   dataloader = DataLoader(dataset, num_workers=1, collate_fn=collate_fovs)
+
+   for batch in iter(dataloader):
+      for fov, metadata in batch:
+         # Process the FOV
+         ...
+
+.. caution::
+
+   Normally FOVs have a parent well property. This has been replaced by a ``_MockWell`` when loading a plate using ``FOVTorchDataset``. The dataset is designed for multiprocessing and this change is aimed at preventing unnecessary pickling.

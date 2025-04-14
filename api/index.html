@@ -1,0 +1,908 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="paracell" href="paracell.html" /><link rel="prev" title="Seg Files" href="../dataset/seg.html" />
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>Paracell API - Paracell v0.0.1</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=f591599d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Paracell v0.0.1</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">Paracell v0.0.1</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guides/analysis/index.html">Analysis Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Analysis Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/analysis/feature_extraction.html">Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/analysis/aggregation.html">Aggregation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/analysis/analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../guides/developer/index.html">Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Developer Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../guides/developer/fov.html">FOVs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/developer/segmentation.html">Segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/developer/visualization.html">Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/developer/feature_extraction.html">Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/developer/plates_wells_bulk.html">Plates, Wells, and Bulk Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guides/developer/misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Config Structure</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../dataset/index.html">Dataset Formats</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dataset Formats</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/raw_image_dir.html">Raw Images Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/pipeline_output.html">Pipeline Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/training.html">Training Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/seg.html">Seg Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Paracell API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Paracell API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html">paracell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.feature_extraction.html">paracell.feature_extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html">paracell.improcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html">paracell.segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.utils.html">paracell.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/api/index.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="paracell-api">
+<h1>Paracell API<a class="headerlink" href="#paracell-api" title="Link to this heading">¶</a></h1>
+<p>This is the more technical documentation for the API. It’s recommended you read the developer guide first.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="paracell.html">paracell</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.cell_painting">cell_painting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.CellPaintingFOV"><code class="docutils literal notranslate"><span class="pre">CellPaintingFOV</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.CellPaintingFOV.get_analysis_folder_path"><code class="docutils literal notranslate"><span class="pre">CellPaintingFOV.get_analysis_folder_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.CellPaintingFOV.get_image_folder_path"><code class="docutils literal notranslate"><span class="pre">CellPaintingFOV.get_image_folder_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.CellPaintingFOV.load_channels"><code class="docutils literal notranslate"><span class="pre">CellPaintingFOV.load_channels()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.create_cell_painting_plate"><code class="docutils literal notranslate"><span class="pre">create_cell_painting_plate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.config">config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.analyses"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.analyses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.channels"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.illumination_correction_config"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.illumination_correction_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.image_dir"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.image_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.is_new_plate"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.is_new_plate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.n_workers"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.n_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.output_dir"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.output_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.plate_name"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.plate_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.plate_type"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.plate_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.quality_control"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.quality_control</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.segmentation_config"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.segmentation_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.well_range"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.well_range</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.config.IlluminationCorrectionConfig"><code class="docutils literal notranslate"><span class="pre">IlluminationCorrectionConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.IlluminationCorrectionConfig.illumcor_model_path"><code class="docutils literal notranslate"><span class="pre">IlluminationCorrectionConfig.illumcor_model_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.IlluminationCorrectionConfig.illumcor_path"><code class="docutils literal notranslate"><span class="pre">IlluminationCorrectionConfig.illumcor_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.IlluminationCorrectionConfig.use_illumcor"><code class="docutils literal notranslate"><span class="pre">IlluminationCorrectionConfig.use_illumcor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.channels"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.image_cell_diam"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.image_cell_diam</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.load_workers"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.load_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.save_compressed"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.save_compressed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.seg_model_path"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.seg_model_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.seg_override"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.seg_override</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.config.load_analysis_config"><code class="docutils literal notranslate"><span class="pre">load_analysis_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.manager">manager</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager"><code class="docutils literal notranslate"><span class="pre">FOVManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.construct_cells"><code class="docutils literal notranslate"><span class="pre">FOVManager.construct_cells()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.fov_from_image"><code class="docutils literal notranslate"><span class="pre">FOVManager.fov_from_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.fov_from_image_dir"><code class="docutils literal notranslate"><span class="pre">FOVManager.fov_from_image_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.from_path"><code class="docutils literal notranslate"><span class="pre">FOVManager.from_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.get_prefix"><code class="docutils literal notranslate"><span class="pre">FOVManager.get_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.load_presegmented_fov"><code class="docutils literal notranslate"><span class="pre">FOVManager.load_presegmented_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.FOVManager.load_seg"><code class="docutils literal notranslate"><span class="pre">FOVManager.load_seg()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.manager.PlateFactory"><code class="docutils literal notranslate"><span class="pre">PlateFactory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.PlateFactory.from_dir"><code class="docutils literal notranslate"><span class="pre">PlateFactory.from_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.PlateFactory.get_well_names"><code class="docutils literal notranslate"><span class="pre">PlateFactory.get_well_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.manager.WellManager"><code class="docutils literal notranslate"><span class="pre">WellManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.WellManager.analyze_fov"><code class="docutils literal notranslate"><span class="pre">WellManager.analyze_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.WellManager.create_fov_from_folder_paths"><code class="docutils literal notranslate"><span class="pre">WellManager.create_fov_from_folder_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.WellManager.create_fovs"><code class="docutils literal notranslate"><span class="pre">WellManager.create_fovs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.manager.WellManager.fov_from_file_paths"><code class="docutils literal notranslate"><span class="pre">WellManager.fov_from_file_paths()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.paracell_io">paracell_io</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paracell_io.CellDeserializer"><code class="docutils literal notranslate"><span class="pre">CellDeserializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.CellDeserializer.from_dict"><code class="docutils literal notranslate"><span class="pre">CellDeserializer.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paracell_io.Deserializer"><code class="docutils literal notranslate"><span class="pre">Deserializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.Deserializer.from_dict"><code class="docutils literal notranslate"><span class="pre">Deserializer.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.Deserializer.from_file"><code class="docutils literal notranslate"><span class="pre">Deserializer.from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.Deserializer.from_path"><code class="docutils literal notranslate"><span class="pre">Deserializer.from_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.from_dict"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.from_json"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.read_cells"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.read_cells()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paracell_io.PlateDeserializer"><code class="docutils literal notranslate"><span class="pre">PlateDeserializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.PlateDeserializer.from_dict"><code class="docutils literal notranslate"><span class="pre">PlateDeserializer.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.PlateDeserializer.from_json"><code class="docutils literal notranslate"><span class="pre">PlateDeserializer.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.PlateDeserializer.from_salvage_dir"><code class="docutils literal notranslate"><span class="pre">PlateDeserializer.from_salvage_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paracell_io.WellDeserializer"><code class="docutils literal notranslate"><span class="pre">WellDeserializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.WellDeserializer.from_dict"><code class="docutils literal notranslate"><span class="pre">WellDeserializer.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.WellDeserializer.from_json"><code class="docutils literal notranslate"><span class="pre">WellDeserializer.from_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.paradata">paradata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paradata.Cell"><code class="docutils literal notranslate"><span class="pre">Cell</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.add_statistic"><code class="docutils literal notranslate"><span class="pre">Cell.add_statistic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.bbox"><code class="docutils literal notranslate"><span class="pre">Cell.bbox</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.deallocate"><code class="docutils literal notranslate"><span class="pre">Cell.deallocate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.get_parent"><code class="docutils literal notranslate"><span class="pre">Cell.get_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.get_statistic"><code class="docutils literal notranslate"><span class="pre">Cell.get_statistic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.mask"><code class="docutils literal notranslate"><span class="pre">Cell.mask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.outline_idx"><code class="docutils literal notranslate"><span class="pre">Cell.outline_idx</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.set_outline_idx"><code class="docutils literal notranslate"><span class="pre">Cell.set_outline_idx()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.set_parent_fov"><code class="docutils literal notranslate"><span class="pre">Cell.set_parent_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.to_dict"><code class="docutils literal notranslate"><span class="pre">Cell.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.update_seg"><code class="docutils literal notranslate"><span class="pre">Cell.update_seg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Cell.uuid"><code class="docutils literal notranslate"><span class="pre">Cell.uuid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paradata.FOV"><code class="docutils literal notranslate"><span class="pre">FOV</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.add_cell"><code class="docutils literal notranslate"><span class="pre">FOV.add_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.add_cell_outline_pair"><code class="docutils literal notranslate"><span class="pre">FOV.add_cell_outline_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.add_processed_channel"><code class="docutils literal notranslate"><span class="pre">FOV.add_processed_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.add_statistic"><code class="docutils literal notranslate"><span class="pre">FOV.add_statistic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.cells"><code class="docutils literal notranslate"><span class="pre">FOV.cells</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.cells_to_df"><code class="docutils literal notranslate"><span class="pre">FOV.cells_to_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.csv_path"><code class="docutils literal notranslate"><span class="pre">FOV.csv_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.data"><code class="docutils literal notranslate"><span class="pre">FOV.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.deallocate"><code class="docutils literal notranslate"><span class="pre">FOV.deallocate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.dtype"><code class="docutils literal notranslate"><span class="pre">FOV.dtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_cell"><code class="docutils literal notranslate"><span class="pre">FOV.get_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_cell_by_idx"><code class="docutils literal notranslate"><span class="pre">FOV.get_cell_by_idx()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_channel"><code class="docutils literal notranslate"><span class="pre">FOV.get_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_metadata_dict"><code class="docutils literal notranslate"><span class="pre">FOV.get_metadata_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_outline_from_cell"><code class="docutils literal notranslate"><span class="pre">FOV.get_outline_from_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_outline_from_uuid"><code class="docutils literal notranslate"><span class="pre">FOV.get_outline_from_uuid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_parent"><code class="docutils literal notranslate"><span class="pre">FOV.get_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.get_processed_channel"><code class="docutils literal notranslate"><span class="pre">FOV.get_processed_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.is_channels_loaded"><code class="docutils literal notranslate"><span class="pre">FOV.is_channels_loaded()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.is_processed_channel"><code class="docutils literal notranslate"><span class="pre">FOV.is_processed_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.load_channels"><code class="docutils literal notranslate"><span class="pre">FOV.load_channels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.masks"><code class="docutils literal notranslate"><span class="pre">FOV.masks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.outlines"><code class="docutils literal notranslate"><span class="pre">FOV.outlines</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.parent_path"><code class="docutils literal notranslate"><span class="pre">FOV.parent_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.seg_path"><code class="docutils literal notranslate"><span class="pre">FOV.seg_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.set_csv_path"><code class="docutils literal notranslate"><span class="pre">FOV.set_csv_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.set_masks"><code class="docutils literal notranslate"><span class="pre">FOV.set_masks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.set_outlines"><code class="docutils literal notranslate"><span class="pre">FOV.set_outlines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.set_parent"><code class="docutils literal notranslate"><span class="pre">FOV.set_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.set_parent_path"><code class="docutils literal notranslate"><span class="pre">FOV.set_parent_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.set_seg_path"><code class="docutils literal notranslate"><span class="pre">FOV.set_seg_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.shape"><code class="docutils literal notranslate"><span class="pre">FOV.shape</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.to_csv"><code class="docutils literal notranslate"><span class="pre">FOV.to_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.to_json"><code class="docutils literal notranslate"><span class="pre">FOV.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.FOV.update_dtype"><code class="docutils literal notranslate"><span class="pre">FOV.update_dtype()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paradata.Plate"><code class="docutils literal notranslate"><span class="pre">Plate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.add_well"><code class="docutils literal notranslate"><span class="pre">Plate.add_well()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.get_parent"><code class="docutils literal notranslate"><span class="pre">Plate.get_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.get_well"><code class="docutils literal notranslate"><span class="pre">Plate.get_well()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.output_dir"><code class="docutils literal notranslate"><span class="pre">Plate.output_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.remove_well"><code class="docutils literal notranslate"><span class="pre">Plate.remove_well()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.set_output_dir"><code class="docutils literal notranslate"><span class="pre">Plate.set_output_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.set_parent"><code class="docutils literal notranslate"><span class="pre">Plate.set_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.to_json"><code class="docutils literal notranslate"><span class="pre">Plate.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.uuid"><code class="docutils literal notranslate"><span class="pre">Plate.uuid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Plate.wells"><code class="docutils literal notranslate"><span class="pre">Plate.wells</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paradata.Well"><code class="docutils literal notranslate"><span class="pre">Well</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.add_fov"><code class="docutils literal notranslate"><span class="pre">Well.add_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.add_fov_metadata"><code class="docutils literal notranslate"><span class="pre">Well.add_fov_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.add_fov_metadata_dict"><code class="docutils literal notranslate"><span class="pre">Well.add_fov_metadata_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.fovs"><code class="docutils literal notranslate"><span class="pre">Well.fovs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.get_fov"><code class="docutils literal notranslate"><span class="pre">Well.get_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.get_parent"><code class="docutils literal notranslate"><span class="pre">Well.get_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.set_parent"><code class="docutils literal notranslate"><span class="pre">Well.set_parent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.to_dict"><code class="docutils literal notranslate"><span class="pre">Well.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paradata.Well.uuid"><code class="docutils literal notranslate"><span class="pre">Well.uuid</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.paralog">paralog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paralog.add_default_paralog_handlers"><code class="docutils literal notranslate"><span class="pre">add_default_paralog_handlers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paralog.get_paralogger"><code class="docutils literal notranslate"><span class="pre">get_paralogger()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.pipeline">pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.FOVTorchDataset"><code class="docutils literal notranslate"><span class="pre">FOVTorchDataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.pipeline.FOVTorchDataset.well_start_ids"><code class="docutils literal notranslate"><span class="pre">FOVTorchDataset.well_start_ids</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.pipeline.FOVTorchDataset.get_well_idx"><code class="docutils literal notranslate"><span class="pre">FOVTorchDataset.get_well_idx()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.analyze_fov"><code class="docutils literal notranslate"><span class="pre">analyze_fov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.collate_fovs"><code class="docutils literal notranslate"><span class="pre">collate_fovs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.create_plate"><code class="docutils literal notranslate"><span class="pre">create_plate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.create_segmentor"><code class="docutils literal notranslate"><span class="pre">create_segmentor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.run_analysis"><code class="docutils literal notranslate"><span class="pre">run_analysis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.run_illumcor"><code class="docutils literal notranslate"><span class="pre">run_illumcor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.run_quality_control"><code class="docutils literal notranslate"><span class="pre">run_quality_control()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.pipeline.segment_and_analyze_batch"><code class="docutils literal notranslate"><span class="pre">segment_and_analyze_batch()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="paracell.feature_extraction.html">paracell.feature_extraction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="paracell.feature_extraction.html#module-paracell.feature_extraction.analysis">paracell.feature_extraction.analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.AnalysisMixin"><code class="docutils literal notranslate"><span class="pre">AnalysisMixin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.CellAnalysisMixin"><code class="docutils literal notranslate"><span class="pre">CellAnalysisMixin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.CellAnalysisMixin.analyze_cell"><code class="docutils literal notranslate"><span class="pre">CellAnalysisMixin.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.CellAnalysisMixin.name"><code class="docutils literal notranslate"><span class="pre">CellAnalysisMixin.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.CellAnalysisMixin.prefix"><code class="docutils literal notranslate"><span class="pre">CellAnalysisMixin.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.ImageAnalysisMixin"><code class="docutils literal notranslate"><span class="pre">ImageAnalysisMixin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.ImageAnalysisMixin.analyze_image"><code class="docutils literal notranslate"><span class="pre">ImageAnalysisMixin.analyze_image()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.analysis.get_cell_analysis_classes"><code class="docutils literal notranslate"><span class="pre">get_cell_analysis_classes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.feature_extraction.html#module-paracell.feature_extraction.crop">paracell.feature_extraction.crop</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.CanvasCropGenerator"><code class="docutils literal notranslate"><span class="pre">CanvasCropGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.CanvasCropGenerator.generate_crop"><code class="docutils literal notranslate"><span class="pre">CanvasCropGenerator.generate_crop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.CentreCropGenerator"><code class="docutils literal notranslate"><span class="pre">CentreCropGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.CentreCropGenerator.generate_crop"><code class="docutils literal notranslate"><span class="pre">CentreCropGenerator.generate_crop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.CropGenerator"><code class="docutils literal notranslate"><span class="pre">CropGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.CropGenerator.generate_crop"><code class="docutils literal notranslate"><span class="pre">CropGenerator.generate_crop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.LegacyCropGenerator"><code class="docutils literal notranslate"><span class="pre">LegacyCropGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.crop.LegacyCropGenerator.generate_crop"><code class="docutils literal notranslate"><span class="pre">LegacyCropGenerator.generate_crop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.feature_extraction.html#module-paracell.feature_extraction.dfe">paracell.feature_extraction.dfe</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.analyze_cell"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.analyze_image"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.analyze_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.extract_features"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.extract_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.name"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.prefix"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOv2Singleton"><code class="docutils literal notranslate"><span class="pre">DINOv2Singleton</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOv2Singleton.deallocate_model"><code class="docutils literal notranslate"><span class="pre">DINOv2Singleton.deallocate_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOv2Singleton.get_device"><code class="docutils literal notranslate"><span class="pre">DINOv2Singleton.get_device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOv2Singleton.get_model"><code class="docutils literal notranslate"><span class="pre">DINOv2Singleton.get_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.RGBDINOv2FeatureExtractor"><code class="docutils literal notranslate"><span class="pre">RGBDINOv2FeatureExtractor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.RGBDINOv2FeatureExtractor.analyze_cell"><code class="docutils literal notranslate"><span class="pre">RGBDINOv2FeatureExtractor.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.RGBDINOv2FeatureExtractor.name"><code class="docutils literal notranslate"><span class="pre">RGBDINOv2FeatureExtractor.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.RGBDINOv2FeatureExtractor.prefix"><code class="docutils literal notranslate"><span class="pre">RGBDINOv2FeatureExtractor.prefix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.feature_extraction.html#module-paracell.feature_extraction.vision">paracell.feature_extraction.vision</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis"><code class="docutils literal notranslate"><span class="pre">BasicShapeAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis.analyze_cell"><code class="docutils literal notranslate"><span class="pre">BasicShapeAnalysis.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis.name"><code class="docutils literal notranslate"><span class="pre">BasicShapeAnalysis.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis.prefix"><code class="docutils literal notranslate"><span class="pre">BasicShapeAnalysis.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis"><code class="docutils literal notranslate"><span class="pre">ColocalizationAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis.analyze_cell"><code class="docutils literal notranslate"><span class="pre">ColocalizationAnalysis.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis.name"><code class="docutils literal notranslate"><span class="pre">ColocalizationAnalysis.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis.prefix"><code class="docutils literal notranslate"><span class="pre">ColocalizationAnalysis.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis"><code class="docutils literal notranslate"><span class="pre">CompartmentAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.analyze_cell"><code class="docutils literal notranslate"><span class="pre">CompartmentAnalysis.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.calculate_intensity_features"><code class="docutils literal notranslate"><span class="pre">CompartmentAnalysis.calculate_intensity_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.name"><code class="docutils literal notranslate"><span class="pre">CompartmentAnalysis.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.nuclear_chan_name"><code class="docutils literal notranslate"><span class="pre">CompartmentAnalysis.nuclear_chan_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.prefix"><code class="docutils literal notranslate"><span class="pre">CompartmentAnalysis.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis"><code class="docutils literal notranslate"><span class="pre">IntensityAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis.analyze_cell"><code class="docutils literal notranslate"><span class="pre">IntensityAnalysis.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis.name"><code class="docutils literal notranslate"><span class="pre">IntensityAnalysis.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis.prefix"><code class="docutils literal notranslate"><span class="pre">IntensityAnalysis.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis"><code class="docutils literal notranslate"><span class="pre">ObjectAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis.analyze_cell"><code class="docutils literal notranslate"><span class="pre">ObjectAnalysis.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis.name"><code class="docutils literal notranslate"><span class="pre">ObjectAnalysis.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis.prefix"><code class="docutils literal notranslate"><span class="pre">ObjectAnalysis.prefix</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis"><code class="docutils literal notranslate"><span class="pre">TextureAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis.analyze_cell"><code class="docutils literal notranslate"><span class="pre">TextureAnalysis.analyze_cell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis.name"><code class="docutils literal notranslate"><span class="pre">TextureAnalysis.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis.prefix"><code class="docutils literal notranslate"><span class="pre">TextureAnalysis.prefix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="paracell.improcess.html">paracell.improcess</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.channels">paracell.improcess.channels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.channels.add_thresh_channels"><code class="docutils literal notranslate"><span class="pre">add_thresh_channels()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.debug">paracell.improcess.debug</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.debug.print_image_statistics"><code class="docutils literal notranslate"><span class="pre">print_image_statistics()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.illumination">paracell.improcess.illumination</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.add_channel"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.add_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.fit"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.fit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.fit_transform_all"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.fit_transform_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.fit_transform_channel"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.fit_transform_channel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.get_illumcorf"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.get_illumcorf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.is_loaded"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.is_loaded()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.load"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.save"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.save_transform"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.save_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.transform"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.transform_all"><code class="docutils literal notranslate"><span class="pre">BaSiCPyWrapper.transform_all()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.get_max_value"><code class="docutils literal notranslate"><span class="pre">get_max_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.get_min_value"><code class="docutils literal notranslate"><span class="pre">get_min_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.norm_dtype_convert"><code class="docutils literal notranslate"><span class="pre">norm_dtype_convert()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.illumination.norm_minmax_convert"><code class="docutils literal notranslate"><span class="pre">norm_minmax_convert()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.manipulation">paracell.improcess.manipulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.crop_image"><code class="docutils literal notranslate"><span class="pre">crop_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.get_bbox"><code class="docutils literal notranslate"><span class="pre">get_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.get_cell_indices"><code class="docutils literal notranslate"><span class="pre">get_cell_indices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.get_cropped_mask"><code class="docutils literal notranslate"><span class="pre">get_cropped_mask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.get_outline_coords"><code class="docutils literal notranslate"><span class="pre">get_outline_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.get_single_idx"><code class="docutils literal notranslate"><span class="pre">get_single_idx()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.masks_to_outlines"><code class="docutils literal notranslate"><span class="pre">masks_to_outlines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.npwhere_to_xy_coords"><code class="docutils literal notranslate"><span class="pre">npwhere_to_xy_coords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.show_outline"><code class="docutils literal notranslate"><span class="pre">show_outline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.thicken_outline"><code class="docutils literal notranslate"><span class="pre">thicken_outline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.validate_mask_outline_parity"><code class="docutils literal notranslate"><span class="pre">validate_mask_outline_parity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.manipulation.xy_coords_to_npwhere"><code class="docutils literal notranslate"><span class="pre">xy_coords_to_npwhere()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.maskremover">paracell.improcess.maskremover</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.calculate_num_cells"><code class="docutils literal notranslate"><span class="pre">calculate_num_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.compare_vs_original"><code class="docutils literal notranslate"><span class="pre">compare_vs_original()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.compute_flows_inplace"><code class="docutils literal notranslate"><span class="pre">compute_flows_inplace()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.export_filtered_dat"><code class="docutils literal notranslate"><span class="pre">export_filtered_dat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.get_filtered_masks_and_outlines"><code class="docutils literal notranslate"><span class="pre">get_filtered_masks_and_outlines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.is_consecutive"><code class="docutils literal notranslate"><span class="pre">is_consecutive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.maskremover.reorder_image_idx"><code class="docutils literal notranslate"><span class="pre">reorder_image_idx()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.ops">paracell.improcess.ops</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor"><code class="docutils literal notranslate"><span class="pre">RGBColor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.BLACK"><code class="docutils literal notranslate"><span class="pre">RGBColor.BLACK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.BLUE"><code class="docutils literal notranslate"><span class="pre">RGBColor.BLUE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.CYAN"><code class="docutils literal notranslate"><span class="pre">RGBColor.CYAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.GREEN"><code class="docutils literal notranslate"><span class="pre">RGBColor.GREEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.MAGENTA"><code class="docutils literal notranslate"><span class="pre">RGBColor.MAGENTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.RED"><code class="docutils literal notranslate"><span class="pre">RGBColor.RED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.WHITE"><code class="docutils literal notranslate"><span class="pre">RGBColor.WHITE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.RGBColor.YELLOW"><code class="docutils literal notranslate"><span class="pre">RGBColor.YELLOW</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.centre_paste"><code class="docutils literal notranslate"><span class="pre">centre_paste()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.colour_image"><code class="docutils literal notranslate"><span class="pre">colour_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.compute_bbox"><code class="docutils literal notranslate"><span class="pre">compute_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.crop_and_multiply"><code class="docutils literal notranslate"><span class="pre">crop_and_multiply()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.cropped_img"><code class="docutils literal notranslate"><span class="pre">cropped_img()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.draw_outline"><code class="docutils literal notranslate"><span class="pre">draw_outline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.draw_outlines_and_get_bbox"><code class="docutils literal notranslate"><span class="pre">draw_outlines_and_get_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.expand_sqcrop"><code class="docutils literal notranslate"><span class="pre">expand_sqcrop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.gaussian_blur_and_otsu_threshold"><code class="docutils literal notranslate"><span class="pre">gaussian_blur_and_otsu_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.get_cell_fill"><code class="docutils literal notranslate"><span class="pre">get_cell_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.get_cell_fill_from_im"><code class="docutils literal notranslate"><span class="pre">get_cell_fill_from_im()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.get_composite"><code class="docutils literal notranslate"><span class="pre">get_composite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.get_cropped_cell_chan_imgs"><code class="docutils literal notranslate"><span class="pre">get_cropped_cell_chan_imgs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.get_masked_img"><code class="docutils literal notranslate"><span class="pre">get_masked_img()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.is_indexable"><code class="docutils literal notranslate"><span class="pre">is_indexable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.show_histogram"><code class="docutils literal notranslate"><span class="pre">show_histogram()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.ops.thresh_img"><code class="docutils literal notranslate"><span class="pre">thresh_img()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.improcess.html#module-paracell.improcess.plotting">paracell.improcess.plotting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.colour_mapping_to_list"><code class="docutils literal notranslate"><span class="pre">colour_mapping_to_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.get_cell_gallery"><code class="docutils literal notranslate"><span class="pre">get_cell_gallery()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.get_merged_fov_image"><code class="docutils literal notranslate"><span class="pre">get_merged_fov_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.get_outlined_fov"><code class="docutils literal notranslate"><span class="pre">get_outlined_fov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.get_outlined_image"><code class="docutils literal notranslate"><span class="pre">get_outlined_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.visualize_fov"><code class="docutils literal notranslate"><span class="pre">visualize_fov()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.improcess.html#paracell.improcess.plotting.well_cell_heat_map"><code class="docutils literal notranslate"><span class="pre">well_cell_heat_map()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="paracell.segmentation.html">paracell.segmentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.config">paracell.segmentation.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.CellposeTrainConfig"><code class="docutils literal notranslate"><span class="pre">CellposeTrainConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.CellposeTrainConfig.model"><code class="docutils literal notranslate"><span class="pre">CellposeTrainConfig.model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.CellposeTrainConfig.paths"><code class="docutils literal notranslate"><span class="pre">CellposeTrainConfig.paths</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.CellposeTrainConfig.training"><code class="docutils literal notranslate"><span class="pre">CellposeTrainConfig.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.ModelConfig"><code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.ModelConfig.cell_diameter"><code class="docutils literal notranslate"><span class="pre">ModelConfig.cell_diameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.ModelConfig.name"><code class="docutils literal notranslate"><span class="pre">ModelConfig.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.ModelConfig.pretrained_model_path"><code class="docutils literal notranslate"><span class="pre">ModelConfig.pretrained_model_path</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.PathsConfig"><code class="docutils literal notranslate"><span class="pre">PathsConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.PathsConfig.image_suffix"><code class="docutils literal notranslate"><span class="pre">PathsConfig.image_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.PathsConfig.mask_suffix"><code class="docutils literal notranslate"><span class="pre">PathsConfig.mask_suffix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.PathsConfig.model_save_path"><code class="docutils literal notranslate"><span class="pre">PathsConfig.model_save_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.PathsConfig.train_dir"><code class="docutils literal notranslate"><span class="pre">PathsConfig.train_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.PathsConfig.validation_dir"><code class="docutils literal notranslate"><span class="pre">PathsConfig.validation_dir</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig"><code class="docutils literal notranslate"><span class="pre">TrainingConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.batch_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.device"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.eval_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.eval_every</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.learning_rate"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.learning_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.n_epochs"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.n_epochs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.n_workers"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.n_workers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.normalize"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.normalize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.resize"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.resize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.save_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.save_every</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.clean_dataclass_export"><code class="docutils literal notranslate"><span class="pre">clean_dataclass_export()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.get_training_config"><code class="docutils literal notranslate"><span class="pre">get_training_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.save_config"><code class="docutils literal notranslate"><span class="pre">save_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.conversions">paracell.segmentation.conversions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.add_cl_flows_to_seg_mask"><code class="docutils literal notranslate"><span class="pre">add_cl_flows_to_seg_mask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.add_cl_flows_to_seg_masks"><code class="docutils literal notranslate"><span class="pre">add_cl_flows_to_seg_masks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.convert_cyto2_to_seg_format"><code class="docutils literal notranslate"><span class="pre">convert_cyto2_to_seg_format()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.convert_seg_to_png_masks"><code class="docutils literal notranslate"><span class="pre">convert_seg_to_png_masks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.copy_folder_images"><code class="docutils literal notranslate"><span class="pre">copy_folder_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.get_mask_path_and_prefixes"><code class="docutils literal notranslate"><span class="pre">get_mask_path_and_prefixes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.get_mask_paths"><code class="docutils literal notranslate"><span class="pre">get_mask_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.gfp_channel_augmentation"><code class="docutils literal notranslate"><span class="pre">gfp_channel_augmentation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.image_mask_to_seg_mask"><code class="docutils literal notranslate"><span class="pre">image_mask_to_seg_mask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.conversions.seg_mask_to_image_mask"><code class="docutils literal notranslate"><span class="pre">seg_mask_to_image_mask()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.dataset">paracell.segmentation.dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.dataset.CellposeDataset"><code class="docutils literal notranslate"><span class="pre">CellposeDataset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.dataset.random_crop_reshape"><code class="docutils literal notranslate"><span class="pre">random_crop_reshape()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.engine">paracell.segmentation.engine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.engine.eval_checkpoint_model"><code class="docutils literal notranslate"><span class="pre">eval_checkpoint_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.engine.train_one_epoch"><code class="docutils literal notranslate"><span class="pre">train_one_epoch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.eval">paracell.segmentation.eval</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.HiddenPrints"><code class="docutils literal notranslate"><span class="pre">HiddenPrints</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.cellpose_dataset_to_coco"><code class="docutils literal notranslate"><span class="pre">cellpose_dataset_to_coco()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.cellpose_masks_to_rles"><code class="docutils literal notranslate"><span class="pre">cellpose_masks_to_rles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.coco_eval_to_results"><code class="docutils literal notranslate"><span class="pre">coco_eval_to_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.eval_results_from_coco"><code class="docutils literal notranslate"><span class="pre">eval_results_from_coco()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.evaluate"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.evaluate_cellpose_model"><code class="docutils literal notranslate"><span class="pre">evaluate_cellpose_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.eval.pred_masks_to_annotations"><code class="docutils literal notranslate"><span class="pre">pred_masks_to_annotations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.segmentors">paracell.segmentation.segmentors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.CellposeLoadSegmentor"><code class="docutils literal notranslate"><span class="pre">CellposeLoadSegmentor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.CellposeLoadSegmentor.segment_fov"><code class="docutils literal notranslate"><span class="pre">CellposeLoadSegmentor.segment_fov()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.CellposeSegmentationOutput"><code class="docutils literal notranslate"><span class="pre">CellposeSegmentationOutput</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.DefaultCellposeSegmentor"><code class="docutils literal notranslate"><span class="pre">DefaultCellposeSegmentor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.DefaultCellposeSegmentor.create_model"><code class="docutils literal notranslate"><span class="pre">DefaultCellposeSegmentor.create_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.DefaultCellposeSegmentor.save_seg_output"><code class="docutils literal notranslate"><span class="pre">DefaultCellposeSegmentor.save_seg_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.DefaultCellposeSegmentor.segment_images"><code class="docutils literal notranslate"><span class="pre">DefaultCellposeSegmentor.segment_images()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.bulk_segment_and_save_fovs"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.bulk_segment_and_save_fovs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.bulk_segment_fovs"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.bulk_segment_fovs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.create_model"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.create_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.deallocate"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.deallocate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.get_seg_input"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.get_seg_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.initialize"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.is_loaded"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.is_loaded()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.save_seg_output"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.save_seg_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.segment_fov"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.segment_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.segment_images"><code class="docutils literal notranslate"><span class="pre">FOVSegmentor.segment_images()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.SegmentationOutput"><code class="docutils literal notranslate"><span class="pre">SegmentationOutput</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.SegmentationOutput.add_outlines_list"><code class="docutils literal notranslate"><span class="pre">SegmentationOutput.add_outlines_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.Segmentor"><code class="docutils literal notranslate"><span class="pre">Segmentor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.Segmentor.get_seg_path"><code class="docutils literal notranslate"><span class="pre">Segmentor.get_seg_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.Segmentor.segment_fov"><code class="docutils literal notranslate"><span class="pre">Segmentor.segment_fov()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.Segmentor.set_seg_dir"><code class="docutils literal notranslate"><span class="pre">Segmentor.set_seg_dir()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.ThreeChannelCellposeSegmentor"><code class="docutils literal notranslate"><span class="pre">ThreeChannelCellposeSegmentor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.segmentors.ThreeChannelCellposeSegmentor.create_model"><code class="docutils literal notranslate"><span class="pre">ThreeChannelCellposeSegmentor.create_model()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.train">paracell.segmentation.train</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.train.train_pipeline"><code class="docutils literal notranslate"><span class="pre">train_pipeline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.transforms">paracell.segmentation.transforms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.RandomCrop"><code class="docutils literal notranslate"><span class="pre">RandomCrop</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.RandomCrop.forward"><code class="docutils literal notranslate"><span class="pre">RandomCrop.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.RandomFlip"><code class="docutils literal notranslate"><span class="pre">RandomFlip</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.RandomFlip.forward"><code class="docutils literal notranslate"><span class="pre">RandomFlip.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.RandomRotate"><code class="docutils literal notranslate"><span class="pre">RandomRotate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.RandomRotate.forward"><code class="docutils literal notranslate"><span class="pre">RandomRotate.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.transforms.get_transform"><code class="docutils literal notranslate"><span class="pre">get_transform()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.utils">paracell.segmentation.utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.add_file_number"><code class="docutils literal notranslate"><span class="pre">add_file_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.build_lbl_np"><code class="docutils literal notranslate"><span class="pre">build_lbl_np()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.build_lbl_tensor"><code class="docutils literal notranslate"><span class="pre">build_lbl_tensor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.cellpose_flows_to_save_flows"><code class="docutils literal notranslate"><span class="pre">cellpose_flows_to_save_flows()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.collate_fn"><code class="docutils literal notranslate"><span class="pre">collate_fn()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.gather_image_mask_paths"><code class="docutils literal notranslate"><span class="pre">gather_image_mask_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.get_cell_probabilities"><code class="docutils literal notranslate"><span class="pre">get_cell_probabilities()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.get_file_number"><code class="docutils literal notranslate"><span class="pre">get_file_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.get_lr_scheduler"><code class="docutils literal notranslate"><span class="pre">get_lr_scheduler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.save_sample_images"><code class="docutils literal notranslate"><span class="pre">save_sample_images()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="paracell.utils.html">paracell.utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="paracell.utils.html#module-paracell.utils.compression">paracell.utils.compression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.compression.compress_directory"><code class="docutils literal notranslate"><span class="pre">compress_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.compression.compress_seg_npy"><code class="docutils literal notranslate"><span class="pre">compress_seg_npy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.utils.html#module-paracell.utils.general">paracell.utils.general</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.general.safe_divide"><code class="docutils literal notranslate"><span class="pre">safe_divide()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="paracell.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">paracell</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../dataset/seg.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Seg Files</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, David Nguyen and Chao Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

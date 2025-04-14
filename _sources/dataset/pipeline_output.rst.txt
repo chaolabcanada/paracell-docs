@@ -1,0 +1,96 @@
+Pipeline Output
+===============
+Below is the folder structure for the ``output_dir`` of the :ref:`feature extraction pipeline <pipeline_cli>`.
+
+.. code-block:: text
+
+   <output folder>
+   ├── illumcor
+   │   └── illumcor images
+   ├── analysis files
+   ├── aggregate files
+   └── metadata files
+
+Illumcor Folder
+---------------
+
+Illumination correction is only supposed for the Chao Lab format. Illumcor images are illumination corrected versions of the files found in the :doc:`raw image dir <raw_image_dir>`.
+
+Analysis Files
+--------------
+These fils contain the segmentation data and the extracted features for the cells.
+
+.. _seg_file_output_format:
+
+``<fov_prefix>_seg.npy`` is the :doc:`cellpose segmentation <seg>` file for the FOV.
+
+   - Contains masks, outlines and other properties.
+   - Either ``_seg.npy`` or ``_seg.npz`` depending if compression is enabled in config.
+
+``<fov_prefix>_cells.csv`` contains the cells of the FOV with corresponding analysis properties.
+
+   Table where the columns are per cell features and the rows are the cells.
+
+   .. warning::
+
+      This doesn't exist if ``quality_control`` is enabled, as that aggregates all cells into ``all_cells.parquet``.
+
+Aggregate Files
+---------------
+
+These files are only generated when ``quality_control`` is enabled.
+
+``all_cells.parquet`` contains all cells with corresponding analysis properties.
+
+   Parquet version of ``<fov_prefix>_cells.csv``, but this contains all cells from all FOVs.
+
+``plate_cells.parquet`` same format as all_cells, but each feature is averaged across the wells.
+
+Metadata Files
+--------------
+
+``plate.json`` contains the plate information for the plate being analyzed.
+
+   Example:
+
+   .. code-block:: json
+
+      {
+         "METADATA__UUID": "88f9974b746c4332b2e91b0730b40f25",
+         "METADATA__Name": "Plate_Name",
+         "METADATA__CreationTime": "2025-03-28 20:50:31.632040",
+         "METADATA__ParentDir": "/mnt/DQX/microscopy_data_raw/processed/",
+         "METADATA__NumWells": 1,
+         "Wells": [
+            {
+               "METADATA__UUID": "4b86efc63a2d4d7d9656b2d6daa15dae",
+               "METADATA__Name": "Plate_Name__Well__A1",
+               "METADATA__Location": "A1",
+               "FOVs": []
+            }
+         ]
+      }
+
+   .. note::
+      The example has been shortened to fit better. The objects inside the FOVs list, ``"FOVs": []``, in each well, is of the :ref:`imdata <im_data_format>` format.
+
+.. _im_data_format:
+
+``<fov_prefix>_imdata.json`` contains FOV metadata.
+
+   Per FOV image data.
+
+   Example:
+
+   .. code-block:: json
+
+      {
+         "METADATA__UUID": "e2ffe4aa0f2b4ceb94feb48732353bf1",
+         "METADATA__Prefix": "A1--W00001--P00001--Z00002--T00000",
+         "METADATA__ParentPath": "/mnt/DQX/microscopy_data_raw/processed/",
+         "METADATA__ImageLevelOutputPath": "/mnt/FNX/analysis_outputs/A1--W00001--P00001--Z00002--T00000_imdata.json",
+         "METADATA__CSVOutputPath": "/mnt/FNX/analysis_outputs/A1--W00001--P00001--Z00002--T00000_cells.csv",
+         "METADATA__SegOutputPath": "/mnt/FNX/analysis_outputs/A1--W00001--P00001--Z00002--T00000_seg.npz",
+         "METADATA__Well": "4b86efc63a2d4d7d9656b2d6daa15dae",
+         "METADATA__Plate": "88f9974b746c4332b2e91b0730b40f25"
+      }

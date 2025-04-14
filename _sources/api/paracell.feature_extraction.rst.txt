@@ -1,0 +1,34 @@
+paracell.feature_extraction
+===========================
+
+paracell.feature_extraction.analysis
+------------------------------------
+
+.. automodule:: paracell.feature_extraction.analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.feature_extraction.crop
+--------------------------------
+
+.. automodule:: paracell.feature_extraction.crop
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.feature_extraction.dfe
+-------------------------------
+
+.. automodule:: paracell.feature_extraction.dfe
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.feature_extraction.vision
+----------------------------------
+
+.. automodule:: paracell.feature_extraction.vision
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,32 @@
+Seg Files
+=========
+Files ending in ``_seg.npy`` or ``_seg.npz`` are seg files. These store the segmentation data, such as masks. This is a modified version of `Cellpose's format <https://cellpose.readthedocs.io/en/latest/outputs.html#seg-npy-output>`_.
+
+- The npy files are compatible with `Cellpose's seg files <https://cellpose.readthedocs.io/en/latest/outputs.html#seg-npy-output>`_.
+- The npz are compressed versions of npy files. Generally masks compress well, but flows do not.
+
+Depending on the pipeline being run, paracell may add a few additional properties to the cellpose seg format:
+
+- ``mask_probabilities`` List of cell probabilities, per cell.
+   - First item corresponds to cell with mask idx 1, so on.
+   - Derived from flows.
+   - Present on segs saved from segmentors.
+
+.. _cl_computed_flows_description:
+
+- ``cl_computed_flows``: Alternative Cellpose flows.
+   - Used for Paracell three channel training.
+   - Generated only by pseudolabelling and adding flows to hand-labelled datasets.
+   - Numpy array of shape [4, H, W]. It's the output of Cellpose's ``dynamics.labels_to_flows``. It contains:
+      0. Copy of masks.
+      1. Cell probability/cell distance transform.
+      2. Y flows.
+      3. X flows.
+- ``cached_masks``: Masks, but includes all cells, not just GFP.
+   -  Used for pseudolabelling refinement in the GUI.
+- ``cell_threshold_values``: Dict with keys ``fitc_average``, ``cyan_sub``, ``red_percentage``. The values are an array, with items corresponding to each cell, similar to ``mask_probabilities``.
+   - Used for thresholding the pseudolabels.
+
+.. note::
+
+   Typically Cellpose's ``flows`` aren't saved to conserve space.

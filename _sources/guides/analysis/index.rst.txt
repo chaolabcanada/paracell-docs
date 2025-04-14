@@ -1,0 +1,12 @@
+Analysis Guide
+==============
+
+This section a guide on running the analysis pipeline and notebooks on a plate of cells. It will run you through preparing the data, segmentation, feature extraction, aggregation, and the final analysis.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Sections in order
+
+   feature_extraction
+   aggregation
+   analysis

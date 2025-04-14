@@ -1,0 +1,858 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>paracell.feature_extraction.vision - Paracell v0.0.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css?v=f591599d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Paracell v0.0.1</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Paracell v0.0.1</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guides/analysis/index.html">Analysis Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Analysis Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/analysis/feature_extraction.html">Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/analysis/aggregation.html">Aggregation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/analysis/analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guides/developer/index.html">Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Developer Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/fov.html">FOVs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/segmentation.html">Segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/visualization.html">Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/feature_extraction.html">Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/plates_wells_bulk.html">Plates, Wells, and Bulk Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../config.html">Config Structure</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../dataset/index.html">Dataset Formats</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dataset Formats</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/raw_image_dir.html">Raw Images Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Paracell API</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Paracell API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.html">paracell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.feature_extraction.html">paracell.feature_extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.improcess.html">paracell.improcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.segmentation.html">paracell.segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.utils.html">paracell.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for paracell.feature_extraction.vision</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Analysis classes for conventional feature extraction.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mahotas.features</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mhf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="c1"># import cupy as cp</span>
+<span class="c1"># from cucim.skimage import measure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">measure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndimage</span> <span class="k">as</span> <span class="n">ndi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">threshold_li</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.improcess</span><span class="w"> </span><span class="kn">import</span> <span class="n">ops</span><span class="p">,</span> <span class="n">illumination</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.improcess.channels</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_thresh_channels</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.feature_extraction.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellAnalysisMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paradata</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">FOV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.utils.general</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_divide</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TextureAnalysis">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TextureAnalysis</span><span class="p">(</span><span class="n">CellAnalysisMixin</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Texture Analysis&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;TEXTURE&#39;</span>
+
+<div class="viewcode-block" id="TextureAnalysis.analyze_cell">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis.analyze_cell">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_cell</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">chan_name</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># Crop to cell image</span>
+            <span class="c1"># NOTE: We do not mask for texture analysis</span>
+            <span class="n">cropped_chan_image</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">chan_name</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
+
+            <span class="c1"># Scale and convert image to uint8</span>
+            <span class="n">cropped_chan_image_uint8</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">cropped_chan_image</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">NORM_MINMAX</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Check if entire image is None</span>
+            <span class="k">if</span> <span class="n">cropped_chan_image_uint8</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Channel </span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s1"> is None for cell </span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">. Skipping.&#39;</span><span class="p">)</span>
+
+                <span class="c1"># Replace with random noise from 0 to 1</span>
+                <span class="n">cropped_chan_image_uint8</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">cropped_chan_image_uint8</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Calculate Haralick texture features</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">curr_haralick_features</span> <span class="o">=</span> <span class="n">mhf</span><span class="o">.</span><span class="n">haralick</span><span class="p">(</span><span class="n">cropped_chan_image_uint8</span><span class="p">,</span> <span class="n">return_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># Add each feature set to cell statistics</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">curr_haralick_features</span><span class="p">):</span>
+                    <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s1">_Haralick_Feature_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error calculating Haralick features for cell </span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">_outline_idx</span><span class="si">}</span><span class="s1"> in channel </span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s1">. </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+            <span class="c1"># Calculate parameter-free Threshold Adjacency Statistics (PFTAS)</span>
+            <span class="n">curr_pftas_features</span> <span class="o">=</span> <span class="n">mhf</span><span class="o">.</span><span class="n">pftas</span><span class="p">(</span><span class="n">cropped_chan_image_uint8</span><span class="p">)</span>
+
+            <span class="c1"># Calculate Zernike moments</span>
+            <span class="n">curr_zernike_features</span> <span class="o">=</span> <span class="n">mhf</span><span class="o">.</span><span class="n">zernike_moments</span><span class="p">(</span><span class="n">cropped_chan_image_uint8</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">cropped_chan_image_uint8</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">curr_pftas_features</span><span class="p">):</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s1">_PFTAS_Feature_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">feature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">curr_zernike_features</span><span class="p">):</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">__</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s1">_Zernike_Moment_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ColocalizationAnalysis">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ColocalizationAnalysis</span><span class="p">(</span><span class="n">CellAnalysisMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analysis module for stats about the colocalization of channels.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Colocalization Analysis&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;COLOCALIZATION&#39;</span>
+
+<div class="viewcode-block" id="ColocalizationAnalysis.analyze_cell">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis.analyze_cell">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_cell</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds colocalization-related features to the cell&#39;s stats.</span>
+
+<span class="sd">        Precondition:</span>
+<span class="sd">            - There are at least two channels in the FOV.</span>
+<span class="sd">            - The cell has been segmented.</span>
+
+<span class="sd">        Params:</span>
+<span class="sd">            cell (Cell): Cell to add stats to.</span>
+<span class="sd">            fov (FOV): FOV containing the cell.</span>
+
+<span class="sd">        Additional Info:</span>
+<span class="sd">            - Pearson and Mander&#39;s overlap coefficients default to 0 for empty and identical images.</span>
+<span class="sd">            - Channels are added in alphabetical order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">channels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
+        <span class="n">add_thresh_channels</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
+        <span class="c1"># For iterating over all combinations (non-duplicate) of channels.</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">base_chan1</span><span class="p">,</span> <span class="n">base_chan2</span> <span class="ow">in</span> <span class="n">combos</span><span class="p">:</span>
+            <span class="c1"># Some of the colocalization coefficients don&#39;t accept uint16 images.</span>
+            <span class="n">cropped1</span> <span class="o">=</span> <span class="n">illumination</span><span class="o">.</span><span class="n">norm_dtype_convert</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">base_chan1</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+            <span class="n">cropped2</span> <span class="o">=</span> <span class="n">illumination</span><span class="o">.</span><span class="n">norm_dtype_convert</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">base_chan2</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+            <span class="n">thresh_cropped1</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_processed_channel</span><span class="p">(</span><span class="s2">&quot;thresh&quot;</span><span class="p">,</span> <span class="n">base_chan1</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+            <span class="n">thresh_cropped2</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_processed_channel</span><span class="p">(</span><span class="s2">&quot;thresh&quot;</span><span class="p">,</span> <span class="n">base_chan2</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+
+            <span class="c1"># Get all the colocalization coefficients.</span>
+            <span class="n">intersection_coeff</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">intersection_coeff</span><span class="p">(</span><span class="n">thresh_cropped1</span><span class="p">,</span> <span class="n">thresh_cropped2</span><span class="p">)</span>
+            <span class="n">intersection_coeff_rev</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">intersection_coeff</span><span class="p">(</span><span class="n">thresh_cropped2</span><span class="p">,</span> <span class="n">thresh_cropped1</span><span class="p">)</span>
+            <span class="n">manders_coloc_coeff</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">manders_coloc_coeff</span><span class="p">(</span><span class="n">cropped1</span><span class="p">,</span> <span class="n">thresh_cropped2</span><span class="p">)</span>
+            <span class="n">manders_coloc_coeff_rev</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">manders_coloc_coeff</span><span class="p">(</span><span class="n">cropped2</span><span class="p">,</span> <span class="n">thresh_cropped1</span><span class="p">)</span>
+
+            <span class="n">cropped1_identical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">cropped1</span> <span class="o">==</span> <span class="n">cropped1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">cropped2_identical</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">cropped2</span> <span class="o">==</span> <span class="n">cropped2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">empty_crop</span> <span class="o">=</span> <span class="p">(</span><span class="n">cropped1_identical</span> <span class="ow">and</span> <span class="n">cropped1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cropped2_identical</span> <span class="ow">and</span> <span class="n">cropped2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1"># Manders coeff is nan(div by 0) when wither of the crops are all 0s.</span>
+            <span class="k">if</span> <span class="n">empty_crop</span><span class="p">:</span>
+                <span class="n">manders_overlap_coeff</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">manders_overlap_coeff</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">manders_overlap_coeff</span><span class="p">(</span><span class="n">cropped1</span><span class="p">,</span> <span class="n">cropped2</span><span class="p">)</span>
+
+            <span class="c1"># Pearson is similar to Manders but the images cannot be of all the same value.</span>
+            <span class="k">if</span> <span class="n">cropped1_identical</span> <span class="ow">or</span> <span class="n">cropped2_identical</span><span class="p">:</span>
+                <span class="n">pcc</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pcc</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">pearson_corr_coeff</span><span class="p">(</span><span class="n">cropped1</span><span class="p">,</span> <span class="n">cropped2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Add stats.</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">base_chan1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">base_chan2</span><span class="si">}</span><span class="s2">_Intersection_Coefficient&quot;</span><span class="p">,</span> <span class="n">intersection_coeff</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">base_chan2</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">base_chan1</span><span class="si">}</span><span class="s2">_Intersection_Coefficient&quot;</span><span class="p">,</span> <span class="n">intersection_coeff_rev</span><span class="p">)</span>
+
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">base_chan1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">base_chan2</span><span class="si">}</span><span class="s2">_Manders_Colocalization_Coefficient&quot;</span><span class="p">,</span> <span class="n">manders_coloc_coeff</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">base_chan2</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">base_chan1</span><span class="si">}</span><span class="s2">_Manders_Colocalization_Coefficient&quot;</span><span class="p">,</span> <span class="n">manders_coloc_coeff_rev</span><span class="p">)</span>
+
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">base_chan1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">base_chan2</span><span class="si">}</span><span class="s2">_Manders_Overlap_Coefficient&quot;</span><span class="p">,</span> <span class="n">manders_overlap_coeff</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">base_chan1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">base_chan2</span><span class="si">}</span><span class="s2">_Pearson_Correlation_Coefficient&quot;</span><span class="p">,</span> <span class="n">pcc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BasicShapeAnalysis">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BasicShapeAnalysis</span><span class="p">(</span><span class="n">CellAnalysisMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analysis module for stats about the cell shape.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Basic Shape Analysis&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;BASIC_SHAPE&#39;</span>
+
+<div class="viewcode-block" id="BasicShapeAnalysis.analyze_cell">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis.analyze_cell">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_cell</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds statistics to the cell about the shape.</span>
+
+<span class="sd">        Precondition:</span>
+<span class="sd">            - The cell has been segmented.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cell (Cell): Cell to add stats to.</span>
+<span class="sd">            fov (FOV): FOV the cell belongs to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span>
+        <span class="c1"># Cell mask is assumed to be an uint8 array</span>
+        <span class="c1"># Contours for shape analysis using cv2</span>
+        <span class="n">contours</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_NONE</span><span class="p">)</span>
+
+        <span class="n">largest_contour</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">)</span>
+
+        <span class="n">convex_hull</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">convexHull</span><span class="p">(</span><span class="n">largest_contour</span><span class="p">)</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">largest_contour</span><span class="p">)</span>
+
+        <span class="c1"># Calculate general cell characteristics</span>
+        <span class="k">if</span> <span class="n">M</span><span class="p">[</span><span class="s2">&quot;m00&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">centroid_x</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">centroid_y</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">centroid_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="s2">&quot;m10&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="s2">&quot;m00&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="n">x1</span>
+            <span class="n">centroid_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="s2">&quot;m01&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">M</span><span class="p">[</span><span class="s2">&quot;m00&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="n">y1</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Centroid_X&quot;</span><span class="p">,</span> <span class="n">centroid_x</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Centroid_Y&quot;</span><span class="p">,</span> <span class="n">centroid_y</span><span class="p">)</span>
+
+        <span class="n">cX</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">cY</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">y1</span> <span class="o">+</span> <span class="n">y2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__cX&quot;</span><span class="p">,</span> <span class="n">cX</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__cY&quot;</span><span class="p">,</span> <span class="n">cY</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__X1&quot;</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Y1&quot;</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__X2&quot;</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Y2&quot;</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+
+
+        <span class="n">total_cell_fill</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+        <span class="n">bbox_area</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+        <span class="c1"># should be equal to cell area, in pixels</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Total_Cell_Fill&quot;</span><span class="p">,</span> <span class="n">total_cell_fill</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Total_BBox_Area&quot;</span><span class="p">,</span> <span class="n">bbox_area</span><span class="p">)</span>
+        <span class="c1"># ratio of bbox that is filled by the cell (not particularly useful)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Fill_Coverage&quot;</span><span class="p">,</span> <span class="n">total_cell_fill</span> <span class="o">/</span> <span class="n">bbox_area</span><span class="p">)</span>
+
+        <span class="c1"># shape analysis</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">largest_contour</span><span class="p">)</span>
+        <span class="n">perimeter</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">largest_contour</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Area&quot;</span><span class="p">,</span> <span class="n">area</span><span class="p">)</span>
+         <span class="c1"># len(cell.outline) # Perimeter in pixels (# of coordinate points in outline)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Perimeter&quot;</span><span class="p">,</span> <span class="n">perimeter</span><span class="p">)</span>
+        <span class="c1"># width of bbox over length of bbox</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Elongation&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">))</span>
+
+        <span class="n">convex_perimeter</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">convex_hull</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">convex_area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">convex_hull</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Convex_Perimeter&quot;</span><span class="p">,</span> <span class="n">convex_perimeter</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Convex_Area&quot;</span><span class="p">,</span> <span class="n">convex_area</span><span class="p">)</span>
+
+        <span class="c1"># http://www.cyto.purdue.edu/cdroms/micro2/content/education/wirth10.pdf</span>
+        <span class="n">circularity</span> <span class="o">=</span> <span class="n">safe_divide</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">area</span><span class="p">,</span> <span class="n">convex_perimeter</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Circularity&quot;</span><span class="p">,</span> <span class="n">circularity</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Convexity&quot;</span><span class="p">,</span> <span class="n">safe_divide</span><span class="p">(</span><span class="n">convex_perimeter</span><span class="p">,</span> <span class="n">perimeter</span><span class="p">))</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Solidity&quot;</span><span class="p">,</span> <span class="n">safe_divide</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">convex_area</span><span class="p">))</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Aspect_Ratio&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">y2</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x2</span><span class="o">-</span><span class="n">x1</span><span class="p">))</span> <span class="c1"># height / width</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Compactness&quot;</span><span class="p">,</span> <span class="n">safe_divide</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">area</span><span class="p">),</span> <span class="p">(</span><span class="n">perimeter</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+
+        <span class="c1"># TODO: try removing this since this is done in intensity analysis and this is confusing.</span>
+        <span class="k">for</span> <span class="n">chan_name</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">crop_chan_cell</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">chan</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+            <span class="n">total_intensity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">crop_chan_cell</span><span class="p">)</span>
+
+            <span class="c1"># proportion of cell with non-zero pixels of channel k</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Cell_Coverage_of_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">safe_divide</span><span class="p">(</span><span class="n">total_intensity</span><span class="p">,</span> <span class="n">total_cell_fill</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="IntensityAnalysis">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IntensityAnalysis</span><span class="p">(</span><span class="n">CellAnalysisMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analysis module for stats about the intensity of the cell per channel.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Intensity Analysis&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;INTENSITY&#39;</span>
+
+<div class="viewcode-block" id="IntensityAnalysis.analyze_cell">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis.analyze_cell">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_cell</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">):</span>
+        <span class="n">total_cell_fill</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">chan_name</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">crop_chan</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">chan</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+
+            <span class="n">total_intensity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">crop_chan</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Total_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">total_intensity</span><span class="p">)</span>
+
+            <span class="n">average_intensity</span> <span class="o">=</span> <span class="n">total_intensity</span> <span class="o">/</span> <span class="n">total_cell_fill</span> <span class="k">if</span> <span class="n">total_cell_fill</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Average_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">average_intensity</span><span class="p">)</span>
+
+            <span class="c1"># Calculate percentiles for the cell only(exclude mask).</span>
+            <span class="n">cell_only</span> <span class="o">=</span> <span class="n">crop_chan</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="nb">bool</span><span class="p">)]</span>
+            <span class="n">first_quartile</span><span class="p">,</span> <span class="n">median</span><span class="p">,</span> <span class="n">third_quartile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">cell_only</span><span class="p">,</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">])</span>
+
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__25th_Percentile_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">first_quartile</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Median_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">median</span><span class="p">)</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__75th_Percentile_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">third_quartile</span><span class="p">)</span>
+
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__STD_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">crop_chan</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ObjectAnalysis">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjectAnalysis</span><span class="p">(</span><span class="n">CellAnalysisMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analysis module for stats about the physical object characteristics.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Object Analysis&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;OBJECT&#39;</span>
+
+    <span class="c1"># To make the code more readable, removing redundant code for simple stats.</span>
+    <span class="c1"># These are mappings of statistic names to functions that calculate them.</span>
+    <span class="n">_simple_stats_fns</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Perimeter&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="s1">&#39;Convex_Perimeter&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">convex_hull</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">arcLength</span><span class="p">(</span><span class="n">convex_hull</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="s1">&#39;Convex_Area&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">convex_hull</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">convex_hull</span><span class="p">),</span>
+        <span class="s1">&#39;Min_Enclosing_Radius&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">minEnclosingCircle</span><span class="p">(</span><span class="n">cnt</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="n">_per_stat_calcs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Max&quot;</span><span class="p">:</span> <span class="nb">max</span><span class="p">,</span>
+        <span class="s2">&quot;Mean&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
+        <span class="s2">&quot;STD&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">,</span>
+        <span class="s2">&quot;Min&quot;</span><span class="p">:</span> <span class="nb">min</span><span class="p">,</span>
+        <span class="s2">&quot;25th_Percentile&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+        <span class="s2">&quot;Median&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">,</span>
+        <span class="s2">&quot;75th_Percentile&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="ObjectAnalysis.analyze_cell">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis.analyze_cell">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_cell</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds statistics to the cell corresponding to the</span>
+<span class="sd">        physics characteristics of the objects per channel.</span>
+
+<span class="sd">        Precondition:</span>
+<span class="sd">            - The cell has been segmented.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cell (Cell): Cell to add stats to.</span>
+<span class="sd">            fov (FOV): FOV the cell belongs to.</span>
+
+<span class="sd">        Additional Info:</span>
+<span class="sd">            The object analysis property will be False for\</span>
+<span class="sd">            channels where no objects could be detected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">add_thresh_channels</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">chan_name</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">cropped_chan</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">chan</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+
+            <span class="c1"># Reverse since ndi.center_of_mass returns (y, x)</span>
+            <span class="n">chan_center_of_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">ndi</span><span class="o">.</span><span class="n">center_of_mass</span><span class="p">(</span><span class="n">cropped_chan</span><span class="p">))</span>
+
+            <span class="c1"># This isn&#39;t cropped, so the computed coordinates are in the right place of the image.</span>
+            <span class="n">thresh_cell</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_processed_channel</span><span class="p">(</span><span class="s2">&quot;thresh&quot;</span><span class="p">,</span> <span class="n">chan_name</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+
+            <span class="n">contours</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">thresh_cell</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_SIMPLE</span><span class="p">)</span>
+
+            <span class="n">simple_stats</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+            <span class="n">simple_stats_max</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">max_area</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># to be set by the loop.</span>
+
+            <span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">contours</span><span class="p">:</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+
+                <span class="c1"># Ignore the noise.</span>
+                <span class="k">if</span> <span class="n">area</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">convex_hull</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">convexHull</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+                <span class="n">is_larger_object</span> <span class="o">=</span> <span class="n">area</span> <span class="o">&gt;</span> <span class="n">max_area</span>
+
+                <span class="c1"># Collect all the simple stats into lists, and track them for the max object.</span>
+                <span class="k">for</span> <span class="n">stat_type</span><span class="p">,</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_simple_stats_fns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="n">convex_hull</span><span class="p">)</span>
+                    <span class="n">simple_stats</span><span class="p">[</span><span class="n">stat_type</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">is_larger_object</span><span class="p">:</span>
+                        <span class="n">simple_stats_max</span><span class="p">[</span><span class="n">stat_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+                <span class="n">moments</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">moments</span><span class="p">[</span><span class="s1">&#39;m00&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">cx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moments</span><span class="p">[</span><span class="s1">&#39;m10&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">moments</span><span class="p">[</span><span class="s1">&#39;m00&#39;</span><span class="p">])</span>
+                    <span class="n">cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">moments</span><span class="p">[</span><span class="s1">&#39;m01&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">moments</span><span class="p">[</span><span class="s1">&#39;m00&#39;</span><span class="p">])</span>
+
+                    <span class="c1"># distance from channel center of mass</span>
+                    <span class="n">curr_dist_com</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">dist</span><span class="p">([</span><span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">],</span> <span class="n">chan_center_of_mass</span><span class="p">)</span>
+                    <span class="n">simple_stats</span><span class="p">[</span><span class="s1">&#39;Distance_From_Center_of_Mass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_dist_com</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">is_larger_object</span><span class="p">:</span>
+                    <span class="n">simple_stats_max</span><span class="p">[</span><span class="s1">&#39;Area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area</span>
+                <span class="n">simple_stats</span><span class="p">[</span><span class="s1">&#39;Area&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">area</span><span class="p">)</span>
+                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Statistics for the largest object (e.g. the nucleus)</span>
+            <span class="k">for</span> <span class="n">stat_type</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_simple_stats_fns</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">[</span><span class="s1">&#39;Area&#39;</span><span class="p">]):</span>
+                <span class="n">cell_stat_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Largest_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Object_</span><span class="si">{</span><span class="n">stat_type</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="n">cell_stat_name</span><span class="p">,</span> <span class="n">simple_stats_max</span><span class="p">[</span><span class="n">stat_type</span><span class="p">])</span>
+
+            <span class="c1"># Absolute statistics</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Object_Count&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+
+            <span class="c1"># Object level statistics.</span>
+            <span class="n">stat_iter</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_simple_stats_fns</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+                <span class="p">[</span><span class="s1">&#39;Area&#39;</span><span class="p">,</span> <span class="s1">&#39;Distance_From_Center_of_Mass&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">stat_type</span> <span class="ow">in</span> <span class="n">stat_iter</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">sub_stat</span><span class="p">,</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_per_stat_calcs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">cell_stat_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">sub_stat</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">_Object_</span><span class="si">{</span><span class="n">stat_type</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">simple_stats</span><span class="p">[</span><span class="n">stat_type</span><span class="p">])</span> <span class="k">if</span> <span class="n">simple_stats</span><span class="p">[</span><span class="n">stat_type</span><span class="p">]</span> <span class="k">else</span> <span class="mf">0.0</span>
+                    <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="n">cell_stat_name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CompartmentAnalysis">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompartmentAnalysis</span><span class="p">(</span><span class="n">CellAnalysisMixin</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Compartment Analysis&#39;</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;COMPARTMENT&#39;</span>
+    <span class="n">nuclear_chan_name</span> <span class="o">=</span> <span class="s1">&#39;DAPI&#39;</span>
+
+<div class="viewcode-block" id="CompartmentAnalysis.analyze_cell">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.analyze_cell">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_cell</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the statistics about the intensities of the</span>
+<span class="sd">        area localized in the nucleus, cytoplasm and</span>
+<span class="sd">        remaining periphery, for each channel.</span>
+
+<span class="sd">        Precondition:</span>
+<span class="sd">            - The cell has been segmented.</span>
+<span class="sd">            - A nucleus is required in the nuclear channel. Otherwise no stats will be added.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cell (Cell): Cell to add the statistics to.</span>
+<span class="sd">            fov (FOV): FOV the cell belongs to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eroded</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">erode</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getStructuringElement</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_ELLIPSE</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">cell_outline</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">eroded</span><span class="p">)</span>
+
+        <span class="n">nuclear_chan</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">nuclear_chan_name</span><span class="p">)</span>
+        <span class="n">cropped_nuclear_fill</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">nuclear_chan</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span>
+        <span class="n">iter_threshold</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">li_threshold</span> <span class="o">=</span> <span class="n">threshold_li</span><span class="p">(</span><span class="n">cropped_nuclear_fill</span><span class="p">,</span> <span class="n">iter_callback</span><span class="o">=</span><span class="n">iter_threshold</span><span class="o">.</span><span class="n">append</span><span class="p">)</span>
+
+        <span class="c1"># Fill the nucleus completely. This might remove some nuclear patterns, but holes in the middle are unlikely.</span>
+        <span class="c1"># We choose only the largest shape as the nucleus.</span>
+        <span class="n">nuclear_fill_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">cropped_nuclear_fill</span> <span class="o">&gt;</span> <span class="n">li_threshold</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span> <span class="o">*</span> <span class="o">~</span><span class="p">(</span><span class="n">cell_outline</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Draw contours around nuclear image. Drop the smallest ones. Use polyfill to obtain the filled nucleus. May not work for all.</span>
+        <span class="n">nuc_cnts</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">nuclear_fill_mask</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_EXTERNAL</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_NONE</span><span class="p">)</span>
+
+        <span class="c1"># Skip analysis if there is no nucleus found.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nuc_cnts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">max_contour</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">nuc_cnts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">)</span>
+        <span class="n">nuclear_fill_mask</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">nuclear_fill_mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="p">[</span><span class="n">max_contour</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">FILLED</span><span class="p">)</span>
+
+        <span class="n">no_nucleus</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">nuclear_fill_mask</span><span class="p">)</span>
+        <span class="n">no_periphery</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">cell_outline</span><span class="p">)</span>
+        <span class="n">cytoplasm</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">no_periphery</span><span class="p">,</span> <span class="n">no_nucleus</span><span class="p">)</span>
+
+        <span class="n">add_thresh_channels</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
+        <span class="c1"># Now that we have the regions, we can do per-channel analysis.</span>
+        <span class="c1"># Approach 1 - We can use object segmentation library for skimage, which is probably more efficient</span>
+        <span class="c1"># https://scikit-image.org/docs/stable/auto_examples/applications/plot_colocalization_metrics.html</span>
+
+        <span class="c1"># The intersection coefficient returns the proportion of a binary segmentation mask overlaps with another binary mask</span>
+        <span class="c1"># This would work well for our case.</span>
+
+        <span class="c1"># Approach 2 - We can segment objects and get the proportion of objects that are located in each channel.</span>
+        <span class="c1"># This works well as well.</span>
+        <span class="k">for</span> <span class="n">chan_name</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">cropped_chan</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">chan</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+            <span class="n">thresh_chan</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">cropped_img</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">get_processed_channel</span><span class="p">(</span><span class="s2">&quot;thresh&quot;</span><span class="p">,</span> <span class="n">chan_name</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">bbox</span><span class="p">)</span> <span class="o">*</span> <span class="n">cell</span><span class="o">.</span><span class="n">mask</span>
+
+            <span class="c1"># Apply all the masks to the channel.</span>
+            <span class="n">nuc_localized_chan</span> <span class="o">=</span> <span class="n">cropped_chan</span> <span class="o">*</span> <span class="n">nuclear_fill_mask</span>
+            <span class="n">cyto_localized_chan</span> <span class="o">=</span> <span class="n">cropped_chan</span> <span class="o">*</span> <span class="n">cytoplasm</span>
+            <span class="n">periphery_localized_chan</span> <span class="o">=</span> <span class="n">cropped_chan</span> <span class="o">*</span> <span class="n">cell_outline</span>
+
+            <span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">calculate_intensity_features</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">nuc_localized_chan</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Nuclear-localized_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">calculate_intensity_features</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">cyto_localized_chan</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Cytoplasm-localized_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">calculate_intensity_features</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">periphery_localized_chan</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Periphery-localized_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">contours</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findContours</span><span class="p">(</span><span class="n">thresh_chan</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">RETR_LIST</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CHAIN_APPROX_NONE</span><span class="p">)</span> <span class="c1"># contours for shape analysis using cv2</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">contours</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Binary canvas of all non-noise contours(area &gt; 2).</span>
+            <span class="n">cnt_canvas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+            <span class="n">to_draw</span> <span class="o">=</span> <span class="p">[</span><span class="n">cnt</span> <span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">contours</span> <span class="k">if</span> <span class="n">cv2</span><span class="o">.</span><span class="n">contourArea</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">drawContours</span><span class="p">(</span><span class="n">cnt_canvas</span><span class="p">,</span> <span class="n">to_draw</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">thickness</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">FILLED</span><span class="p">)</span>
+
+            <span class="n">total_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cnt_canvas</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">total_area</span><span class="p">:</span> <span class="c1"># prevent dividing by 0</span>
+                <span class="c1"># Overlap masks for the contour and the nucleus (bitwise_and)</span>
+                <span class="n">cnt_nuc</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">cnt_canvas</span><span class="p">,</span> <span class="n">nuclear_fill_mask</span><span class="p">)</span>
+                <span class="n">cnt_periphery</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">cnt_canvas</span><span class="p">,</span> <span class="n">cell_outline</span><span class="p">)</span>
+                <span class="n">cnt_cyto</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">bitwise_and</span><span class="p">(</span><span class="n">cnt_canvas</span><span class="p">,</span> <span class="n">cytoplasm</span><span class="p">)</span>
+
+                <span class="c1"># The percentage of nucleus located inside the cell (mask).</span>
+                <span class="c1"># We can sum since all the values are binary.</span>
+                <span class="n">nuc_proportion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cnt_nuc</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_area</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Nuclear-localized_Proportion_of_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">nuc_proportion</span><span class="p">)</span>
+
+                <span class="n">periphery_proportion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cnt_periphery</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_area</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Periphery-localized_Proportion_of_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">periphery_proportion</span><span class="p">)</span>
+
+                <span class="n">cyto_proportion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cnt_cyto</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_area</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Cytoplasm-localized_Proportion_of_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">cyto_proportion</span><span class="p">)</span>
+
+                <span class="c1"># Should always be 1.</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Total_Compartmental_Localization_Proportion_of_</span><span class="si">{</span><span class="n">chan_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">periphery_proportion</span> <span class="o">+</span> <span class="n">nuc_proportion</span> <span class="o">+</span> <span class="n">cyto_proportion</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="CompartmentAnalysis.calculate_intensity_features">
+<a class="viewcode-back" href="../../../api/paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.calculate_intensity_features">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_intensity_features</span><span class="p">(</span><span class="n">cell</span><span class="p">:</span> <span class="n">Cell</span><span class="p">,</span> <span class="n">intensity_image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate basic intensity features given a certain input</span>
+<span class="sd">        intensity image. For example, you may want to input an image of</span>
+<span class="sd">        intensities that are solely in the nucleus.</span>
+
+<span class="sd">        Features will NOT be scaled.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cell (Cell): The cell whose profile will be modified.</span>
+<span class="sd">            intensity_image (np.ndarray): Image containing intensities (0-65535).</span>
+<span class="sd">            feature_name (str): Name of the feature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Total_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">intensity_image</span><span class="p">))</span>
+
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Minimum_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">intensity_image</span><span class="p">))</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Average_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">intensity_image</span><span class="p">))</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Maximum_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">intensity_image</span><span class="p">))</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__STD_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">intensity_image</span><span class="p">))</span>
+
+        <span class="n">first_quartile</span><span class="p">,</span> <span class="n">median</span><span class="p">,</span> <span class="n">third_quartile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">intensity_image</span><span class="p">,</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">])</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__25th_Percentile_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">first_quartile</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__Median_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">median</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">add_statistic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CompartmentAnalysis</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">__75th_Percentile_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s2">_Intensity&quot;</span><span class="p">,</span> <span class="n">third_quartile</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, David Nguyen and Chao Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

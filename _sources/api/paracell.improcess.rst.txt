@@ -1,0 +1,58 @@
+paracell.improcess
+==================
+
+paracell.improcess.channels
+---------------------------
+
+.. automodule:: paracell.improcess.channels
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.improcess.debug
+------------------------
+
+.. automodule:: paracell.improcess.debug
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.improcess.illumination
+-------------------------------
+
+.. automodule:: paracell.improcess.illumination
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.improcess.manipulation
+-------------------------------
+
+.. automodule:: paracell.improcess.manipulation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.improcess.maskremover
+------------------------------
+
+.. automodule:: paracell.improcess.maskremover
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.improcess.ops
+----------------------
+
+.. automodule:: paracell.improcess.ops
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.improcess.plotting
+---------------------------
+
+.. automodule:: paracell.improcess.plotting
+   :members:
+   :undoc-members:
+   :show-inheritance:

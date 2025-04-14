@@ -1,0 +1,58 @@
+paracell
+========
+
+cell_painting
+-------------
+
+.. automodule:: paracell.cell_painting
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+config
+------
+
+.. automodule:: paracell.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+manager
+-------
+
+.. automodule:: paracell.manager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell_io
+-----------
+
+.. automodule:: paracell.paracell_io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paradata
+--------
+
+.. automodule:: paracell.paradata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paralog
+-------
+
+.. automodule:: paracell.paralog
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pipeline
+--------
+
+.. automodule:: paracell.pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,74 @@
+paracell.segmentation
+=====================
+
+paracell.segmentation.config
+----------------------------
+
+.. automodule:: paracell.segmentation.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.conversions
+---------------------------------
+
+.. automodule:: paracell.segmentation.conversions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.dataset
+-----------------------------
+
+.. automodule:: paracell.segmentation.dataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.engine
+----------------------------
+
+.. automodule:: paracell.segmentation.engine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.eval
+--------------------------
+
+.. automodule:: paracell.segmentation.eval
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.segmentors
+--------------------------------
+
+.. automodule:: paracell.segmentation.segmentors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.train
+---------------------------
+
+.. automodule:: paracell.segmentation.train
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.transforms
+--------------------------------
+
+.. automodule:: paracell.segmentation.transforms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.segmentation.utils
+---------------------------
+
+.. automodule:: paracell.segmentation.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

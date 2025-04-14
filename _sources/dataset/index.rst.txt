@@ -1,0 +1,36 @@
+Dataset Formats
+===============
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+
+   raw_image_dir
+   pipeline_output
+   training
+   model
+   seg
+
+Paracell uses various dataset formats for each of its pipelines. This page will provide a brief description on each. A more detailed explanation can be found on the following pages.
+
+:doc:`Raw Images Directory <raw_image_dir>`
+-------------------------------------------
+Folder containing ``.tif`` files for the raw microscopy images.
+
+:doc:`Pipeline Output <pipeline_output>`
+----------------------------------------
+Folder containing extracted features and cell segmentation data.
+
+:doc:`Training Dataset <training>`
+----------------------------------
+Folder with pairs of ``.tif`` files and corresponding ``_seg.npy`` files, for Cellpose model training or validation.
+
+:doc:`Model Output <model>`
+---------------------------
+Contains TensorBoard data, config, logs, and the models on every checkpoint.
+
+:doc:`Seg Files <seg>`
+----------------------
+Segmentation files, ending in ``_seg.npy`` or ``_seg.npz``, are `Cellpose outputs <https://cellpose.readthedocs.io/en/latest/outputs.html#seg-npy-output>`_ with modifications. ``_seg.npy`` are compatible with Cellpose.
+
+These contain the segmentation masks and outlines, among other things.

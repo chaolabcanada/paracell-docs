@@ -1,0 +1,44 @@
+Feature Extraction
+==================
+
+Often we want to extract morphological features from single cells for downstream analysis, such as clustering and classification.
+
+The ``paracell.feature_extraction`` module provides classes for extracting features. More specifically, the classes inside ``vision`` and ``dfe``.
+
+For the following sections, we assume that ``fov`` has channels loaded, cells segmented and created. We also assume that ``cell = fov.cells[0]`` or any cell (this is for the sake of example). The tutorial will use the ``ThreeChannelCellposeSegmentor`` for the ``fov`` examples that follow.
+
+Conventional Feature Extraction
+-------------------------------
+
+``paracell.feature_extraction.vision`` uses computer vision to extract conventional features.
+
+For this tutorial, we will use ``BasicShapeAnalysis``, but all the other analysis classes (ones that extend ``CellAnalysisMixin``) work the same way. You call ``analyze_cell`` on the the class (or class instance).
+
+.. code-block:: python
+
+   from paracell.feature_extraction.vision import BasicShapeAnalysis
+
+   BasicShapeAnalysis.analyze_cell(cell, fov)
+
+This will add the analysis information into the cell statistics dictionary. The names of all features are prefixed by prefix property of the class and generally follows upper snake case.
+
+Format: ``<prefix>__<property>``
+
+One analysis added by BasicShapeAnalysis is the area of the cell, ``BASIC_SHAPE__Area``, which can be accessed using ``cell.get_statistic``
+
+.. code-block:: python
+
+   cell.get_statistic("BASIC_SHAPE__Area")
+
+You can also convert the cell into dictionary. This is useful for turning cells into Pandas DataFrames.
+
+.. code-block:: python
+
+   cell.to_dict()
+
+Deep Feature Extraction
+-----------------------
+
+``paracell.feature_extraction.dfe`` provides classes for extracting deep features using DINOv2.
+
+The classes work the same way as conventional features.

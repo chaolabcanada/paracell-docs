@@ -1,0 +1,19 @@
+Aggregation
+===========
+
+After preforming :doc:`segmentation and feature extraction (FE) <feature_extraction>`, the cell aggregation needs to be preformed and analysis specific metadata need to be added.
+
+For these experiments, we can use the preprocess functions inside ``paracell.analysis``. Skeleton code is available inside the aggregation_qa notebook.
+
+In the config options section, fill out the variables.
+
+- ``PLATE_NAME``: Name of the plate. Should match that used for FE. 
+- ``PLATE_DATA_PATH``: ``output_dir`` from FE.
+- ``PLATEMAP_PATH``: Path to the platemap csv for this plate. It contains the variant information for each well.
+- ``AGGREGATE_SAVE_PATH``: Path to save the aggregated data. Make sure this is a parquet file.
+
+After filling out the variables, you can just run all the notebook tabs.
+
+.. note::
+
+   The current filtering done is removing cells with perimeter \<= 100 pixels, area \<= 900 pixels\ :sup:`2`, or cells which are Pbase. If any of these filtering properties needs to be reduced or removed, ``plate_info_to_parquet`` will need modifications. Otherwise, further filtering can be done during analysis in the notebook.

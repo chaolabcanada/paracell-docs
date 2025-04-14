@@ -1,0 +1,26 @@
+Misc
+====
+
+This page contains random tips about Paracell which aren't long enough for their own section.
+
+improcess
+---------
+
+There are a lot of useful functions inside ``paracell.improcess`` for image processing.
+
+It's recommended to have a look inside ``paracell.improcess.ops``!
+
+Outlines
+--------
+
+Mask formatted image, but every mask only contains the pixels on the edge.
+
+Flows
+-----
+
+Cellpose doesn't have one format of flows.
+
+- The flows saved in the seg files, follow the one listed in the `output formats <https://cellpose.readthedocs.io/en/latest/outputs.html#seg-npy-output>`_ of Cellpose.
+- The flows output of the ``CellposeModel`` are slightly different, which is listed in their `documentation <https://cellpose.readthedocs.io/en/latest/api.html#id0>`_.
+- ``cl_computed_flows`` are :reF:`Paracell's format <cl_computed_flows_description>` used for training.
+

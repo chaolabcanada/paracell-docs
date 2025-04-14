@@ -1,0 +1,40 @@
+Installation
+============
+
+Prerequisites
+-------------
+Paracell can be installed using pip. Python (and preferably a Python environment), should be installed.
+
+If you want xFormers to speed up DINO deep feature extraction, install xFormers first. See the `xFormers installation instructions <https://github.com/facebookresearch/xformers#installing-xformers>`_ for more information. It's recommended to install ``torch`` and ``torchvision`` alongside xFormers.
+
+Main Installation
+-----------------
+1. Clone the `Paracell GitHub repository <https://github.com/chaolabcanada/paracell>`_ into a folder.
+
+   .. code-block:: bash
+
+      git clone https://github.com/chaolabcanada/paracell.git
+
+2. In the terminal, navigate to the root of the Paracell directory.
+
+   .. code-block:: bash
+
+      cd paracell
+
+3. Install Paracell as experimental. Dependencies are install automatically by pip.
+
+   .. code-block:: bash
+
+      pip install -e .
+
+   For development, make sure to install dev dependencies.
+
+   .. code-block:: bash
+
+      pip install -e .[dev]
+
+After Installation
+------------------
+
+- Paracell CLI can be run with the ``paracell`` command. More info: :doc:`Paracell CLI Guide <cli>`.
+- Paracell can be imported as a Python package, ``import paracell``. More info: Paracell API Guide.

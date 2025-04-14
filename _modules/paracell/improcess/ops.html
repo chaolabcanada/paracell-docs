@@ -1,0 +1,772 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>paracell.improcess.ops - Paracell v0.0.1</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css?v=f591599d" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Paracell v0.0.1</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Paracell v0.0.1</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guides/analysis/index.html">Analysis Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Analysis Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/analysis/feature_extraction.html">Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/analysis/aggregation.html">Aggregation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/analysis/analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guides/developer/index.html">Developer Guide</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Developer Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/fov.html">FOVs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/segmentation.html">Segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/visualization.html">Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/feature_extraction.html">Feature Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/plates_wells_bulk.html">Plates, Wells, and Bulk Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guides/developer/misc.html">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">Command Line Interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../config.html">Config Structure</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../dataset/index.html">Dataset Formats</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dataset Formats</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/raw_image_dir.html">Raw Images Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/index.html">Paracell API</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Paracell API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.html">paracell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.feature_extraction.html">paracell.feature_extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.improcess.html">paracell.improcess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.segmentation.html">paracell.segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/paracell.utils.html">paracell.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for paracell.improcess.ops</h1><div class="highlight"><pre>
+<span></span><span class="c1"># general</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">filters</span><span class="p">,</span> <span class="n">util</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+
+<span class="c1"># DL</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.models.feature_extraction</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_feature_extractor</span><span class="p">,</span> <span class="n">get_graph_node_names</span>
+
+<span class="c1"># enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paralog</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_paralogger</span>
+
+<div class="viewcode-block" id="RGBColor">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.RGBColor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RGBColor</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">MAGENTA</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">CYAN</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">WHITE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">BLACK</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="thresh_img">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.thresh_img">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">thresh_img</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use Otsu&#39;s thresholding to get a binary mask from a certain channel.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image (np.ndarray): Image to be thresholded.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        thresholded_image (np.ndarray): Binary mask of the image after thresholding.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert to grayscale</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+    <span class="c1"># Threshold, obtain binary mask between 0 and 1</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">thresholded_image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_OTSU</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">thresholded_image</span></div>
+
+
+<span class="c1"># Visualizing in merged colour channels</span>
+<div class="viewcode-block" id="colour_image">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.colour_image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">colour_image</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">colour</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create image of a specific colour from a single-channel image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not a single-channel image.&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Ensure that channel dimension exists</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_3d</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="c1"># Create colour with shape</span>
+
+    <span class="n">colour</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">colour</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">image</span> <span class="o">*</span> <span class="n">colour</span></div>
+
+
+<div class="viewcode-block" id="get_composite">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.get_composite">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_composite</span><span class="p">(</span><span class="n">composite_items</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Intended for adding multiple single-coloured images together.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">composite_items</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">composite</span> <span class="o">=</span> <span class="n">composite_items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">composite</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">composite</span><span class="p">,</span> <span class="n">composite_items</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">composite</span></div>
+
+
+<div class="viewcode-block" id="show_histogram">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.show_histogram">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_histogram</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">img_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Show a histogram of one-colour images by intensities.</span>
+
+<span class="sd">    Params:</span>
+<span class="sd">        ax (mpl.axes.Axes): Axes that it will be plotted on.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calcHist</span><span class="p">(</span><span class="n">img</span><span class="p">,[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[</span><span class="mi">257</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">257</span><span class="p">])</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hist</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Histogram for </span><span class="si">{</span><span class="n">img_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="compute_bbox">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.compute_bbox">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_bbox</span><span class="p">(</span><span class="n">outline</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes bboxes using outline coordinates obtained from cellpose segmentation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        outline: Array of array of [x y] points that make up an outline (all around the cell).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        bbox: Tuple in x1, x2, y1, y2 format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># compute bbox</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">outline</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># min x</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">outline</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># max x</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">outline</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># min y</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">outline</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># max y</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="draw_outlines_and_get_bbox">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.draw_outlines_and_get_bbox">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_outlines_and_get_bbox</span><span class="p">(</span><span class="n">outlines</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate outlines and bbox coordinates from the Cellpose output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        outlines (list): Cellpose outlines.</span>
+<span class="sd">        template (np.ndarray): Template for drawing - usually the original image.</span>
+<span class="sd">        indices (list): Indices in the outlines list that the bboxes should be drawn for.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        drawn (np.ndarray): Image with bboxes drawn on them.</span>
+<span class="sd">        bbox (tuple): Tuple of bounding box coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outlines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No outlines found.&quot;</span><span class="p">)</span>
+    
+    <span class="n">drawn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+        <span class="n">outline</span> <span class="o">=</span> <span class="n">outlines</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">outline</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">drawn</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span> <span class="c1"># Set to max intensity.</span>
+        
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">compute_bbox</span><span class="p">(</span><span class="n">outline</span><span class="p">)</span>
+        <span class="c1">#cv2.rectangle(drawn, (x1, y1), (x2, y2), (255, 255, 255), 2)</span>
+
+    
+    <span class="k">return</span> <span class="n">drawn</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_cell_fill_from_im">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.get_cell_fill_from_im">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cell_fill_from_im</span><span class="p">(</span><span class="n">outline</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get cell fill for a single cell. (Replaces get_cell_fill.)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        coords: Tuple of x1, y1, x2, y2 for bbox of cell</span>
+<span class="sd">        image: Original image of the entire section of the plate</span>
+<span class="sd">        index: Index/unique identifier of the cell</span>
+<span class="sd">        masks: list of mask object from cellpose</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cell_fill</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">cell_fill</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fillPoly</span><span class="p">(</span><span class="n">cell_fill</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">([</span><span class="n">outline</span><span class="p">]),</span> <span class="mi">255</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cell_fill</span></div>
+
+
+<div class="viewcode-block" id="get_cell_fill">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.get_cell_fill">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cell_fill</span><span class="p">(</span><span class="n">outline</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get cell fill for a single cell. (Replaces get_cell_fill.)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        coords: Tuple of x1, y1, x2, y2 for bbox of cell</span>
+<span class="sd">        shape: Shape of the original FOV image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cell_fill</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">cell_fill</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">fillPoly</span><span class="p">(</span><span class="n">cell_fill</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">([</span><span class="n">outline</span><span class="p">]),</span> <span class="mi">255</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cell_fill</span></div>
+
+
+<div class="viewcode-block" id="crop_and_multiply">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.crop_and_multiply">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">crop_and_multiply</span><span class="p">(</span><span class="n">bbox</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">image1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">image2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Usually used to crop and multiply binary cell fill and another channel (e.g. DAPI/GFP/Phalloidin/Cy3/Cy5).</span>
+
+<span class="sd">    Obtains items that are exclusively within the cell.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        bbox: Coords of bounding box to crop to.</span>
+<span class="sd">        image1: First image.</span>
+<span class="sd">        image2: Second image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">bbox</span>
+    <span class="n">cropped</span> <span class="o">=</span> <span class="n">image1</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">image2</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># crop + multiply at once</span>
+
+    <span class="k">return</span> <span class="n">cropped</span></div>
+
+
+<div class="viewcode-block" id="cropped_img">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.cropped_img">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cropped_img</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Crop image to the specified bounding box.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bbox (tuple): x1, y1, x2, y2</span>
+<span class="sd">        img (np.ndarray): Original image</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: Cropped image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">bbox</span>
+
+    <span class="k">return</span> <span class="n">img</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_masked_img">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.get_masked_img">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_masked_img</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shapes are not the same! Image </span><span class="si">{</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, mask: </span><span class="si">{</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Mask is not binary!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Element-wise multiplication</span>
+    <span class="n">masked_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">masked_img</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">img</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Broadcasted&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">masked_img</span></div>
+
+
+
+<div class="viewcode-block" id="get_cropped_cell_chan_imgs">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.get_cropped_cell_chan_imgs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cropped_cell_chan_imgs</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">fov_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get cropped cell channel images in dict format.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coords (tuple): Coordinates to crop cell images to.</span>
+<span class="sd">        fov_dict (dict): OrderedDict containing {chan_name, fov_chan_img} - fov.channels.items()</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Dict containing cropped cell channel images. {chan_name: cropped_cell_chan_img, ...}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cell_chan_imgs</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">chan_name</span><span class="p">,</span> <span class="n">chan_img</span> <span class="ow">in</span> <span class="n">fov_dict</span><span class="p">:</span>
+        <span class="n">cell_chan_img</span> <span class="o">=</span> <span class="n">cropped_img</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">chan_img</span><span class="p">)</span>
+
+        <span class="n">cell_chan_imgs</span><span class="p">[</span><span class="n">chan_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_chan_img</span>
+    
+    <span class="k">return</span> <span class="n">cell_chan_imgs</span></div>
+
+
+<div class="viewcode-block" id="draw_outline">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.draw_outline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_outline</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">outline</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">colour</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)):</span>
+    <span class="n">outline_canvas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">outline</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">outline_canvas</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+
+    <span class="n">outline_img</span> <span class="o">=</span> <span class="n">get_composite</span><span class="p">(</span><span class="n">colour_image</span><span class="p">(</span><span class="n">outline_canvas</span><span class="p">,</span> <span class="n">colour</span><span class="p">),</span> <span class="c1"># make the outlines green</span>
+                                           <span class="n">img</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">outline_img</span></div>
+
+
+<div class="viewcode-block" id="gaussian_blur_and_otsu_threshold">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.gaussian_blur_and_otsu_threshold">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_blur_and_otsu_threshold</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">blur_sigma</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply Gaussian blur followed by Otsu thresholding to an input image using skimage.</span>
+
+<span class="sd">    Refer to skimage docs for more detail: https://scikit-image.org/docs/stable/api/skimage.filters.html</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image (np.ndarray): Input grayscale image as a NumPy array.</span>
+<span class="sd">        blur_sigma (float, optional): Standard deviation for Gaussian blur.</span>
+<span class="sd">            Larger values will result in a more pronounced blur. Defaults to 6.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: Thresholded binary image after Gaussian blur and Otsu thresholding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Convert to grayscale if necessary</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+
+    <span class="c1"># Apply Gaussian blur and Otsu&#39;s thresholding</span>
+    <span class="n">blurred_image</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">blur_sigma</span><span class="p">)</span>
+    <span class="n">threshold_value</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">threshold_otsu</span><span class="p">(</span><span class="n">blurred_image</span><span class="p">)</span>
+
+    <span class="c1"># Retain np.uint8 to be cross-compatible with the rest of the OpenCV operations.</span>
+    <span class="n">thresholded_image</span> <span class="o">=</span> <span class="n">blurred_image</span> <span class="o">&gt;</span> <span class="n">threshold_value</span>
+    <span class="n">thresholded_image</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">img_as_ubyte</span><span class="p">(</span><span class="n">thresholded_image</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">thresholded_image</span></div>
+
+
+<div class="viewcode-block" id="centre_paste">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.centre_paste">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">centre_paste</span><span class="p">(</span><span class="n">to_paste</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">canvas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an image with the pasted image in the middle of a blank canvas of a specified size.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        to_paste (np.ndarray): Image to be pasted in the middle.</span>
+<span class="sd">        canvas (np.ndarray): Image of the size of the square blank canvas to be pasted upon.</span>
+<span class="sd">        mode (str): Mode of pasting; defaults to &quot;static&quot;. </span>
+<span class="sd">            - &quot;static&quot; mode ensures that the canvas is at least 1 pixel bigger than to_paste for all dimensions.</span>
+<span class="sd">            - &quot;dynamic&quot; mode pastes to_paste in the middle of a SQUARE canvas depending on the size of to_paste (without cropping). </span>
+<span class="sd">        inplace (bool): Whether or not the original image will be modified and returned by the function.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: Square image with the to_paste image pasted in the middle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Throw error if the size of the image is greater than the canvas size</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;static&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Canvas is too small to paste to_paste&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;dynamic&quot;</span><span class="p">:</span>
+        <span class="c1"># Get larger dimension of width/height from the original image and add one</span>
+        <span class="n">dim_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">canvas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_size</span><span class="p">,</span> <span class="n">dim_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">canvas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">dim_size</span><span class="p">,</span> <span class="n">dim_size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Image may not be in the correct format. Should be H x W x C.&quot;</span><span class="p">)</span>
+
+
+    <span class="n">cX</span><span class="p">,</span> <span class="n">cY</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">canvas</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">get_paralogger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Image may not in the correct format. Should be H x W x C. Got format: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">to_paste</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Paste to_paste in the middle of canvas</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">cX</span> <span class="o">-</span> <span class="n">w</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">cX</span> <span class="o">+</span> <span class="n">w</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">cY</span> <span class="o">-</span> <span class="n">h</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">cY</span> <span class="o">+</span> <span class="n">h</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="c1"># Adjust the coordinates if the size of to_paste is odd, ensuring that the final height and width match the size of to_paste</span>
+    <span class="n">nW</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+    <span class="n">nH</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span>
+
+    <span class="k">if</span> <span class="n">nW</span> <span class="o">&gt;</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">x2</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nW</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">:</span>
+        <span class="n">x2</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nH</span> <span class="o">&gt;</span> <span class="n">h</span><span class="p">:</span>
+        <span class="n">y2</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">nH</span> <span class="o">&lt;</span> <span class="n">h</span><span class="p">:</span>
+        <span class="n">y2</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># Check to ensure that the final height and width match the size of to_paste</span>
+    <span class="n">W_adjusted</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+    <span class="n">H_adjusted</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span>
+
+    <span class="k">if</span> <span class="n">W_adjusted</span> <span class="o">!=</span> <span class="n">w</span> <span class="ow">or</span> <span class="n">H_adjusted</span> <span class="o">!=</span> <span class="n">h</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final height and width do not match the size of to_paste. h = </span><span class="si">{</span><span class="n">H_adjusted</span><span class="si">}</span><span class="s2">, w = </span><span class="si">{</span><span class="n">W_adjusted</span><span class="si">}</span><span class="s2">. Original: h = </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">, w = </span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Paste to_paste in the middle of the canvas, given the coordinates</span>
+    <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+        <span class="n">canvas</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_paste</span>
+        <span class="k">return</span> <span class="n">canvas</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">final_canvas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
+        <span class="n">final_canvas</span><span class="p">[</span><span class="n">y1</span><span class="p">:</span><span class="n">y2</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span><span class="n">x2</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_paste</span>
+
+    <span class="k">return</span> <span class="n">final_canvas</span></div>
+
+
+<div class="viewcode-block" id="expand_sqcrop">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.expand_sqcrop">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">expand_sqcrop</span><span class="p">(</span><span class="n">bboxes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">multiplier</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to expand an existing crop by a certain multiplier.</span>
+<span class="sd">    Retains center of image while making it a square.</span>
+<span class="sd">    Does not check for overly expanded bboxes (outside of bounds).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bboxes (tuple): (x1, y1, x2, y2)</span>
+<span class="sd">        multiplier (float): Multiplier by which the largest of (height, width)</span>
+<span class="sd">        will be multiplied by</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int_coords: List of expanded coords (int).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">bboxes</span>
+
+    <span class="c1"># Get midpoint</span>
+    <span class="n">cX</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">cY</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">+</span> <span class="n">y2</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="c1"># Calculate height/width</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span>
+
+    <span class="c1"># Calculate target height/width</span>
+    <span class="n">target_h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">multiplier</span>
+    <span class="n">target_w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">multiplier</span>
+
+    <span class="c1"># Square expansion range (for all axes), starting from center</span>
+    <span class="n">target_expansion</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">target_h</span><span class="p">,</span> <span class="n">target_w</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">cX</span> <span class="o">-</span> <span class="n">target_expansion</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">cX</span> <span class="o">+</span> <span class="n">target_expansion</span>
+    <span class="n">y1</span> <span class="o">=</span> <span class="n">cY</span> <span class="o">-</span> <span class="n">target_expansion</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">cY</span> <span class="o">+</span> <span class="n">target_expansion</span>    
+
+    <span class="n">float_coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">]</span>
+    <span class="n">int_coords</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">float_coords</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">int_coords</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">int_coords</span></div>
+
+
+<div class="viewcode-block" id="is_indexable">
+<a class="viewcode-back" href="../../../api/paracell.improcess.html#paracell.improcess.ops.is_indexable">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_indexable</span><span class="p">(</span><span class="n">coords</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">array</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if coords of an image can be indexed</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coords (tuple): x1, y1, x2, y2</span>
+<span class="sd">        array (np.ndarray): 2D array to be indexed</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">coords</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">maxX</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">maxY</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">]</span>
+
+    <span class="n">bounds</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxX</span><span class="p">),</span> <span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxY</span><span class="p">)}</span>
+
+    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]:</span>
+        <span class="n">curr_bounds</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">zi</span> <span class="ow">in</span> <span class="n">z</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">zi</span> <span class="ow">or</span> <span class="n">zi</span> <span class="o">&gt;</span> <span class="n">curr_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+    
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, David Nguyen and Chao Lab
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    </body>
+</html>

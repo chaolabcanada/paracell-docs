@@ -1,0 +1,24 @@
+Welcome To Paracell
+===================
+Paracell is a cell analysis pipeline that segments, extracts features, and analyzes cells from raw microscopy data.
+
+Paracell is both a CLI and a python package.
+
+Table of Contents
+-----------------
+.. toctree::
+   :maxdepth: 2
+
+   install
+   guides/analysis/index
+   guides/developer/index
+   cli
+   config
+   dataset/index
+   api/index
+
+Indices and Tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`

@@ -1,0 +1,100 @@
+FOVs
+====
+
+An FOV is a class that represents a field of view inside a well. It contains the image channels, cells, and metadata corresponding to that physical region. The majority of Paracell analysis is centered around processing FOVs.
+
+FOVs are found, along with wells and plates, inside the ``paradata`` module.
+
+.. code-block:: python
+
+   from paracell.paradata import FOV
+
+Creating FOVs
+-------------
+FOVs can be created directly using the class constructor.
+
+.. code-block:: python
+
+   fov = FOV("A2--W00002--P00064--Z00002--T00000")
+
+The argument passed in is the FOV prefix. This encodes the well and position information of the FOV, and follows :ref:`this <chao_lab_image_name_format>` format.
+
+FOV Channels
+------------
+
+The ``channels`` property is a dictionary, with the keys being the name of the channel, and the value being the grayscale images (numpy array). Channels can be manually added, typically from loading grayscale images. For the following example, we will just create a random numpy image.
+
+.. code-block:: python
+
+   fov.channels["FITC"] = np.random.randint(
+      0, 65535, (40, 40), dtype=np.uint16
+   )
+
+FOVs also contain a processed channel property. Typically, channels are raw images from the microscope, and processed channels are the processed versions of those raw images. For example, you may have a thresholded version of the FITC channel, in the processed channels.
+
+.. code-block:: python
+
+   fitc_channel = fov.channels["FITC"]
+   thresh_fitc = thresh_img(fitc_channel)
+   fov.add_processed_channel("thresh", "FITC", thresh_fitc)
+
+``thresh_img`` is from the ``paracell.improcess.ops`` module. It preforms `OTSU thresholding <https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html#autotoc_md1435>`_. The exact specifics aren't relevant for this tutorial.
+
+FOVManager
+----------
+
+So far, we've manually created channels on an FOV. The FOVManager inside Paracell helps with creating FOVs from an image, a :doc:`raw image folder <../../dataset/raw_image_dir>`, and ones that are segmented.
+
+.. code-block:: python
+
+   from paracell.manager import FOVManager
+
+FOV From Image
+^^^^^^^^^^^^^^
+
+The ``fov_from_image`` method on ``FOVManager`` creates an FOV where the channels on the FOV are the channels of the image. The channel order is a list of names, mapping the RGB colour channels, of the image, to the name they will have in the FOV. For example, if the red channel is FITC, green channel is Cyan, and blue channel is DAPI, then the channel order is ``["FITC", "Cyan", "DAPI"]``. Images are loaded in RGB order.
+
+.. caution::
+
+   Microscopy images represent the intensity of light received by the microscope. The actual light emitted by the stains and antibodies may be outside the visible spectrum, so these colourings can be arbitrary. The convention of RGB is similarly arbitrary.
+
+.. note::
+
+   The FOV prefix is automatically set to the image name (excluding the extension). Generally, such stacked images are used frequently in pseudolabelling and training.
+
+.. code-block:: python
+
+   fov = FOVManager.fov_from_image(SAMPLE_IMAGE_PATH, ["FITC", "Cyan", "DAPI"])
+   print(fov.channels["FITC"].shape)  # See that the channel is loaded.
+
+FOV From Raw Image Directory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+FOVs are also commonly loaded from raw microscopy image directories. See :doc:`raw image directory <../../dataset/raw_image_dir>` format in dataset for more information.
+
+FOVs can be loaded with the FOV prefix and the path to the raw image directory.
+
+.. code-block:: python
+
+   fov = FOVManager.fov_from_image_dir("A2--W00002--P00064--Z00002--T00000", RAW_IMAGE_DIR)
+   fov.load_channels()
+   print(fov.channels["FITC"].shape)
+
+.. note::
+
+   Here we have to call ``load_channels``, because the ``fov_from_image_dir`` creates a base FOV with no channels loaded. FOVs are generally centered around the raw microscopy image directory. Loading channels is a slow operation as it has to load all the images into memory.
+
+Pre-segmented FOVs
+^^^^^^^^^^^^^^^^^^
+
+So far, only FOVs with channels have been created. FOVs also contain cells, and their corresponding masks and outlines. Cells are generally created through the use of a :doc:`segmentor <segmentation>` (more about them on the next page). However, saved segmentation data can be used to load the cells on an FOV. Saved :doc:`seg files <../../dataset/seg>` are typically stored in a folder of similar format to :doc:`analyses output folders <../../dataset/pipeline_output>`. The specifics aren't important. Just know the seg folder needs a file ``<fov_prefix>_seg.npy`` (``_seg.npz`` is also valid), and the image folder needs a file ``<fov_prefix>.tif``.
+
+.. code-block:: python
+
+   fov = FOVManager.load_presegmented_fov(
+      "A2--W00002--P00064--Z00002--T00000",
+      RAW_IMAGE_DIR,
+      SEG_DIR
+   )
+   print(fov.channels["FITC"].shape)
+   print(len(fov.cells)) # See that cells are loaded

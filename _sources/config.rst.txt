@@ -1,0 +1,137 @@
+Config Structure
+================
+
+.. _analysis-pipeline-config:
+
+Pipeline
+--------
+Full Configuration Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: yaml
+
+   plate_name: plate_name
+   plate_type: chao_lab
+   image_dir: /path/to/raw/images
+   output_dir: /path/to/save/analysis
+   channels: [DAPI, Cyan, Cy3, Cy5, FITC]
+   is_new_plate: true
+   quality_control: true
+   well_range: [0, null]
+   n_workers: 8
+   illumination_correction_config:
+      use_illumcor: false
+      illumcor_model_path: default
+      illumcor_path: default
+   segmentation_config:
+      channels: [DAPI, Cyan]
+      seg_model_path: null
+      seg_override: false
+      save_compressed: true
+      batch_size: 8
+      load_workers: 2
+      image_cell_diam: 100
+   analyses:
+      - Texture Analysis
+      - Colocalization Analysis
+      - Basic Shape Analysis
+      - Intensity Analysis
+      - Object Analysis
+      - Compartment Analysis
+      - DINOv2
+      - RGBDINOv2
+
+.. _analysis_pipeline_config_fields:
+
+Config Fields
+^^^^^^^^^^^^^
+- ``plate_name``: The name of the plate. Can be anything for Chao lab format, but must be the name of the plate inside the cell painting directory.
+- ``plate_type``: ``chao_lab`` or ``cell_painting``.
+- ``image_dir``: The directory containing the raw microscopy images.
+- ``output_dir``: The directory to save the analysis results.
+- ``channels``: A list of channels to analyze. These channels will be loaded for analysis. For cell painting datasets, these channels correspond to the w1, w2, ... ordering used in their images.
+- ``is_new_plate``: Whether the plate is a new plate. Recommended to set to true.
+- ``quality_control``: Whether to run quality control. This aggregates all the cell csvs into a single parquet.
+- ``well_range``: [start_well, end_well] to analyze. Uses python slice notation, and end_well is not included. Recommended to set to ``[null, null]`` to analyze all wells from first to last.
+- ``n_workers``: The number of workers to use for analysis. More workers use more memory. If you're running out of memory, try lowering this parameter.
+- ``illumination_correction_config``:
+   - ``use_illumcor``: Whether to use illumination correction. Use if images aren't illumination corrected.
+   - ``illumcor_model_path``: Recommended to use default.
+   - ``illumcor_path``: Recommended to use default.
+- ``segmentation_config``:
+   - ``channels``: Channels used by the Cellpose segmentor, as expected in that order. Most models are nuclear, cytoplasm, GFP. GFP is optional.
+   - ``seg_model_path``: Path to the segmentation model, or none to use cyto3. There can only be two channels when using cyto3.
+   - ``seg_override``: If previously created seg files are to be overridden.
+   - ``save_compressed``: Whether to save the segmentation in a compressed format.
+   - ``batch_size``: The batch size to use for segmentation.
+   - ``load_workers``: The number of workers to use for loading images.
+   - ``image_cell_diam``: The diameter of cells per image in pixels. Used by the Cellpose model.
+- ``analyses``: List of analyses to run. List of possible analyses are:
+   - ``Texture Analysis``: Texture analysis of the cells.
+   - ``Colocalization Analysis``: Colocalization analysis of the cells.
+   - ``Basic Shape Analysis``: Basic shape analysis of the cells.
+   - ``Intensity Analysis``: Analyzes intensity of channels of the cells.
+   - ``Object Analysis``: Object analysis of the cells.
+   - ``Compartment Analysis``: Compartment analysis of the cells.
+   - ``DINOv2``: DINOv2 deep feature analysis of the cells.
+   - ``RGBDINOv2``: Deep feature using the coloured FOV images.
+
+.. _training-script-config:
+
+Training Script
+---------------
+
+Full Configuration Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: yaml
+
+   paths:
+      train_dir: /path/to/train/data
+      validation_dir: /path/to/validation/data
+      model_save_path: /path/to/output
+      image_suffix: .tif
+      mask_suffix: _seg.npy
+   model:
+      name: 3ch_gfp
+      cell_diameter: 30
+      pretrained_model_path: null
+   training:
+      learning_rate: 0.1
+      batch_size: 16
+      n_epochs: 300
+      normalize: true
+      resize: null
+      n_workers: 8
+      save_every: 20
+      eval_every: 5
+      device: default
+
+Config Fields
+^^^^^^^^^^^^^
+- ``paths``:
+   - ``train_dir``: Directory containing the training data. Should have images and segs in the :doc:`three channel training format <dataset/training>`.
+   - ``validation_dir``: Validation version of ``train_dir``.
+   - ``model_save_path``: Directory to store the model. Model will be saved in ``model_save_path/model_name``. Note a number will be appended to the end if there are many folders with such a name. Data is saved in the :doc:`training output format <dataset/model>`.
+   - ``image_suffix``: File ending of images. ``.tif`` recommended.
+   - ``mask_suffix``: File ending of seg files. Only ``_seg.npy`` is supported currently.
+- ``model``:
+   - ``name``: Name of the model being trained.
+   - ``cell_diameter``: Average cell diameter of the model, in pixels. Training and validation images should have the same sized cells.
+   - ``pretrained_model_path``: Path to a pretrained Cellpose model. Use ``null`` to train from scratch.
+- ``training``:
+   - ``learning_rate``: Learning rate of the model.
+   - ``batch_size``: Amount of images per batch.
+   - ``n_epochs``: Amount of epochs to train for. 
+   - ``normalize``: If Cellpose normalization is to be applied. This turns the 1st and 99th percentile intensities into the new min/max values.
+   - ``resize``: ``[H, W]`` array for height, width to resize the images respectively. Or ``null`` to disable resize.
+   - ``n_workers``: Amount of workers for loading.
+   - ``save_every``: How often to save a checkpoint model.
+   - ``eval_every``: How often to run COCO eval on the model.
+   - ``device``: PyTorch device. Use ``default`` to automatically detect GPU or CPU.
+
+.. note::
+
+   Unless otherwise mentioned, the example parameters are the recommended ones.
+
+Pseudolabelling
+---------------
+To be added.

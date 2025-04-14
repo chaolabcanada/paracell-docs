@@ -1,0 +1,56 @@
+Raw Images Directory
+====================
+This consists of raw microscopy images, ``.tif`` files, for each channel. There are two formats, depending on the ``plate_type`` listed in the :ref:`config <analysis-pipeline-config>`.
+
+Naming Convention
+-----------------
+
+.. _chao_lab_image_name_format:
+
+Chao Lab Format
+^^^^^^^^^^^^^^^
+
+.. code-block:: text
+
+   <well>--<well_number>--<fov_position>--Z00002--T00000--3D Decon_<channel>.tif
+
+Example
+~~~~~~~
+
+.. code-block:: text
+
+   B3--W00009--P00001--Z00002--T00000--3D Decon_Cy5.tif
+
+- ``well``: A1, A2, ..., D6.
+- ``well_number``: ``W<number>``. The number is the number of the well. The A wells come first, then the B wells, and so on...
+- ``fov_position``: ``P<number>``. Number of the FOV inside the well.
+- ``channel``: Fluorescence channel. Typically, we have:
+   - DAPI
+   - Cyan
+   - FITC
+   - Cy3
+   - Cy5
+
+.. note::
+
+   The part before the ``--3D Decon``, eg ``B3--W00009--P00001--Z00002--T00000``, is often referred to as the **FOV prefix**.
+
+Cell Painting Format
+^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: text
+
+   <plate>_<well>_<site>_<channel><uuid>.tif
+
+Example
+~~~~~~~
+
+.. code-block:: text
+
+   7149-01 berger 3-10-13_a01_s1_w13c56c22c-8e0a-4348-9ae5-e8c3c2f873a7.tif
+
+As we only support the Broad Institute dataset, for more information, see `their docs <https://broadinstitute.github.io/cellpainting-gallery/data_structure.html#images-folder-structure>`_.
+
+.. note::
+
+   The channel is w1, w2, ..., w5. Paracell will load these channels, with the names specified in the :ref:`config <analysis-pipeline-config>`, in that order.

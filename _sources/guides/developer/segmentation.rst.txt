@@ -1,0 +1,163 @@
+Segmentation
+============
+
+Paracell uses `Cellpose <https://cellpose.readthedocs.io/en/latest/index.html>`_ to preform instance segmentation of cells. Typically, only GFP positive cells need to be segmented. This is done with the three channel model, which takes in a third channel, FITC (GFP channel).
+
+Segmenting an FOV
+-----------------
+
+Suppose you have an FOV with the channels loaded (at least FITC, Cyan, and DAPI). Segmentation can be done using a segmentor class.
+
+.. code-block:: python
+
+   from paracell.segmentation.segmentors import DefaultCellposeSegmentor
+
+   segmentor = DefaultCellposeSegmentor(image_diam=100)
+
+After creating the segmentor class, we can segment an FOV by calling ``segment_fov``. Below we will reuse the FOV from the previous page.
+
+.. code-block:: python
+
+   fov = FOVManager.fov_from_image(SAMPLE_IMAGE_PATH, ["FITC", "Cyan", "DAPI"])
+   seg = segmentor.segment_fov(fov)
+
+This will automatically add two properties to the FOV, ``masks`` and ``outlines``. The ``seg`` output contains the same masks and outlines, along with Cellpose flows and mask probabilities.
+
+The masks are Cellpose format masks, which is a 2d image where each pixel representing which cell it's belongs to. Pixels with value 0 belong to the background (no cell), pixels with value 1 belong to the first cell, and so on.
+
+These masks will be used to create cells on the FOV, allowing for individual cells to be cropped out.
+
+.. caution::
+
+   Cells are not created on the FOV after segmentation. Only the masks and outlines are.
+
+Creating Cells
+--------------
+
+The masks property on an FOV can be used to create cell instances. The ``Cell`` class is typically used to store the position and analysis details of the cell.
+
+The pixels of the mask image represent cell ids or the background. For example, the pixels with a value of 1 correspond to the cells with ``outline_idx`` being 1.
+
+Cells can be created from masks, present on the FOV, using the following code.
+
+.. code-block:: python
+
+   FOVManager.construct_cells(fov, seg.mask_probabilities)
+
+``seg.mask_probabilities`` is the probability output of the segmentation. It's a list of how likely each cell is to be a correct segmentation. Although this argument is optional, it's highly recommended. It allows cells to be filtered and sorted later in analysis based on confidence.
+
+You can view individual cells inside ``fov.cells``. Right now the cells only have positing and mask information, and metadata.
+
+Three Channel Models
+--------------------
+
+The model used in the previous example, is the Cellpose segmentor, which uses cyto3 to segment every cell. It uses two channels for segmentation, DAPI and Cyan. These channels represent the cell nucleus and cytoplasm respectively. Often times, we only want to segment cells with GFP. We can use the three channel model to segment such cells.
+
+Unlike the DefaultCellposeSegmentor, the ThreeChannelCellposeSegmentor requires an additional argument. It needs the path to the trained GFP model.
+
+.. code-block:: python
+
+   from paracell.segmentation.segmentors import ThreeChannelCellposeSegmentor
+
+   segmentor = ThreeChannelCellposeSegmentor(
+      THREE_CHANNEL_SEGMENTATION_MODEL_PATH,
+      image_diam=100
+   )
+
+An FOV can be segmented using the same method calls after this step.
+
+Cell Diameter
+-------------
+
+Cell diameter is one of the most important arguments of the segmentors. In the previous examples, we just used the default parameters.
+
+Cell diameter (``image_diam``) is the average diameter size, in pixels, of cells inside the images. This should generally correspond to the size that the model was trained to handle. Typically, a good model will be able to handle slightly larger or smaller cells. Make sure that the cell diameters in the image are close to the cell diameter used by the model! This has a large impact on performance.
+
+.. caution::
+
+   The default cell diameter of DefaultCellposeSegmentor is 30, but the default cell diameter of ThreeChannelCellposeSegmentor is 100. This is due to the cyto3 model being trained on cells with a diameter of 30, but the typical images Paracell works with have a diameter of 100.
+
+.. caution::
+
+   There is also a diameter property on the Cellpose model. This is different from the cell diameter of the input images. The model's diameter property can't be changed and is set during training.
+
+Channels
+--------
+
+The ``seg_chan1``, ``seg_chan2``, and ``seg_chan3`` parameters are the microscopy channels to be used in segmentation. The order of the channels depends on the order the model was trained on. The Paracell wrapper around cyto3 expects DAPI then Cyan. For the three channel model, it depends on the channel order used during training. Typically, it's DAPI, Cyan, FITC.
+
+.. caution::
+
+   Some older Paracell three channel models, used the channel order FITC, Cyan, DAPI!
+
+Saving Segs
+-----------
+
+The segmentor class also provides helpful methods for saving seg files. They are saved in the cellpose seg format.
+
+The seg output from the model can be saved with the following code.
+
+.. code-block:: python
+
+   segmentor.save_seg_output(seg, SEG_SAVE_PATH)
+
+Typically, the seg file path is stored on the FOV. This is useful when using the FOV to save and load seg files.
+
+.. code-block:: python
+
+   fov.set_seg_path(SEG_SAVE_PATH)
+
+The save location is also commonly set on the segmentor. Here, we set the location of the segmentation folder. It follows the :ref:`pipeline output <seg_file_output_format>` format.
+
+.. code-block:: python
+
+   segmentor.set_seg_dir(SEG_SAVE_DIR)
+
+This is useful since we can use the following function to have the segmentor automatically get the seg path from the FOV, or if it doesn't exist, give us the seg path using the segmentation folder (``<seg_dir>/<fov_prefix>_seg.npz``).
+
+.. code-block:: python
+
+   segmentor.get_seg_path(fov)
+
+You can optionally set ``update_fov=True`` to have the picked seg path be stored back on the FOV. This is useful when segmenting many FOVs from a single folder.
+
+Compression and Flows
+^^^^^^^^^^^^^^^^^^^^^
+
+By default, the segmentor saves *compressed* segs *without* flows, in an effort to conserve space. Typically, there is not much benefit of storing flows, nor without compression.
+
+If needed, these parameters can be toggled during the construction of the segmentor class, or later by modifying its fields.
+
+.. code-block:: python
+
+   segmentor = DefaultCellposeSegmentor(
+      save_flows=True, save_compressed=False
+   )
+
+.. note::
+
+   Uncompressed segs have the ``_seg.npy`` suffix instead of the ``_seg.npz`` suffix. ``_seg.npy`` segs have the benefit of being compatible with Cellpose.
+
+.. note::
+
+   ``segmentor.get_seg_path`` will automatically handle the suffix if the FOV doesn't have a seg path and the segmentor has the seg dir defined.
+
+Loading Segs
+------------
+
+Loading seg files is typically done with the ``CellposeLoadSegmentor``. Make sure that you either set the path on the FOV or you set the directory on the load segmentor. Ensure the compression setting is set correctly as well.
+
+.. code-block:: python
+
+   from paracell.segmentation.segmentors import CellposeLoadSegmentor
+
+   # Create the load segmentor and set its seg folder.
+   load_segmentor = CellposeLoadSegmentor(save_compressed=True)
+   load_segmentor.set_seg_dir(SEG_DIR)
+
+   # Create an FOV from the image folder, using the FOV prefix.
+   fov = FOVManager.fov_from_image_dir("A2--W00002--P00064--Z00002--T00000", RAW_IMAGE_DIR)
+   fov.load_channels()
+   # Load the masks. The path is automatically determined with
+   # the FOV prefix and the previously set seg path.
+   seg = load_segmentor.segment_fov(fov)

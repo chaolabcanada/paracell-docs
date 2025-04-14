@@ -1,0 +1,6 @@
+Analysis
+========
+
+The skeleton code for clustering analysis is in `variant_clustering.ipynb <https://github.com/chaolabcanada/paracell/blob/main/paracell/analysis/variant_clustering.ipynb>`_ notebook. It is recommended to copy the notebook to modify.
+
+   More information can be found in the notebook.
