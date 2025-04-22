@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -286,20 +287,20 @@
 <span class="nt">image_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/raw/images</span>
 <span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/save/analysis</span>
 <span class="nt">channels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">DAPI</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cyan</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cy3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cy5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">FITC</span><span class="p p-Indicator">]</span>
-<span class="nt">is_new_plate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">save_analysis_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">overwrite</span>
+<span class="nt">seg_override</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="nt">quality_control</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">well_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">null</span><span class="p p-Indicator">]</span>
-<span class="nt">n_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="nt">n_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
 <span class="nt">illumination_correction_config</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">use_illumcor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">   </span><span class="nt">illumcor_model_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="w">   </span><span class="nt">illumcor_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 <span class="nt">segmentation_config</span><span class="p">:</span>
-<span class="w">   </span><span class="nt">channels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">DAPI</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cyan</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="nt">channels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Cyan</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">DAPI</span><span class="p p-Indicator">]</span>
 <span class="w">   </span><span class="nt">seg_model_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
-<span class="w">   </span><span class="nt">seg_override</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">   </span><span class="nt">save_compressed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">   </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">   </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
 <span class="w">   </span><span class="nt">load_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 <span class="w">   </span><span class="nt">image_cell_diam</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
 <span class="nt">analyses</span><span class="p">:</span>
@@ -317,15 +318,18 @@
 <section id="config-fields">
 <span id="analysis-pipeline-config-fields"></span><h3>Config Fields<a class="headerlink" href="#config-fields" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">plate_name</span></code>: The name of the plate. Can be anything for Chao lab format, but must be the name of the plate inside the cell painting directory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plate_name</span></code>: The name of the plate.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">plate_type</span></code>: <code class="docutils literal notranslate"><span class="pre">chao_lab</span></code> or <code class="docutils literal notranslate"><span class="pre">cell_painting</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">image_dir</span></code>: The directory containing the raw microscopy images.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">output_dir</span></code>: The directory to save the analysis results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image_dir</span></code>: The directory containing the <a class="reference internal" href="dataset/raw_image_dir.html"><span class="doc">raw microscopy images</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_dir</span></code>: The directory to save the analysis results. It has <a class="reference internal" href="dataset/pipeline_output.html"><span class="doc">this</span></a> format.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">channels</span></code>: A list of channels to analyze. These channels will be loaded for analysis. For cell painting datasets, these channels correspond to the w1, w2, … ordering used in their images.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">is_new_plate</span></code>: Whether the plate is a new plate. Recommended to set to true.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">save_analysis_mode</span></code>: <code class="docutils literal notranslate"><span class="pre">append</span></code> or <code class="docutils literal notranslate"><span class="pre">overwrite</span></code>. It’s recommended to overwrite analyses, as it’s more flexible and will always work. Use append when adding analyses. See <a class="reference internal" href="cli.html#append-vs-overwrite"><span class="std std-ref">the cli docs</span></a> for more info.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seg_override</span></code>: If previously created seg files are to be overridden.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">quality_control</span></code>: Whether to run quality control. This aggregates all the cell csvs into a single parquet.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">well_range</span></code>: [start_well, end_well] to analyze. Uses python slice notation, and end_well is not included. Recommended to set to <code class="docutils literal notranslate"><span class="pre">[null,</span> <span class="pre">null]</span></code> to analyze all wells from first to last.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_workers</span></code>: The number of workers to use for analysis. More workers use more memory. If you’re running out of memory, try lowering this parameter.</p></li>
+</ul>
+<ul class="simple" id="illumination-correction-config">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">illumination_correction_config</span></code>:</dt><dd><ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">use_illumcor</span></code>: Whether to use illumination correction. Use if images aren’t illumination corrected.</p></li>
@@ -335,11 +339,18 @@
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">segmentation_config</span></code>:</dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">channels</span></code>: Channels used by the Cellpose segmentor, as expected in that order. Most models are nuclear, cytoplasm, GFP. GFP is optional.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">seg_model_path</span></code>: Path to the segmentation model, or none to use cyto3. There can only be two channels when using cyto3.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">seg_override</span></code>: If previously created seg files are to be overridden.</p></li>
+</ul>
+<ul id="segmentation-config">
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">segmentation_config</span></code>:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">channels</span></code>: Channels used by the Cellpose segmentor, as expected in that order. The two channel cyto3 has the cytoplasm, then the nuclear channel. Whereas, most three channel models have the nuclear, cytoplasm, and then GFP channel.</p></li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>The channel order depends on the Cellpose model, and should be double checked.</p>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">seg_model_path</span></code>: Path to the segmentation model, or <code class="docutils literal notranslate"><span class="pre">null</span></code>. A three channel model is used when a path is provided. When the path is <code class="docutils literal notranslate"><span class="pre">null</span></code>, cyto3 (two channel model) is used. More information about the three channel models can be found in the <a class="reference internal" href="guides/developer/segmentation.html#three-channel-model-guide"><span class="std std-ref">three channel model section</span></a> of the segmentation guide.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">save_compressed</span></code>: Whether to save the segmentation in a compressed format.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code>: The batch size to use for segmentation.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">load_workers</span></code>: The number of workers to use for loading images.</p></li>
@@ -349,7 +360,7 @@
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">analyses</span></code>: List of analyses to run. List of possible analyses are:</dt><dd><ul>
+<dt><code class="docutils literal notranslate"><span class="pre">analyses</span></code>: List of analyses to run. List of possible analyses are:</dt><dd><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Texture</span> <span class="pre">Analysis</span></code>: Texture analysis of the cells.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Colocalization</span> <span class="pre">Analysis</span></code>: Colocalization analysis of the cells.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Basic</span> <span class="pre">Shape</span> <span class="pre">Analysis</span></code>: Basic shape analysis of the cells.</p></li>
@@ -438,8 +449,81 @@
 </section>
 </section>
 <section id="pseudolabelling">
-<h2>Pseudolabelling<a class="headerlink" href="#pseudolabelling" title="Link to this heading">¶</a></h2>
-<p>To be added.</p>
+<span id="pseudolabelling-config"></span><h2>Pseudolabelling<a class="headerlink" href="#pseudolabelling" title="Link to this heading">¶</a></h2>
+<section id="id3">
+<h3>Full Configuration Example<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">default_missing_run_properties</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">runs</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">raw_image_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/DQX/microscopy_data_raw/APC_Images/APC_KO1_Batch3_Oct_8_24/Screen_001/processed</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">base_path</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/mnt/FNX/paracell2_outputs/pseudolabel_training_outputs/APC_KO1_October/</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">no_gfp_wells</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">A2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">B3</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">illumination_correction_config</span><span class="p">:</span>
+<span class="w">         </span><span class="nt">use_illumcor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">         </span><span class="nt">illumcor_model_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">         </span><span class="nt">illumcor_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="nt">channels</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPI</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cyan</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FITC</span>
+<span class="nt">n_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="nt">no_gfp_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.99</span>
+<span class="nt">segmentation_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">channels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">Cyan</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">DAPI</span><span class="p p-Indicator">]</span>
+<span class="w">   </span><span class="nt">seg_model_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">   </span><span class="nt">save_compressed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">   </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">   </span><span class="nt">load_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">   </span><span class="nt">image_cell_diam</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="nt">file_processing</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">red_suffix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FITC</span>
+<span class="w">   </span><span class="nt">green_suffix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cyan</span>
+<span class="w">   </span><span class="nt">blue_suffix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPI</span>
+<span class="w">   </span><span class="nt">train_split</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.8</span>
+<span class="w">   </span><span class="nt">test_split</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">   </span><span class="nt">holdout_split</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="w">   </span><span class="nt">save_cl_flows</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">   </span><span class="nt">save_gui_data</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>Config Fields<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">default_missing_run_properties</span></code>: If missing properties in the config should be set to their default values. All the parameters below marked as optional can be omitted.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">runs</span></code>: List of plates to be pseudolabelled. For each plate, the properties are</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">raw_image_path</span></code>: Path to the raw microscopy images.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base_path</span></code>: Path to save the analysis outputs and the pseudolabels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no_gfp_wells</span></code>: List of wells that are Pbase (do not contain GFP cells). At least one is required for pseudolabelling to work.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">illumination_correction_config</span></code> (Optional): Same as the <a class="reference internal" href="#illumination-correction-config"><span class="std std-ref">corresponding one</span></a> in the analysis pipeline. Defaults to illumination correction with paths in the illumcor folder.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">channels</span></code>: Channels to be loaded for segmentation, analysis, and filtering.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n_workers</span></code>: Amount of multiprocessed threads.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no_gfp_threshold</span></code>: Percentile of FITC intensity, inside the GFP wells, at which we consider cells to have GFP.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segmentation_config</span></code>: Identical to the <a class="reference internal" href="#segmentation-config"><span class="std std-ref">corresponding one</span></a> in the analysis pipeline. Since this is GFP thresholding, the cyto3 two channel model should be used.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">file_processing</span></code>:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">red_suffix</span></code>: Microscopy channel to map into the red colour channel of the merged images. The other suffix are similar.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">green_suffix</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">blue_suffix</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">train_split</span></code>: Percentage of images to put inside the train folder. Float between 0 to 1. The test and holdout parameters are similar.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_split</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">holdout_split</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">save_cl_flows</span></code>: If <code class="docutils literal notranslate"><span class="pre">cl_computed_flows</span></code> should be saved inside the filtered seg files. Enable this if you plan on training off the images.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">save_gui_data</span></code>: If GUI data is to be stored. This is a cached copy of masks and contains the cell threshold values. Enable this if you plan on fine-tuning the images inside the modified cellpose GUI.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It’s recommended to have seg compression turned off, as there is limited support for compressed seg files in training and labelling.</p>
+</div>
+</section>
 </section>
 </section>
 
@@ -509,7 +593,11 @@
 <li><a class="reference internal" href="#id2">Config Fields</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#pseudolabelling">Pseudolabelling</a></li>
+<li><a class="reference internal" href="#pseudolabelling">Pseudolabelling</a><ul>
+<li><a class="reference internal" href="#id3">Full Configuration Example</a></li>
+<li><a class="reference internal" href="#id4">Config Fields</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -5,7 +5,11 @@ After installing, Paracell can be run directly through the terminal with the ``p
 
 Paracell will list its commands when running ``paracell`` or the help command (``paracell --help``).
 
-Run ``paracell --help <command>`` to get more information on a command.
+Run ``paracell <command> --help`` to get more information on a command.
+
+.. note::
+
+   Inside the commands, arguments in square brackets are optional and arguments inside angle brackets are required.
 
 .. _pipeline_cli:
 
@@ -13,8 +17,7 @@ Pipeline
 --------
 .. code-block:: bash
 
-   paracell analyze [path-to-config]
-
+   paracell analyze [path_to_config]
 
 .. list-table::
    :header-rows: 1
@@ -23,24 +26,65 @@ Pipeline
 
    * - **Argument**
      - **Description**
-   * - ``path-to-config``
+   * - ``path_to_config``
      - | Optional path to the feature extraction/analysis yaml config file.
        | Defaults to the ``config.yaml`` inside Paracell's code directory.
-       | See :ref:`config <analysis-pipeline-config>` for the format.
+       | See :ref:`config <analysis_pipeline_config>` for the format.
 
 **Description**:
 
    This command does illumination correction, segmentation, and feature extraction.
 
    1. It begins by illumination correcting all images, if enabled.
-   2. It preforms segmentation, with specified Cellpose model and channels.
+   2. It performs segmentation, with specified Cellpose model and channels.
    3. Runs specified analyses on every segmented cell.
+
+.. warning::
+
+   If rerunning analysis after modifying the files inside the raw image directory, it's recommended to delete the analysis output folder first.
+
+.. tip::
+
+   As analysis takes a lot of time and compute power, if you need to pause the compute, on Linux, press ``ctrl + Z`` to stop the process. Then run ``fg`` to continue running the process. Note it will still remain in memory, and the computer needs to remain on.
+
+.. _append_vs_overwrite:
+
+Append vs Overwrite Mode
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+When running analysis, there are two modes which determine how the extracted feature csvs are saved.
+
+Overwrite Mode
+~~~~~~~~~~~~~~
+
+In overwrite mode, the ``_cells.csv`` files (if they exist) will be replaced with new ones. This will overwrite any previously extracted features. This is the recommended option, unless you are adding analyses.
+
+Append Mode
+~~~~~~~~~~~
+
+In this mode, the ``_cells.csv`` files are loaded into the FOVs as cells, and new features are added to them.
+
+This will add all the analysis specified in the config, which are not already present on the cells. If any of the cell features start with the analysis prefix, that analysis will be skipped.
+
+When loading ``_cells.csv``, if the cell count doesn't match the segmentation or the CSV could not be loaded, new cells will be generated, overwriting the existing cells.
+
+.. tip::
+
+   It's recommended to keep the old analyses in the config, when adding new analyses. This helps ensure all the analyses are there incase of missing/corrupt files.
+
+.. caution::
+
+   ``plate.json`` typically uses absolute paths. If using ``append`` mode, and the folder ``out_dir`` has been moved, you should run the :ref:`regenerate plate json command <regenerate_cli>` after moving.
+
+.. caution::
+
+   It's recommended to turn off ``quality_control`` when running in append mode, as the ``all_cells.parquet`` is not used to extend the features.
 
 Training
 --------
 .. code-block:: bash
 
-   paracell train <path-to-config>
+   paracell train <path_to_config>
 
 .. list-table::
    :header-rows: 1
@@ -49,10 +93,10 @@ Training
 
    * - **Argument**
      - **Description**
-   * - ``path-to-config``
+   * - ``path_to_config``
      - | Path to the training yaml config.
        | This is a **different** from the analysis pipeline config.
-       | See :ref:`config <training-script-config>` for format.
+       | See :ref:`config <training_script_config>` for format.
 
 **Description**:
 
@@ -60,4 +104,120 @@ Training
 
 Pseudolabelling
 ---------------
-To be added in the future.
+.. code-block:: bash
+
+   paracell pseudolabel <path_to_config>
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: align-left
+
+   * - **Argument**
+     - **Description**
+   * - ``path_to_config``
+     - | Path to the pseudolabelling yaml config.
+       | This is **different** from the other configs.
+       | See :ref:`config <pseudolabelling_config>` for format.
+
+**Description**:
+
+   This command creates training data for the training loop.
+   1. Paracell analysis is run, using a custom analysis mixin for extracting pseudolabel related features.
+   2. The images are filtered for only GFP cells, using these features and the threshold specified in the config.
+   3. After filtering, this becomes the training seg data. The training data, along with stacked coloured images, are moved into the train, test, and holdout folder.
+
+Clearing Temp Files
+-------------------
+
+.. code-block:: bash
+
+   paracell clear-analysis-intermediates <path_to_config> [illumcor] [seg] [outputs]
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: align-left
+
+   * - **Argument**
+     - **Description**
+   * - ``path_to_config``
+     - | Path to the analysis pipeline yaml config.
+       | See :ref:`config <analysis_pipeline_config>` for format.
+   * - ``illumcor``
+     - If the illumination correction files should be deleted (``true`` or ``false``).
+   * - ``seg``
+     - If the segmentation files should be deleted (``true`` or ``false``).
+   * - ``outputs``
+     - If the cell analysis data (csvs) and the image data (json) files should be deleted (``true`` or ``false``).
+
+**Description**:
+
+   This command clears the analysis *folder* of intermediate files, depending on which you choose to delete.
+
+.. _regenerate_cli:
+
+Regenerate
+----------
+
+Regenerate Plate JSON
+^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   paracell regenerate plate_json [--force] <parent_dir> <plate_type>
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: align-left
+
+   * - **Argument**
+     - **Description**
+   * - ``--force``
+     - Add a ``--force`` to skip the confirmation. This is a destructive command as it overwrites the existing ``plate.json``.
+   * - ``parent_dir``
+     - Folder of the :doc:`analysis pipeline output <dataset/pipeline_output>` format, containing the ``plate.json`` file.
+   * - ``plate_type``
+     - Type of the plate. Should be either "chao_lab" or "cell_painting".
+
+**Description**:
+
+   This command regenerates the ``plate.json`` file based on the contents of the ``parent_dir`` folder. It takes a few metadata properties from the old ``plate.json``. Warnings will be logged if UUID mismatch is detected.
+
+   This command is designed for correcting the paths inside ``plate.json`` after the directory has been moved. This ensures append mode of feature extraction works properly.
+
+.. note::
+
+   Certain metadata properties, such as plate name, will be missing if there is no old ``plate.json``.
+
+.. note::
+
+   It's highly recommended to run the regenerate imdata command after this to ensure the ``_imdata.json`` have matching FOV metadata as the ``plate.json``.
+
+Regenerate Imdata
+^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   paracell regenerate imdata [--force] <parent_dir>
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: align-left
+
+   * - **Argument**
+     - **Description**
+   * - ``--force``
+     - Add a ``--force`` to skip the confirmation. This is a destructive command as it overwrites existing ``_imdata.json`` files.
+   * - ``parent_dir``
+     - Folder of the :doc:`analysis pipeline output <dataset/pipeline_output>` format, containing the ``plate.json`` file.
+
+**Description**:
+
+   This command extracts the FOV metadata from the ``plate.json`` file and saves them to the corresponding ``_imdata.json`` files for each FOV.
+
+.. caution::
+
+   A ``plate.json`` file must exist before running this command. It's recommended to run the regenerate plate json command first!

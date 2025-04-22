@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -311,7 +312,7 @@
 <p>You can view individual cells inside <code class="docutils literal notranslate"><span class="pre">fov.cells</span></code>. Right now the cells only have positing and mask information, and metadata.</p>
 </section>
 <section id="three-channel-models">
-<h2>Three Channel Models<a class="headerlink" href="#three-channel-models" title="Link to this heading">¶</a></h2>
+<span id="three-channel-model-guide"></span><h2>Three Channel Models<a class="headerlink" href="#three-channel-models" title="Link to this heading">¶</a></h2>
 <p>The model used in the previous example, is the Cellpose segmentor, which uses cyto3 to segment every cell. It uses two channels for segmentation, DAPI and Cyan. These channels represent the cell nucleus and cytoplasm respectively. Often times, we only want to segment cells with GFP. We can use the three channel model to segment such cells.</p>
 <p>Unlike the DefaultCellposeSegmentor, the ThreeChannelCellposeSegmentor requires an additional argument. It needs the path to the trained GFP model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.segmentors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreeChannelCellposeSegmentor</span>
@@ -373,6 +374,10 @@
    <span class="n">save_flows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_compressed</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make sure that the compression setting is set properly and matches the seg path on the FOVs, if set.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

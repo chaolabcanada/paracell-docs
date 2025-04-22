@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -281,7 +282,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.tensorboard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummaryWriter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cellpose.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellposeModel</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">collate_fn</span><span class="p">,</span> <span class="n">gather_image_mask_paths</span><span class="p">,</span> <span class="n">get_lr_scheduler</span><span class="p">,</span> <span class="n">get_file_number</span><span class="p">,</span> <span class="n">add_file_number</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">collate_fn</span><span class="p">,</span> <span class="n">gather_image_mask_paths</span><span class="p">,</span> <span class="n">get_lr_scheduler</span><span class="p">,</span> <span class="n">get_file_number</span><span class="p">,</span> <span class="n">add_file_number</span><span class="p">,</span> <span class="n">save_sample_images</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellposeTrainConfig</span><span class="p">,</span> <span class="n">save_config</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellposeDataset</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.eval</span><span class="w"> </span><span class="kn">import</span> <span class="n">cellpose_dataset_to_coco</span>
@@ -324,6 +325,7 @@
             <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">mask_suffix</span>
         <span class="p">),</span>
         <span class="n">resize</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">resize</span><span class="p">,</span>
+        <span class="n">transforms</span><span class="o">=</span><span class="n">get_transform</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="n">normalize</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">normalize</span><span class="p">,</span>
         <span class="n">test_mode</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
@@ -347,6 +349,9 @@
         <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_fn</span>
     <span class="p">)</span>
+
+    <span class="c1"># Below function is useful for debugging </span>
+    <span class="c1"># save_sample_images(train_loader, output_dir=&quot;/home/adrit/RoughOutputs&quot;, max_samples=6)</span>
 
     <span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
         <span class="n">val_dataset</span><span class="p">,</span>
@@ -378,8 +383,9 @@
 
     <span class="c1"># 5) Setup an optimizer</span>
     <span class="c1"># optimizer = optim.AdamW(net.parameters(), lr=learning_rate, weight_decay=1e-5) # was using this just coz</span>
+    <span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
     <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
-    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">get_lr_scheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">)</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">get_lr_scheduler</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="n">steps_per_epoch</span><span class="p">)</span>
     <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Optimizing with SGD for </span><span class="si">%d</span><span class="s2"> epochs. LR=</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">)</span>
 
     <span class="c1"># 6) Setup a writer for tensorboard. Save tensorboard inside our model dir.</span>

@@ -1,7 +1,7 @@
 Config Structure
 ================
 
-.. _analysis-pipeline-config:
+.. _analysis_pipeline_config:
 
 Pipeline
 --------
@@ -14,20 +14,20 @@ Full Configuration Example
    image_dir: /path/to/raw/images
    output_dir: /path/to/save/analysis
    channels: [DAPI, Cyan, Cy3, Cy5, FITC]
-   is_new_plate: true
+   save_analysis_mode: overwrite
+   seg_override: false
    quality_control: true
    well_range: [0, null]
-   n_workers: 8
+   n_workers: 6
    illumination_correction_config:
       use_illumcor: false
       illumcor_model_path: default
       illumcor_path: default
    segmentation_config:
-      channels: [DAPI, Cyan]
+      channels: [Cyan, DAPI]
       seg_model_path: null
-      seg_override: false
       save_compressed: true
-      batch_size: 8
+      batch_size: 6
       load_workers: 2
       image_cell_diam: 100
    analyses:
@@ -44,23 +44,34 @@ Full Configuration Example
 
 Config Fields
 ^^^^^^^^^^^^^
-- ``plate_name``: The name of the plate. Can be anything for Chao lab format, but must be the name of the plate inside the cell painting directory.
+- ``plate_name``: The name of the plate.
 - ``plate_type``: ``chao_lab`` or ``cell_painting``.
-- ``image_dir``: The directory containing the raw microscopy images.
-- ``output_dir``: The directory to save the analysis results.
+- ``image_dir``: The directory containing the :doc:`raw microscopy images <dataset/raw_image_dir>`.
+- ``output_dir``: The directory to save the analysis results. It has :doc:`this <dataset/pipeline_output>` format.
 - ``channels``: A list of channels to analyze. These channels will be loaded for analysis. For cell painting datasets, these channels correspond to the w1, w2, ... ordering used in their images.
-- ``is_new_plate``: Whether the plate is a new plate. Recommended to set to true.
+- ``save_analysis_mode``: ``append`` or ``overwrite``. It's recommended to overwrite analyses, as it's more flexible and will always work. Use append when adding analyses. See :ref:`the cli docs <append_vs_overwrite>` for more info.
+- ``seg_override``: If previously created seg files are to be overridden.
 - ``quality_control``: Whether to run quality control. This aggregates all the cell csvs into a single parquet.
 - ``well_range``: [start_well, end_well] to analyze. Uses python slice notation, and end_well is not included. Recommended to set to ``[null, null]`` to analyze all wells from first to last.
 - ``n_workers``: The number of workers to use for analysis. More workers use more memory. If you're running out of memory, try lowering this parameter.
+
+.. _illumination_correction_config:
+
 - ``illumination_correction_config``:
    - ``use_illumcor``: Whether to use illumination correction. Use if images aren't illumination corrected.
    - ``illumcor_model_path``: Recommended to use default.
    - ``illumcor_path``: Recommended to use default.
+
+.. _segmentation_config:
+
 - ``segmentation_config``:
-   - ``channels``: Channels used by the Cellpose segmentor, as expected in that order. Most models are nuclear, cytoplasm, GFP. GFP is optional.
-   - ``seg_model_path``: Path to the segmentation model, or none to use cyto3. There can only be two channels when using cyto3.
-   - ``seg_override``: If previously created seg files are to be overridden.
+   - ``channels``: Channels used by the Cellpose segmentor, as expected in that order. The two channel cyto3 has the cytoplasm, then the nuclear channel. Whereas, most three channel models have the nuclear, cytoplasm, and then GFP channel.
+
+   .. caution::
+
+      The channel order depends on the Cellpose model, and should be double checked.
+
+   - ``seg_model_path``: Path to the segmentation model, or ``null``. A three channel model is used when a path is provided. When the path is ``null``, cyto3 (two channel model) is used. More information about the three channel models can be found in the :ref:`three channel model section <three_channel_model_guide>` of the segmentation guide.
    - ``save_compressed``: Whether to save the segmentation in a compressed format.
    - ``batch_size``: The batch size to use for segmentation.
    - ``load_workers``: The number of workers to use for loading images.
@@ -75,7 +86,7 @@ Config Fields
    - ``DINOv2``: DINOv2 deep feature analysis of the cells.
    - ``RGBDINOv2``: Deep feature using the coloured FOV images.
 
-.. _training-script-config:
+.. _training_script_config:
 
 Training Script
 ---------------
@@ -120,7 +131,7 @@ Config Fields
 - ``training``:
    - ``learning_rate``: Learning rate of the model.
    - ``batch_size``: Amount of images per batch.
-   - ``n_epochs``: Amount of epochs to train for. 
+   - ``n_epochs``: Amount of epochs to train for.
    - ``normalize``: If Cellpose normalization is to be applied. This turns the 1st and 99th percentile intensities into the new min/max values.
    - ``resize``: ``[H, W]`` array for height, width to resize the images respectively. Or ``null`` to disable resize.
    - ``n_workers``: Amount of workers for loading.
@@ -132,6 +143,70 @@ Config Fields
 
    Unless otherwise mentioned, the example parameters are the recommended ones.
 
+.. _pseudolabelling_config:
+
 Pseudolabelling
 ---------------
-To be added.
+
+Full Configuration Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. code-block:: yaml
+
+   default_missing_run_properties: true
+   runs:
+      - raw_image_path: /mnt/DQX/microscopy_data_raw/APC_Images/APC_KO1_Batch3_Oct_8_24/Screen_001/processed
+         base_path: /mnt/FNX/paracell2_outputs/pseudolabel_training_outputs/APC_KO1_October/
+         no_gfp_wells: [A2, B3]
+         illumination_correction_config:
+            use_illumcor: false
+            illumcor_model_path: default
+            illumcor_path: default
+   channels:
+      - DAPI
+      - Cyan
+      - FITC
+   n_workers: 8
+   no_gfp_threshold: 0.99
+   segmentation_config:
+      channels: [Cyan, DAPI]
+      seg_model_path: null
+      save_compressed: false
+      batch_size: 8
+      load_workers: 2
+      image_cell_diam: 100
+   file_processing:
+      red_suffix: FITC
+      green_suffix: Cyan
+      blue_suffix: DAPI
+      train_split: 0.8
+      test_split: 0.1
+      holdout_split: 0.1
+      save_cl_flows: true
+      save_gui_data: false
+
+Config Fields
+^^^^^^^^^^^^^
+
+- ``default_missing_run_properties``: If missing properties in the config should be set to their default values. All the parameters below marked as optional can be omitted.
+- ``runs``: List of plates to be pseudolabelled. For each plate, the properties are
+   - ``raw_image_path``: Path to the raw microscopy images.
+   - ``base_path``: Path to save the analysis outputs and the pseudolabels.
+   - ``no_gfp_wells``: List of wells that are Pbase (do not contain GFP cells). At least one is required for pseudolabelling to work.
+   - ``illumination_correction_config`` (Optional): Same as the :ref:`corresponding one <illumination_correction_config>` in the analysis pipeline. Defaults to illumination correction with paths in the illumcor folder.
+- ``channels``: Channels to be loaded for segmentation, analysis, and filtering.
+- ``n_workers``: Amount of multiprocessed threads.
+- ``no_gfp_threshold``: Percentile of FITC intensity, inside the GFP wells, at which we consider cells to have GFP.
+- ``segmentation_config``: Identical to the :ref:`corresponding one <segmentation_config>` in the analysis pipeline. Since this is GFP thresholding, the cyto3 two channel model should be used.
+- ``file_processing``:
+   - ``red_suffix``: Microscopy channel to map into the red colour channel of the merged images. The other suffix are similar.
+   - ``green_suffix``
+   - ``blue_suffix``
+   - ``train_split``: Percentage of images to put inside the train folder. Float between 0 to 1. The test and holdout parameters are similar.
+   - ``test_split``
+   - ``holdout_split``
+   - ``save_cl_flows``: If ``cl_computed_flows`` should be saved inside the filtered seg files. Enable this if you plan on training off the images.
+   - ``save_gui_data``: If GUI data is to be stored. This is a cached copy of masks and contains the cell threshold values. Enable this if you plan on fine-tuning the images inside the modified cellpose GUI.
+
+.. warning::
+
+   It's recommended to have seg compression turned off, as there is limited support for compressed seg files in training and labelling.

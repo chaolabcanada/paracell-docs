@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -376,27 +377,28 @@
 <div class="viewcode-block" id="build_lbl_tensor">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.build_lbl_tensor">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_lbl_tensor</span><span class="p">(</span><span class="n">batch_targets</span><span class="p">):</span>
-    <span class="n">all_lbl</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">batch_targets</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span>       <span class="c1"># torch.Tensor, shape (H, W)</span>
-        <span class="n">flows</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span>     <span class="c1"># torch.Tensor, shape (3, H, W)</span>
-        <span class="c1"># print(type(flows))</span>
-        <span class="c1"># Ensure float32</span>
-        <span class="c1"># mask = mask.float()</span>
-        <span class="n">flows</span> <span class="o">=</span> <span class="n">flows</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">batch_targets</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-        <span class="c1"># Binary mask → cellprob [0 or 1]</span>
-        <span class="c1"># mask_bin = (mask &gt; 0.5).float()</span>
-        <span class="n">mask_np</span> <span class="o">=</span> <span class="p">(</span><span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="c1"># Grab flowY = flows[1], flowX = flows[2]</span>
-        <span class="n">flowY</span> <span class="o">=</span> <span class="n">flows</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">flowX</span> <span class="o">=</span> <span class="n">flows</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># all_lbl = []</span>
+    <span class="c1"># for t in batch_targets:</span>
+    <span class="c1">#     mask = t[&quot;mask&quot;]       # torch.Tensor, shape (H, W)</span>
+    <span class="c1">#     flows = t[&quot;flows&quot;]     # torch.Tensor, shape (3, H, W)</span>
+    <span class="c1">#     # print(type(flows))</span>
+    <span class="c1">#     # Ensure float32</span>
+    <span class="c1">#     # mask = mask.float()</span>
+    <span class="c1">#     flows = flows.float()</span>
 
-        <span class="n">stacked</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">mask_np</span><span class="p">),</span><span class="n">flowY</span><span class="p">,</span> <span class="n">flowX</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># shape (3, H, W)</span>
-        <span class="n">all_lbl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stacked</span><span class="p">)</span>
+    <span class="c1">#     # Binary mask → cellprob [0 or 1]</span>
+    <span class="c1">#     # mask_bin = (mask &gt; 0.5).float()</span>
+    <span class="c1">#     mask_np = (mask &gt; 0.5).astype(np.float32)</span>
+    <span class="c1">#     # Grab flowY = flows[1], flowX = flows[2]</span>
+    <span class="c1">#     flowY = flows[1]</span>
+    <span class="c1">#     flowX = flows[2]</span>
 
-    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">all_lbl</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># shape (B, 3, H, W)</span></div>
+    <span class="c1">#     stacked = torch.stack([flowY, flowX], dim=0)  # shape (3, H, W)</span>
+    <span class="c1">#     all_lbl.append(stacked)</span>
 
+    <span class="c1"># return torch.stack(all_lbl, dim=0)  # shape (B, 3, H, W)</span>
 
 
 
@@ -474,9 +476,10 @@
 
 <div class="viewcode-block" id="get_lr_scheduler">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.get_lr_scheduler">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_lr_scheduler</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_lr_scheduler</span><span class="p">(</span> <span class="c1">#issue is we cal it every time we finish a batch. the LR schedular gets reset</span>
     <span class="n">optimizer</span><span class="p">:</span> <span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">,</span>
-    <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">steps_per_epoch</span><span class="p">:</span> <span class="nb">int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequentialLR</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a cosine annealing scheduler with linear warmup.</span>
 
@@ -492,13 +495,26 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        SequentialLR: The scheduler.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">warmup_scheduler</span> <span class="o">=</span> <span class="n">LinearLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">start_factor</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">total_iters</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">epochs</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">epochs</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">warmup_scheduler</span>
+    <span class="c1"># warmup_scheduler = LinearLR(optimizer, start_factor=0.05, total_iters=min(10, epochs))</span>
+    <span class="c1"># # warmup_scheduler = LinearLR(optimizer, start_factor=0.05, total_iters=min(10, epochs)*batch)</span>
+    <span class="c1"># if epochs &lt;= 10:</span>
+    <span class="c1">#     return warmup_scheduler</span>
 
-    <span class="n">main_scheduler</span> <span class="o">=</span> <span class="n">CosineAnnealingLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">T_max</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">epochs</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">SequentialLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="p">[</span><span class="n">warmup_scheduler</span><span class="p">,</span> <span class="n">main_scheduler</span><span class="p">],</span> <span class="n">milestones</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+    <span class="c1"># main_scheduler = CosineAnnealingLR(optimizer, T_max=max(epochs - 10, 0))</span>
+    <span class="c1"># scheduler = SequentialLR(optimizer, [warmup_scheduler, main_scheduler], milestones=[10])</span>
 
+    <span class="c1"># return scheduler</span>
+    <span class="n">total_steps</span> <span class="o">=</span> <span class="n">epochs</span> <span class="o">*</span> <span class="n">steps_per_epoch</span>
+    <span class="n">warmup_steps</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span> <span class="o">*</span> <span class="n">steps_per_epoch</span>  <span class="c1"># warmup in steps</span>
+    <span class="k">if</span> <span class="n">total_steps</span> <span class="o">&lt;=</span> <span class="n">warmup_steps</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">LinearLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">start_factor</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">total_iters</span><span class="o">=</span><span class="n">total_steps</span><span class="p">)</span>
+
+    <span class="n">warmup_scheduler</span> <span class="o">=</span> <span class="n">LinearLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">start_factor</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">total_iters</span><span class="o">=</span><span class="n">warmup_steps</span><span class="p">)</span>
+
+    <span class="n">main_steps</span> <span class="o">=</span> <span class="n">total_steps</span> <span class="o">-</span> <span class="n">warmup_steps</span>
+    <span class="n">main_scheduler</span> <span class="o">=</span> <span class="n">CosineAnnealingLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">T_max</span><span class="o">=</span><span class="n">main_steps</span><span class="p">)</span>
+
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">SequentialLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="p">[</span><span class="n">warmup_scheduler</span><span class="p">,</span> <span class="n">main_scheduler</span><span class="p">],</span> <span class="n">milestones</span><span class="o">=</span><span class="p">[</span><span class="n">warmup_steps</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">scheduler</span></div>
 
 

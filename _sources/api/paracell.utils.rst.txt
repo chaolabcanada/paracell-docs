@@ -16,3 +16,19 @@ paracell.utils.general
    :members:
    :undoc-members:
    :show-inheritance:
+
+paracell.utils.io
+-----------------
+
+.. automodule:: paracell.utils.io
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+paracell.utils.metadata_repair
+------------------------------
+
+.. automodule:: paracell.utils.metadata_repair
+   :members:
+   :undoc-members:
+   :show-inheritance:

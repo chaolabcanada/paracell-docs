@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -278,62 +279,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">cellpose.dynamics</span><span class="w"> </span><span class="kn">import</span> <span class="n">labels_to_flows</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cellpose.transforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize_img</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.transforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_transform</span>
-
-
-
-
-<div class="viewcode-block" id="random_crop_reshape">
-<a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.dataset.random_crop_reshape">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">random_crop_reshape</span><span class="p">(</span><span class="n">image</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">flows</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly crops the image, mask, and flows to 256x256.</span>
-<span class="sd">    Pads smaller images with corresponding default values.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        image (np.ndarray): The image to crop.</span>
-<span class="sd">        mask (np.ndarray): The mask to crop.</span>
-<span class="sd">        flows (np.ndarray): The flows to crop.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        tuple: A tuple containing the cropped image, mask,\</span>
-<span class="sd">            and flows. All cropped to 256x256.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
-
-    <span class="k">if</span> <span class="n">height</span> <span class="o">&lt;</span> <span class="mi">256</span> <span class="ow">or</span> <span class="n">width</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">:</span>
-        <span class="n">old_height</span><span class="p">,</span> <span class="n">old_width</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
-
-        <span class="c1"># New height/width</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
-        <span class="n">width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
-
-        <span class="n">old_image</span> <span class="o">=</span> <span class="n">image</span>
-        <span class="n">old_masks</span> <span class="o">=</span> <span class="n">mask</span>
-        <span class="n">old_flows</span> <span class="o">=</span> <span class="n">flows</span>
-
-        <span class="c1"># Create new image, mask, and flows</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="n">image</span><span class="p">[:</span><span class="n">old_height</span><span class="p">,</span> <span class="p">:</span><span class="n">old_width</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">old_image</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mask</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="n">mask</span><span class="p">[:</span><span class="n">old_height</span><span class="p">,</span> <span class="p">:</span><span class="n">old_width</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_masks</span>
-
-        <span class="n">flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">flow</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">old_flows</span><span class="p">):</span>
-            <span class="n">flows</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="n">old_height</span><span class="p">,</span> <span class="p">:</span><span class="n">old_width</span><span class="p">]</span> <span class="o">=</span> <span class="n">flow</span>
-
-
-    <span class="c1"># Crop randomly to 256x256</span>
-    <span class="n">top</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">height</span> <span class="o">==</span> <span class="mi">256</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">256</span><span class="p">)</span>
-    <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">width</span> <span class="o">==</span> <span class="mi">256</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">256</span><span class="p">)</span>
-    
-    <span class="n">row_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">top</span><span class="o">+</span><span class="mi">256</span><span class="p">)</span>
-    <span class="n">col_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">left</span><span class="o">+</span><span class="mi">256</span><span class="p">)</span>
-
-    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="n">row_slice</span><span class="p">,</span> <span class="n">col_slice</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="n">row_slice</span><span class="p">,</span> <span class="n">col_slice</span><span class="p">]</span>
-    <span class="n">flows</span> <span class="o">=</span> <span class="n">flows</span><span class="p">[:,</span> <span class="n">row_slice</span><span class="p">,</span> <span class="n">col_slice</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">flows</span></div>
-
 
 
 <div class="viewcode-block" id="CellposeDataset">
@@ -426,12 +371,7 @@
             <span class="n">image</span> <span class="o">=</span> <span class="n">normalize_img</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># --------------------</span>
-        <span class="c1"># 5) fix the size</span>
-        <span class="c1"># --------------------</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_mode</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">flows</span> <span class="o">=</span> <span class="n">random_crop_reshape</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">flows</span><span class="p">)</span>
-
+            
         <span class="n">flows</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">flows</span><span class="p">)</span>
 
         <span class="c1"># If they come back as NumPy arrays, convert them to Torch Tensors.</span>
@@ -447,7 +387,7 @@
         <span class="n">sample</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
 
         <span class="c1"># --------------------</span>
-        <span class="c1"># 6) (Optional) apply the transformations</span>
+        <span class="c1"># 5) (Optional) apply the transformations (only on image and masks)</span>
         <span class="c1"># --------------------</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transforms</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_mode</span><span class="p">:</span>
             <span class="n">sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transforms</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>

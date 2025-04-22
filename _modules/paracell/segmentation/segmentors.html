@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -278,8 +279,10 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cellpose</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">utils</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paradata</span><span class="w"> </span><span class="kn">import</span> <span class="n">FOV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paralog</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_paralogger</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">paracell.improcess.manipulation</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">manip</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cell_probabilities</span><span class="p">,</span> <span class="n">cellpose_flows_to_save_flows</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.utils.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_seg</span>
 
 
 <div class="viewcode-block" id="SegmentationOutput">
@@ -417,10 +420,24 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">segment_fov</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">,</span> <span class="n">include_outlines_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                     <span class="n">update_fov</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellposeSegmentationOutput</span><span class="p">:</span>
         <span class="n">seg_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_seg_path</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
-        <span class="n">dat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">seg_path</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dat</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">npyio</span><span class="o">.</span><span class="n">NpzFile</span><span class="p">):</span>
-            <span class="n">dat</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;arr_0&quot;</span><span class="p">]</span>
-        <span class="n">dat</span> <span class="o">=</span> <span class="n">dat</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="c1"># Try loading loading the other format(npz vs npz).</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">seg_path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">seg_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;npz&quot;</span><span class="p">):</span>
+                <span class="n">suffix</span><span class="p">,</span> <span class="n">other_suffix</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;npz&quot;</span><span class="p">,</span> <span class="s2">&quot;npy&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">suffix</span><span class="p">,</span> <span class="n">other_suffix</span> <span class="o">=</span> <span class="p">[</span><span class="n">seg_path</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:],</span> <span class="s2">&quot;npz&quot;</span><span class="p">]</span>
+            
+            <span class="n">seg_path</span> <span class="o">=</span> <span class="n">seg_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">other_suffix</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">seg_path</span><span class="p">):</span>
+                <span class="n">get_paralogger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Loaded </span><span class="si">%s</span><span class="s2"> instead of </span><span class="si">%s</span><span class="s2">. Double check segmentor compression settings!&quot;</span><span class="p">,</span>
+                    <span class="n">other_suffix</span><span class="p">,</span> <span class="n">suffix</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Seg file not found when using load segmentor.&quot;</span><span class="p">)</span>
+
+        <span class="n">dat</span> <span class="o">=</span> <span class="n">load_seg</span><span class="p">(</span><span class="n">seg_path</span><span class="p">)</span>
 
         <span class="n">masks</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;masks&quot;</span><span class="p">]</span>
         <span class="n">outlines</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;outlines&quot;</span><span class="p">]</span>
@@ -483,10 +500,42 @@
 <div class="viewcode-block" id="FOVSegmentor.get_seg_input">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.get_seg_input">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_seg_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get segmentation input for FOV.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">([</span>
-            <span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seg_chans</span>
-        <span class="p">])</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get segmentation input, stacked channels in order, for FOV.</span>
+
+<span class="sd">        Missing channels will be zeros with the shape of the other</span>
+<span class="sd">        channels of the FOV.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fov (FOV): FOV to generate the stacked image of.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: when the FOV has no channels.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: stacked image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fov</span><span class="o">.</span><span class="n">is_channels_loaded</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No channels present on FOV when creating seg input.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get the H, W of the FOV channels for filling in</span>
+        <span class="c1"># missing channels.</span>
+        <span class="n">sample_channel</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">chan</span> <span class="k">for</span> <span class="n">chan</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span>
+            <span class="n">chan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">sample_channel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">ordered_chans</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seg_chans</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">channel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span>
+                <span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">chan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chan</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">get_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+
+            <span class="n">ordered_chans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chan</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">(</span><span class="n">ordered_chans</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FOVSegmentor.segment_images">

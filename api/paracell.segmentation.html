@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -404,12 +405,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="paracell.segmentation.config.clean_dataclass_export">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.config.</span></span><span class="sig-name descname"><span class="pre">clean_dataclass_export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/config.html#clean_dataclass_export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.config.clean_dataclass_export" title="Link to this definition">¶</a></dt>
-<dd><p>Recursively converts dataclass to plain dict, filtering unwanted fields</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="paracell.segmentation.config.get_training_config">
 <span class="sig-prename descclassname"><span class="pre">paracell.segmentation.config.</span></span><span class="sig-name descname"><span class="pre">get_training_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#paracell.segmentation.config.CellposeTrainConfig" title="paracell.segmentation.config.CellposeTrainConfig"><span class="pre">CellposeTrainConfig</span></a></span></span><a class="reference internal" href="../_modules/paracell/segmentation/config.html#get_training_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.config.get_training_config" title="Link to this definition">¶</a></dt>
 <dd><p>Loads a cellpose training config from a yaml file.</p>
@@ -555,28 +550,6 @@ formatted mask. This mask is saved in the output directory.</p>
 <dt class="sig sig-object py" id="paracell.segmentation.dataset.CellposeDataset">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.dataset.</span></span><span class="sig-name descname"><span class="pre">CellposeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/dataset.html#CellposeDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.dataset.CellposeDataset" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.segmentation.dataset.random_crop_reshape">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.dataset.</span></span><span class="sig-name descname"><span class="pre">random_crop_reshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/dataset.html#random_crop_reshape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.dataset.random_crop_reshape" title="Link to this definition">¶</a></dt>
-<dd><p>Randomly crops the image, mask, and flows to 256x256.
-Pads smaller images with corresponding default values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>image</strong> (<em>np.ndarray</em>) – The image to crop.</p></li>
-<li><p><strong>mask</strong> (<em>np.ndarray</em>) – The mask to crop.</p></li>
-<li><p><strong>flows</strong> (<em>np.ndarray</em>) – The flows to crop.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing the cropped image, mask,            and flows. All cropped to 256x256.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
@@ -886,7 +859,23 @@ The underlying dataset needs to be in test mode, without image transforms.</p></
 <dl class="py method">
 <dt class="sig sig-object py" id="paracell.segmentation.segmentors.FOVSegmentor.get_seg_input">
 <span class="sig-name descname"><span class="pre">get_seg_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="paracell.html#paracell.paradata.FOV" title="paracell.paradata.FOV"><span class="pre">FOV</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/segmentors.html#FOVSegmentor.get_seg_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.segmentors.FOVSegmentor.get_seg_input" title="Link to this definition">¶</a></dt>
-<dd><p>Get segmentation input for FOV.</p>
+<dd><p>Get segmentation input, stacked channels in order, for FOV.</p>
+<p>Missing channels will be zeros with the shape of the other
+channels of the FOV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fov</strong> (<a class="reference internal" href="paracell.html#paracell.paradata.FOV" title="paracell.paradata.FOV"><em>FOV</em></a>) – FOV to generate the stacked image of.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when the FOV has no channels.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>stacked image</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1041,11 +1030,19 @@ Note: this will be overwritten by the FOV’s parent directory if that is set.</
 <span id="paracell-segmentation-transforms"></span><h2>paracell.segmentation.transforms<a class="headerlink" href="#module-paracell.segmentation.transforms" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomCrop">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomCrop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomCrop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomCrop" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomCrop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crop_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomCrop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomCrop" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>Randomly crops (image, flows, mask) to the specified crop_size.
-Keeps them spatially aligned.</p>
-<p>If p &lt; 1.0, there’s a chance we skip cropping entirely.</p>
+<p>Randomly crops (image, flows) to the given crop_size. If either the
+image height or width is smaller than the crop size, we skip the crop
+and return the original sample (no padding added).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>crop_size</strong> (<em>int</em><em> or </em><em>tuple</em>) – Desired (height, width) to crop.</p></li>
+<li><p><strong>p</strong> (<em>float</em>) – Probability of applying the transform.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomCrop.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomCrop.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomCrop.forward" title="Link to this definition">¶</a></dt>
@@ -1086,13 +1083,42 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomResize">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomResize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.75,</span> <span class="pre">1.25)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomResize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomResize" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Randomly resizes the (image, flows) to a new size scaled by a random factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scale_range</strong> (<em>tuple</em>) – Tuple of (min_scale, max_scale). For example, (0.75, 1.25)</p></li>
+<li><p><strong>p</strong> (<em>float</em>) – Probability of applying the transform.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomResize.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomResize.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomResize.forward" title="Link to this definition">¶</a></dt>
+<dd><p>Define the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomRotate">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomRotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomRotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomRotate" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Randomly rotate the (image, mask, flows) by an angle in [0, max_angle).
 Applies:
-1) A spatial rotation to the image, mask, and flows.
-2) A vector rotation to the flows’ (flowY, flowX).</p>
+1. A spatial rotation to the image, mask, and flows.
+2. A vector rotation to the flows’ (flowY, flowX).</p>
 <p>The mask is rotated with nearest-neighbor interpolation.
 The image &amp; flows use bilinear interpolation.</p>
 <dl class="py method">
@@ -1248,7 +1274,7 @@ so that it does not overwrite an existing file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paracell.segmentation.utils.get_lr_scheduler">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.utils.</span></span><span class="sig-name descname"><span class="pre">get_lr_scheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SequentialLR</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/utils.html#get_lr_scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.utils.get_lr_scheduler" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.utils.</span></span><span class="sig-name descname"><span class="pre">get_lr_scheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_per_epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SequentialLR</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/utils.html#get_lr_scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.utils.get_lr_scheduler" title="Link to this definition">¶</a></dt>
 <dd><p>Creates a cosine annealing scheduler with linear warmup.</p>
 <p>The warm up period is the first 10 epochs, or less if the total
 number of epochs is less than 10. The epochs past 10 are the
@@ -1369,7 +1395,6 @@ saves each image+mask+flows as a single figure (PNG) to output_dir.</p>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.save_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.save_every</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#paracell.segmentation.config.clean_dataclass_export"><code class="docutils literal notranslate"><span class="pre">clean_dataclass_export()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.get_training_config"><code class="docutils literal notranslate"><span class="pre">get_training_config()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.save_config"><code class="docutils literal notranslate"><span class="pre">save_config()</span></code></a></li>
 </ul>
@@ -1389,7 +1414,6 @@ saves each image+mask+flows as a single figure (PNG) to output_dir.</p>
 </li>
 <li><a class="reference internal" href="#module-paracell.segmentation.dataset">paracell.segmentation.dataset</a><ul>
 <li><a class="reference internal" href="#paracell.segmentation.dataset.CellposeDataset"><code class="docutils literal notranslate"><span class="pre">CellposeDataset</span></code></a></li>
-<li><a class="reference internal" href="#paracell.segmentation.dataset.random_crop_reshape"><code class="docutils literal notranslate"><span class="pre">random_crop_reshape()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-paracell.segmentation.engine">paracell.segmentation.engine</a><ul>
@@ -1460,6 +1484,10 @@ saves each image+mask+flows as a single figure (PNG) to output_dir.</p>
 </li>
 <li><a class="reference internal" href="#paracell.segmentation.transforms.RandomFlip"><code class="docutils literal notranslate"><span class="pre">RandomFlip</span></code></a><ul>
 <li><a class="reference internal" href="#paracell.segmentation.transforms.RandomFlip.forward"><code class="docutils literal notranslate"><span class="pre">RandomFlip.forward()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#paracell.segmentation.transforms.RandomResize"><code class="docutils literal notranslate"><span class="pre">RandomResize</span></code></a><ul>
+<li><a class="reference internal" href="#paracell.segmentation.transforms.RandomResize.forward"><code class="docutils literal notranslate"><span class="pre">RandomResize.forward()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#paracell.segmentation.transforms.RandomRotate"><code class="docutils literal notranslate"><span class="pre">RandomRotate</span></code></a><ul>

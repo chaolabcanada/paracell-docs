@@ -3,7 +3,7 @@ Aggregation
 
 After preforming :doc:`segmentation and feature extraction (FE) <feature_extraction>`, the cell aggregation needs to be preformed and analysis specific metadata need to be added.
 
-For these experiments, we can use the preprocess functions inside ``paracell.analysis``. Skeleton code is available inside the aggregation_qa notebook.
+For these experiments, we can use the preprocess functions inside ``paracell.analysis``. Skeleton code is available inside the `aggregation_qa notebook <https://github.com/chaolabcanada/paracell/blob/main/paracell/analysis/aggregation_qa.ipynb>`_.
 
 In the config options section, fill out the variables.
 

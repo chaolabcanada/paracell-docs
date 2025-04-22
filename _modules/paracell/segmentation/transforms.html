@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -275,6 +276,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms.v2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">v2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">T</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.transforms.functional</span><span class="w"> </span><span class="kn">import</span> <span class="n">InterpolationMode</span>
 
@@ -287,6 +289,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">train</span><span class="p">:</span>
         <span class="n">transforms</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
+            <span class="n">RandomResize</span><span class="p">(</span><span class="n">scale_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.8</span><span class="p">),</span>
             <span class="n">RandomRotate</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_angle</span><span class="o">=</span><span class="mf">180.0</span><span class="p">),</span>
             <span class="n">RandomFlip</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
             <span class="n">RandomCrop</span><span class="p">(</span><span class="n">crop_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
@@ -303,8 +306,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Randomly rotate the (image, mask, flows) by an angle in [0, max_angle).</span>
 <span class="sd">    Applies:</span>
-<span class="sd">    1) A spatial rotation to the image, mask, and flows.</span>
-<span class="sd">    2) A vector rotation to the flows&#39; (flowY, flowX).</span>
+<span class="sd">    1. A spatial rotation to the image, mask, and flows.</span>
+<span class="sd">    2. A vector rotation to the flows&#39; (flowY, flowX).</span>
 
 <span class="sd">    The mask is rotated with nearest-neighbor interpolation.</span>
 <span class="sd">    The image &amp; flows use bilinear interpolation.</span>
@@ -353,14 +356,14 @@
         <span class="n">cosA</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_radians</span><span class="p">)</span>
         <span class="n">sinA</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle_radians</span><span class="p">)</span>
 
-        <span class="n">flowY</span> <span class="o">=</span> <span class="n">flows_torch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">flowX</span> <span class="o">=</span> <span class="n">flows_torch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">flowY</span> <span class="o">=</span> <span class="n">flows_torch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">flowX</span> <span class="o">=</span> <span class="n">flows_torch</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
         <span class="n">new_flowY</span> <span class="o">=</span> <span class="n">cosA</span> <span class="o">*</span> <span class="n">flowY</span> <span class="o">-</span> <span class="n">sinA</span> <span class="o">*</span> <span class="n">flowX</span>
         <span class="n">new_flowX</span> <span class="o">=</span> <span class="n">sinA</span> <span class="o">*</span> <span class="n">flowY</span> <span class="o">+</span> <span class="n">cosA</span> <span class="o">*</span> <span class="n">flowX</span>
 
-        <span class="n">flows_torch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_flowY</span>
-        <span class="n">flows_torch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_flowX</span>
+        <span class="n">flows_torch</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_flowY</span>
+        <span class="n">flows_torch</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_flowX</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flows_torch</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">flows_torch</span><span class="p">)</span>
@@ -405,10 +408,10 @@
         <span class="n">flows</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">flip_horizontal</span><span class="p">:</span>
             <span class="n">flows</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">hflip</span><span class="p">(</span><span class="n">flows</span><span class="p">)</span>
-            <span class="n">flows</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">flows</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Flip X-direction</span>
+            <span class="n">flows</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">flows</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>  <span class="c1"># Flip X-direction</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">flows</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">vflip</span><span class="p">(</span><span class="n">flows</span><span class="p">)</span>
-            <span class="n">flows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">flows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">flows</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">flows</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flows</span>
 
@@ -421,52 +424,96 @@
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.transforms.RandomCrop">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RandomCrop</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Randomly crops (image, flows, mask) to the specified crop_size.</span>
-<span class="sd">    Keeps them spatially aligned.</span>
+<span class="sd">    Randomly crops (image, flows) to the given crop_size. If either the</span>
+<span class="sd">    image height or width is smaller than the crop size, we skip the crop</span>
+<span class="sd">    and return the original sample (no padding added).</span>
 
-<span class="sd">    If p &lt; 1.0, there&#39;s a chance we skip cropping entirely.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        crop_size (int or tuple): Desired (height, width) to crop.</span>
+<span class="sd">        p (float): Probability of applying the transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            crop_size (int): The output height &amp; width.</span>
-<span class="sd">            p (float): Probability of applying the crop.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">crop_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">crop_size</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span> <span class="o">=</span> <span class="n">crop_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">fill</span>
 
 <div class="viewcode-block" id="RandomCrop.forward">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.transforms.RandomCrop.forward">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
         <span class="n">image</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">sample</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span>  <span class="c1"># Skip</span>
 
-        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">sample</span>  <span class="c1"># Skip cropping</span>
+        <span class="n">crop_h</span><span class="p">,</span> <span class="n">crop_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">h_img</span><span class="p">,</span> <span class="n">w_img</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
 
-        <span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1"># Step 1: Pad if needed</span>
+        <span class="n">pad_h</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">crop_h</span> <span class="o">-</span> <span class="n">h_img</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">pad_w</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">crop_w</span> <span class="o">-</span> <span class="n">w_img</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">pad_h</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">pad_w</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">padding</span> <span class="o">=</span> <span class="p">[</span><span class="n">pad_w</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pad_h</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pad_w</span> <span class="o">-</span> <span class="n">pad_w</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pad_h</span> <span class="o">-</span> <span class="n">pad_h</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># left, top, right, bottom</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fill</span><span class="p">)</span>
+            <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">],</span> <span class="n">padding</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fill</span><span class="p">)</span>
+
+        <span class="c1"># Step 2: Now image is big enough to crop — safe to do</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">RandomCrop</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="p">(</span><span class="n">crop_h</span><span class="p">,</span> <span class="n">crop_w</span><span class="p">))</span>
+
+        <span class="c1"># Crop the image</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">j</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+
+        <span class="c1"># Crop the flows in the same manner</span>
         <span class="n">flows</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">H</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span> <span class="ow">or</span> <span class="n">W</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">sample</span>
-
-        <span class="c1"># 1) Choose random offsets</span>
-        <span class="n">top</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">H</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span><span class="p">)</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span><span class="p">)</span>
-        <span class="n">bottom</span> <span class="o">=</span> <span class="n">top</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_size</span>
-
-        <span class="c1"># 2) Crop the image</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">[:,</span> <span class="n">top</span><span class="p">:</span><span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span><span class="n">right</span><span class="p">]</span>
-
-        <span class="c1"># 3) Crop flows</span>
-        <span class="n">flows</span> <span class="o">=</span> <span class="n">flows</span><span class="p">[:,</span> <span class="n">top</span><span class="p">:</span><span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span><span class="n">right</span><span class="p">]</span>
+        <span class="n">flows</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">flows</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="n">j</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
 
         <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flows</span>
+       
+        <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span></div>
+</div>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="RandomResize">
+<a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.transforms.RandomResize">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomResize</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Randomly resizes the (image, flows) to a new size scaled by a random factor.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scale_range (tuple): Tuple of (min_scale, max_scale). For example, (0.75, 1.25)</span>
+<span class="sd">        p (float): Probability of applying the transform.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_scale</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_scale</span> <span class="o">=</span> <span class="n">scale_range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+
+<div class="viewcode-block" id="RandomResize.forward">
+<a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.transforms.RandomResize.forward">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="n">image</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">sample</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span>  <span class="c1"># Skip</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># Choose a random scale factor</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_scale</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_scale</span><span class="p">)</span>
+        <span class="n">new_h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span>
+        <span class="n">new_w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span>
+
+        <span class="c1"># Resize image and flows</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span><span class="p">],</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">InterpolationMode</span><span class="o">.</span><span class="n">BILINEAR</span><span class="p">)</span>
+
+        <span class="n">flows</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span>
+        <span class="n">flows</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">flows</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span><span class="p">],</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">InterpolationMode</span><span class="o">.</span><span class="n">BILINEAR</span><span class="p">)</span>
+
+        <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flows</span>
+        <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">target</span></div>
 </div>
 
 </pre></div>
