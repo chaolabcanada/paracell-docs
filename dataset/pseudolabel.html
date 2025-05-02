@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Pipeline Output" href="pipeline_output.html" /><link rel="prev" title="Dataset Formats" href="index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Seg Files" href="seg.html" /><link rel="prev" title="Model Output" href="model.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>Raw Images Directory - Paracell v0.0.1</title>
+        <title>Pseudolabel Output - Paracell v0.0.1</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -220,11 +220,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../cli.html">Command Line Interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../config.html">Config Structure</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Dataset Formats</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Dataset Formats</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Raw Images Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw_image_dir.html">Raw Images Directory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pseudolabel.html">Pseudolabel Output</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -256,7 +256,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/dataset/raw_image_dir.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/dataset/pseudolabel.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -276,59 +276,36 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="raw-images-directory">
-<h1>Raw Images Directory<a class="headerlink" href="#raw-images-directory" title="Link to this heading">¶</a></h1>
-<p>This consists of raw microscopy images, <code class="docutils literal notranslate"><span class="pre">.tif</span></code> files, for each channel. There are two formats, depending on the <code class="docutils literal notranslate"><span class="pre">plate_type</span></code> listed in the <a class="reference internal" href="../config.html#analysis-pipeline-config"><span class="std std-ref">config</span></a>.</p>
-<section id="naming-convention">
-<h2>Naming Convention<a class="headerlink" href="#naming-convention" title="Link to this heading">¶</a></h2>
-<section id="chao-lab-format">
-<span id="chao-lab-image-name-format"></span><h3>Chao Lab Format<a class="headerlink" href="#chao-lab-format" title="Link to this heading">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;well&gt;--&lt;well_number&gt;--&lt;fov_position&gt;--Z00002--T00000--3D Decon_&lt;channel&gt;.tif
+          <section id="pseudolabel-output">
+<h1>Pseudolabel Output<a class="headerlink" href="#pseudolabel-output" title="Link to this heading">¶</a></h1>
+<p>The pseudolabelling pipeline’s output is the same as the <a class="reference internal" href="pipeline_output.html"><span class="doc">analysis pipeline output</span></a>, except with a few extra folders.</p>
+<p>Structure:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;output folder&gt;
+├── merged/
+├── train/
+├── test/
+├── holdout/
+└── analysis pipeline outputs
 </pre></div>
 </div>
-<section id="example">
-<h4>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h4>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>B3--W00009--P00001--Z00002--T00000--3D Decon_Cy5.tif
-</pre></div>
-</div>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">well</span></code>: A1, A2, …, D6.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">well_number</span></code>: <code class="docutils literal notranslate"><span class="pre">W&lt;number&gt;</span></code>. The number is the number of the well. The A wells come first, then the B wells, and so on…</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fov_position</span></code>: <code class="docutils literal notranslate"><span class="pre">P&lt;number&gt;</span></code>. Number of the FOV inside the well.</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">channel</span></code>: Fluorescence channel. Typically, we have:</dt><dd><ul>
-<li><p>DAPI</p></li>
-<li><p>Cyan</p></li>
-<li><p>FITC</p></li>
-<li><p>Cy3</p></li>
-<li><p>Cy5</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
+<section id="train-test-holdout">
+<h2>Train/Test/Holdout<a class="headerlink" href="#train-test-holdout" title="Link to this heading">¶</a></h2>
+<p>These folders all contain image, seg pairs. These folders are of the <a class="reference internal" href="training.html"><span class="doc">training pipeline format</span></a>. Each folder contains a non-overlapping subset of the images. The percentage each folder contains, depends on the parameters set in config.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The part before the <code class="docutils literal notranslate"><span class="pre">--3D</span> <span class="pre">Decon</span></code>, eg <code class="docutils literal notranslate"><span class="pre">B3--W00009--P00001--Z00002--T00000</span></code>, is often referred to as the <strong>FOV prefix</strong>.</p>
+<p>The inclusion of <code class="docutils literal notranslate"><span class="pre">cl_computed_flows</span></code> in the <a class="reference internal" href="seg.html"><span class="doc">seg</span></a> files, depends on the config. There may also be other pseudolabelling related properties.</p>
 </div>
 </section>
+<section id="temporary-files-folders">
+<h2>Temporary Files/Folders<a class="headerlink" href="#temporary-files-folders" title="Link to this heading">¶</a></h2>
+<p>While running analysis, there are temporary files and folders created.</p>
+<section id="merged">
+<h3>Merged<a class="headerlink" href="#merged" title="Link to this heading">¶</a></h3>
+<p>This folder initial1ly contains all the stacked coloured images of FOVs, which will later be moved to the train, test, and holdout folders.</p>
 </section>
-<section id="cell-painting-format">
-<h3>Cell Painting Format<a class="headerlink" href="#cell-painting-format" title="Link to this heading">¶</a></h3>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;plate&gt;_&lt;well&gt;_&lt;site&gt;_&lt;channel&gt;&lt;uuid&gt;.tif
-</pre></div>
-</div>
-<section id="id1">
-<h4>Example<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>7149-01 berger 3-10-13_a01_s1_w13c56c22c-8e0a-4348-9ae5-e8c3c2f873a7.tif
-</pre></div>
-</div>
-<p>As we only support the Broad Institute dataset, for more information, see <a class="reference external" href="https://broadinstitute.github.io/cellpainting-gallery/data_structure.html#images-folder-structure">their docs</a>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The channel is w1, w2, …, w5. Paracell will load these channels, with the names specified in the <a class="reference internal" href="../config.html#analysis-pipeline-config"><span class="std std-ref">config</span></a>, in that order.</p>
-</div>
-</section>
+<section id="filtered-seg-files">
+<h3>Filtered Seg Files<a class="headerlink" href="#filtered-seg-files" title="Link to this heading">¶</a></h3>
+<p>These are files ending with <code class="docutils literal notranslate"><span class="pre">_filtered_seg.npy</span></code> or <code class="docutils literal notranslate"><span class="pre">_filtered_seg.npz</span></code>. These are generated while the normal seg files get filtered for GFP+ cells. They are moved into the train, test, and holdout folders.</p>
 </section>
 </section>
 </section>
@@ -338,23 +315,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="pipeline_output.html">
+          <a class="next-page" href="seg.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Pipeline Output</div>
+                <div class="title">Seg Files</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="model.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Dataset Formats</div>
+                <div class="title">Model Output</div>
                 
               </div>
             </a>
@@ -388,16 +365,11 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Raw Images Directory</a><ul>
-<li><a class="reference internal" href="#naming-convention">Naming Convention</a><ul>
-<li><a class="reference internal" href="#chao-lab-format">Chao Lab Format</a><ul>
-<li><a class="reference internal" href="#example">Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#cell-painting-format">Cell Painting Format</a><ul>
-<li><a class="reference internal" href="#id1">Example</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Pseudolabel Output</a><ul>
+<li><a class="reference internal" href="#train-test-holdout">Train/Test/Holdout</a></li>
+<li><a class="reference internal" href="#temporary-files-folders">Temporary Files/Folders</a><ul>
+<li><a class="reference internal" href="#merged">Merged</a></li>
+<li><a class="reference internal" href="#filtered-seg-files">Filtered Seg Files</a></li>
 </ul>
 </li>
 </ul>

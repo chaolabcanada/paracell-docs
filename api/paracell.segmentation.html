@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -354,7 +355,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.config.</span></span><span class="sig-name descname"><span class="pre">TrainingConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_every</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/config.html#TrainingConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.config.</span></span><span class="sig-name descname"><span class="pre">TrainingConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_every</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_every</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop_metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'AP50'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop_patience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop_min_delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/config.html#TrainingConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.batch_size">
@@ -364,6 +365,26 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.device">
 <span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.device" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.early_stop">
+<span class="sig-name descname"><span class="pre">early_stop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.early_stop" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.early_stop_metric">
+<span class="sig-name descname"><span class="pre">early_stop_metric</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'AP50'</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.early_stop_metric" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.early_stop_min_delta">
+<span class="sig-name descname"><span class="pre">early_stop_min_delta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.early_stop_min_delta" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.early_stop_patience">
+<span class="sig-name descname"><span class="pre">early_stop_patience</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.early_stop_patience" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -392,21 +413,10 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.resize">
-<span class="sig-name descname"><span class="pre">resize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.resize" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="paracell.segmentation.config.TrainingConfig.save_every">
 <span class="sig-name descname"><span class="pre">save_every</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#paracell.segmentation.config.TrainingConfig.save_every" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.segmentation.config.clean_dataclass_export">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.config.</span></span><span class="sig-name descname"><span class="pre">clean_dataclass_export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/config.html#clean_dataclass_export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.config.clean_dataclass_export" title="Link to this definition">¶</a></dt>
-<dd><p>Recursively converts dataclass to plain dict, filtering unwanted fields</p>
 </dd></dl>
 
 <dl class="py function">
@@ -553,7 +563,7 @@ formatted mask. This mask is saved in the output directory.</p>
 <span id="paracell-segmentation-dataset"></span><h2>paracell.segmentation.dataset<a class="headerlink" href="#module-paracell.segmentation.dataset" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="paracell.segmentation.dataset.CellposeDataset">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.dataset.</span></span><span class="sig-name descname"><span class="pre">CellposeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/dataset.html#CellposeDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.dataset.CellposeDataset" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.dataset.</span></span><span class="sig-name descname"><span class="pre">CellposeDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transforms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/dataset.html#CellposeDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.dataset.CellposeDataset" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
 </dd></dl>
 
@@ -562,7 +572,7 @@ formatted mask. This mask is saved in the output directory.</p>
 <span id="paracell-segmentation-engine"></span><h2>paracell.segmentation.engine<a class="headerlink" href="#module-paracell.segmentation.engine" title="Link to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="paracell.segmentation.engine.eval_checkpoint_model">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.engine.</span></span><span class="sig-name descname"><span class="pre">eval_checkpoint_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CellposeModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#paracell.segmentation.dataset.CellposeDataset" title="paracell.segmentation.dataset.CellposeDataset"><span class="pre">CellposeDataset</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coco_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">COCO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SummaryWriter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/engine.html#eval_checkpoint_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.engine.eval_checkpoint_model" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.engine.</span></span><span class="sig-name descname"><span class="pre">eval_checkpoint_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CellposeModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#paracell.segmentation.dataset.CellposeDataset" title="paracell.segmentation.dataset.CellposeDataset"><span class="pre">CellposeDataset</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coco_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">COCO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SummaryWriter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/engine.html#eval_checkpoint_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.engine.eval_checkpoint_model" title="Link to this definition">¶</a></dt>
 <dd><p>Runs eval on the model and saves to tensorboard.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -574,6 +584,12 @@ formatted mask. This mask is saved in the output directory.</p>
 <li><p><strong>writer</strong> (<em>SummaryWriter</em>) – Writer for AP, AR, loss and LR.</p></li>
 <li><p><strong>epoch</strong> (<em>int</em>) – One based epoch number.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Evaluation results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -611,6 +627,7 @@ formatted mask. This mask is saved in the output directory.</p>
 <dt class="sig sig-object py" id="paracell.segmentation.eval.HiddenPrints">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.eval.</span></span><span class="sig-name descname"><span class="pre">HiddenPrints</span></span><a class="reference internal" href="../_modules/paracell/segmentation/eval.html#HiddenPrints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.eval.HiddenPrints" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Context manager to suppress print statements.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -709,15 +726,17 @@ formatted mask. This mask is saved in the output directory.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="paracell.segmentation.eval.evaluate_cellpose_model">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.eval.</span></span><span class="sig-name descname"><span class="pre">evaluate_cellpose_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CellposeModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#paracell.segmentation.dataset.CellposeDataset" title="paracell.segmentation.dataset.CellposeDataset"><span class="pre">CellposeDataset</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coco_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">COCO</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_diam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'segm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">COCOeval</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/eval.html#evaluate_cellpose_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.eval.evaluate_cellpose_model" title="Link to this definition">¶</a></dt>
-<dd><p>Evaluate the cellpose model on the cellpose dataset.</p>
+<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.eval.</span></span><span class="sig-name descname"><span class="pre">evaluate_cellpose_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#paracell.segmentation.dataset.CellposeDataset" title="paracell.segmentation.dataset.CellposeDataset"><span class="pre">CellposeDataset</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CellposeModel</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coco_ds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">COCO</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_diam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'segm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">COCOeval</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/eval.html#evaluate_cellpose_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.eval.evaluate_cellpose_model" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluate a Cellpose model, either using an existing instance or by
+loading from disk.</p>
 <p>Note: Due to tiling, the loss computed may be slightly different        compared to that of the training loop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>CellposeModel</em>) – The cellpose model to evaluate.</p></li>
 <li><p><strong>dataloader</strong> (<em>DataLoader</em><em>[</em><a class="reference internal" href="#paracell.segmentation.dataset.CellposeDataset" title="paracell.segmentation.dataset.CellposeDataset"><em>CellposeDataset</em></a><em>]</em>) – The dataloader of the cellpose dataset.
 The underlying dataset needs to be in test mode, without image transforms.</p></li>
+<li><p><strong>model</strong> – (optional) a pre-loaded CellposeModel instance.</p></li>
+<li><p><strong>model_path</strong> – (optional) path to a checkpoint to load if user wants to evaluate a pretrained model.</p></li>
 <li><p><strong>coco_ds</strong> (<em>COCO</em><em>, </em><em>optional</em>) – COCO dataset loaded from dataloader.</p></li>
 <li><p><strong>img_diam</strong> (<em>int</em>) – Median cell diamater of the cells in the images.</p></li>
 <li><p><strong>iou_type</strong> (<em>str</em>) – The type of iou to use. Only bbox and segm are supported.</p></li>
@@ -790,6 +809,7 @@ The underlying dataset needs to be in test mode, without image transforms.</p></
 <dt class="sig sig-object py" id="paracell.segmentation.segmentors.CellposeSegmentationOutput">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.segmentors.</span></span><span class="sig-name descname"><span class="pre">CellposeSegmentationOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/segmentors.html#CellposeSegmentationOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.segmentors.CellposeSegmentationOutput" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#paracell.segmentation.segmentors.SegmentationOutput" title="paracell.segmentation.segmentors.SegmentationOutput"><code class="xref py py-class docutils literal notranslate"><span class="pre">SegmentationOutput</span></code></a></p>
+<p>Segmentation output for Cellpose.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -864,7 +884,23 @@ The underlying dataset needs to be in test mode, without image transforms.</p></
 <dl class="py method">
 <dt class="sig sig-object py" id="paracell.segmentation.segmentors.FOVSegmentor.get_seg_input">
 <span class="sig-name descname"><span class="pre">get_seg_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="paracell.html#paracell.paradata.FOV" title="paracell.paradata.FOV"><span class="pre">FOV</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/segmentors.html#FOVSegmentor.get_seg_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.segmentors.FOVSegmentor.get_seg_input" title="Link to this definition">¶</a></dt>
-<dd><p>Get segmentation input for FOV.</p>
+<dd><p>Get segmentation input, stacked channels in order, for FOV.</p>
+<p>Missing channels will be zeros with the shape of the other
+channels of the FOV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fov</strong> (<a class="reference internal" href="paracell.html#paracell.paradata.FOV" title="paracell.paradata.FOV"><em>FOV</em></a>) – FOV to generate the stacked image of.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – when the FOV has no channels.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>stacked image</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -918,6 +954,7 @@ The underlying dataset needs to be in test mode, without image transforms.</p></
 <dt class="sig sig-object py" id="paracell.segmentation.segmentors.SegmentationOutput">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.segmentors.</span></span><span class="sig-name descname"><span class="pre">SegmentationOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outlines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/segmentors.html#SegmentationOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.segmentors.SegmentationOutput" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for anything related to the segmentation of FOVs.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="paracell.segmentation.segmentors.SegmentationOutput.add_outlines_list">
 <span class="sig-name descname"><span class="pre">add_outlines_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/paracell/segmentation/segmentors.html#SegmentationOutput.add_outlines_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.segmentors.SegmentationOutput.add_outlines_list" title="Link to this definition">¶</a></dt>
@@ -1012,7 +1049,13 @@ Note: this will be overwritten by the FOV’s parent directory if that is set.</
 <dl class="py function">
 <dt class="sig sig-object py" id="paracell.segmentation.train.train_pipeline">
 <span class="sig-prename descclassname"><span class="pre">paracell.segmentation.train.</span></span><span class="sig-name descname"><span class="pre">train_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#paracell.segmentation.config.CellposeTrainConfig" title="paracell.segmentation.config.CellposeTrainConfig"><span class="pre">CellposeTrainConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/train.html#train_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.train.train_pipeline" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Train a Cellpose model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#paracell.segmentation.config.CellposeTrainConfig" title="paracell.segmentation.config.CellposeTrainConfig"><em>CellposeTrainConfig</em></a>) – The configuration for the training.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-paracell.segmentation.transforms">
@@ -1054,7 +1097,6 @@ registered hooks while the latter silently ignores them.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Randomly flips (image, flows) horizontally or vertically with probability <cite>p</cite>.
 Updates the flow vector directions correctly.</p>
-<p>Does NOT flip the mask (as per your requirements).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomFlip.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomFlip.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomFlip.forward" title="Link to this definition">¶</a></dt>
@@ -1104,10 +1146,10 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="paracell.segmentation.transforms.RandomRotate">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">paracell.segmentation.transforms.</span></span><span class="sig-name descname"><span class="pre">RandomRotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">180.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#RandomRotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.RandomRotate" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>Randomly rotate the (image, mask, flows) by an angle in [0, max_angle).
+<p>Randomly rotate the (image, flows) by an angle in [0, max_angle).
 Applies:
-1) A spatial rotation to the image, mask, and flows.
-2) A vector rotation to the flows’ (flowY, flowX).</p>
+1. A spatial rotation to the image and flows.
+2. A vector rotation to the flows’ (flowY, flowX).</p>
 <p>The mask is rotated with nearest-neighbor interpolation.
 The image &amp; flows use bilinear interpolation.</p>
 <dl class="py method">
@@ -1132,6 +1174,17 @@ The image &amp; flows use bilinear interpolation.</p>
 <dt class="sig sig-object py" id="paracell.segmentation.transforms.get_transform">
 <span class="sig-prename descclassname"><span class="pre">paracell.segmentation.transforms.</span></span><span class="sig-name descname"><span class="pre">get_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/transforms.html#get_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.transforms.get_transform" title="Link to this definition">¶</a></dt>
 <dd><p>Get the transformations to be applied to both image and target (mask/bboxes).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>train</strong> (<em>bool</em>) – Whether to get the training or validation transforms.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The transformations to be applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torchvision.transforms.Compose</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1155,18 +1208,6 @@ if file_number is positive.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.segmentation.utils.build_lbl_np">
-<span class="sig-prename descclassname"><span class="pre">paracell.segmentation.utils.</span></span><span class="sig-name descname"><span class="pre">build_lbl_np</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_targets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/paracell/segmentation/utils.html#build_lbl_np"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.segmentation.utils.build_lbl_np" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>batch_targets is a list of length B, each entry is a dict with:</dt><dd><p>target[“mask”] =&gt; shape (H, W)
-target[“flows”] =&gt; shape (3, H, W) =&gt; [flowY, flowX, ???]</p>
-</dd>
-<dt>We’ll produce a NumPy array of shape (B, 3, H, W):</dt><dd><p>[0]=cellprob, [1]=flowY, [2]=flowX</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1375,16 +1416,18 @@ saves each image+mask+flows as a single figure (PNG) to output_dir.</p>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig"><code class="docutils literal notranslate"><span class="pre">TrainingConfig</span></code></a><ul>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.batch_size</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.device"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.device</span></code></a></li>
+<li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.early_stop"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop</span></code></a></li>
+<li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.early_stop_metric"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop_metric</span></code></a></li>
+<li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.early_stop_min_delta"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop_min_delta</span></code></a></li>
+<li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.early_stop_patience"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop_patience</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.eval_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.eval_every</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.learning_rate"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.learning_rate</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.n_epochs"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.n_epochs</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.n_workers"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.n_workers</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.normalize"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.normalize</span></code></a></li>
-<li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.resize"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.resize</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.TrainingConfig.save_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.save_every</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#paracell.segmentation.config.clean_dataclass_export"><code class="docutils literal notranslate"><span class="pre">clean_dataclass_export()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.get_training_config"><code class="docutils literal notranslate"><span class="pre">get_training_config()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.config.save_config"><code class="docutils literal notranslate"><span class="pre">save_config()</span></code></a></li>
 </ul>
@@ -1489,7 +1532,6 @@ saves each image+mask+flows as a single figure (PNG) to output_dir.</p>
 </li>
 <li><a class="reference internal" href="#module-paracell.segmentation.utils">paracell.segmentation.utils</a><ul>
 <li><a class="reference internal" href="#paracell.segmentation.utils.add_file_number"><code class="docutils literal notranslate"><span class="pre">add_file_number()</span></code></a></li>
-<li><a class="reference internal" href="#paracell.segmentation.utils.build_lbl_np"><code class="docutils literal notranslate"><span class="pre">build_lbl_np()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.utils.build_lbl_tensor"><code class="docutils literal notranslate"><span class="pre">build_lbl_tensor()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.utils.cellpose_flows_to_save_flows"><code class="docutils literal notranslate"><span class="pre">cellpose_flows_to_save_flows()</span></code></a></li>
 <li><a class="reference internal" href="#paracell.segmentation.utils.collate_fn"><code class="docutils literal notranslate"><span class="pre">collate_fn()</span></code></a></li>

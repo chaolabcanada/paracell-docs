@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -288,23 +289,23 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fov</span> <span class="o">=</span> <span class="n">FOV</span><span class="p">(</span><span class="s2">&quot;A2--W00002--P00064--Z00002--T00000&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The argument passed in is the FOV prefix. This encodes the well and position information of the FOV, and follows <a class="reference internal" href="../../dataset/raw_image_dir.html#chao-lab-image-name-format"><span class="std std-ref">this</span></a> format.</p>
+<p>The argument passed in is the FOV prefix. This encodes the well and position information of the FOV, and follows <a class="reference internal" href="../../dataset/raw_image_dir.html#chao-lab-image-name-format"><span class="std std-ref">this</span></a> format. FOV prefixes are also generally used at the start of file names. Eg: <code class="docutils literal notranslate"><span class="pre">&lt;prefix_name&gt;_seg.npy</span></code> is the naming convention for seg files.</p>
 </section>
 <section id="fov-channels">
 <h2>FOV Channels<a class="headerlink" href="#fov-channels" title="Link to this heading">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">channels</span></code> property is a dictionary, with the keys being the name of the channel, and the value being the grayscale images (numpy array). Channels can be manually added, typically from loading grayscale images. For the following example, we will just create a random numpy image.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">channels</span></code> property is a dictionary, with the keys being the name of the channel, and the value being the grayscale images (numpy array). Channels represent raw images from the microscope with cells fluorescing with different stains. They can be manually added, typically from loading grayscale images. For the following example, we will just create a random numpy image.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="s2">&quot;FITC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
    <span class="mi">0</span><span class="p">,</span> <span class="mi">65535</span><span class="p">,</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>FOVs also contain a processed channel property. Typically, channels are raw images from the microscope, and processed channels are the processed versions of those raw images. For example, you may have a thresholded version of the FITC channel, in the processed channels.</p>
+<p>FOVs also contain a processed channel property, used for storing processed variations of channels. For example, you may have a thresholded version of the FITC channel, in the processed channels.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fitc_channel</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="s2">&quot;FITC&quot;</span><span class="p">]</span>
 <span class="n">thresh_fitc</span> <span class="o">=</span> <span class="n">thresh_img</span><span class="p">(</span><span class="n">fitc_channel</span><span class="p">)</span>
 <span class="n">fov</span><span class="o">.</span><span class="n">add_processed_channel</span><span class="p">(</span><span class="s2">&quot;thresh&quot;</span><span class="p">,</span> <span class="s2">&quot;FITC&quot;</span><span class="p">,</span> <span class="n">thresh_fitc</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">thresh_img</span></code> is from the <code class="docutils literal notranslate"><span class="pre">paracell.improcess.ops</span></code> module. It preforms <a class="reference external" href="https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html#autotoc_md1435">OTSU thresholding</a>. The exact specifics aren’t relevant for this tutorial.</p>
+<p><code class="docutils literal notranslate"><span class="pre">thresh_img</span></code> is from the <code class="docutils literal notranslate"><span class="pre">paracell.improcess.ops</span></code> module. It performs <a class="reference external" href="https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html#autotoc_md1435">OTSU thresholding</a>. The exact specifics aren’t relevant for this tutorial.</p>
 </section>
 <section id="fovmanager">
 <h2>FOVManager<a class="headerlink" href="#fovmanager" title="Link to this heading">¶</a></h2>
@@ -344,7 +345,7 @@
 </section>
 <section id="pre-segmented-fovs">
 <h3>Pre-segmented FOVs<a class="headerlink" href="#pre-segmented-fovs" title="Link to this heading">¶</a></h3>
-<p>So far, only FOVs with channels have been created. FOVs also contain cells, and their corresponding masks and outlines. Cells are generally created through the use of a <a class="reference internal" href="segmentation.html"><span class="doc">segmentor</span></a> (more about them on the next page). However, saved segmentation data can be used to load the cells on an FOV. Saved <a class="reference internal" href="../../dataset/seg.html"><span class="doc">seg files</span></a> are typically stored in a folder of similar format to <a class="reference internal" href="../../dataset/pipeline_output.html"><span class="doc">analyses output folders</span></a>. The specifics aren’t important. Just know the seg folder needs a file <code class="docutils literal notranslate"><span class="pre">&lt;fov_prefix&gt;_seg.npy</span></code> (<code class="docutils literal notranslate"><span class="pre">_seg.npz</span></code> is also valid), and the image folder needs a file <code class="docutils literal notranslate"><span class="pre">&lt;fov_prefix&gt;.tif</span></code>.</p>
+<p>So far, only FOVs with channels have been created. FOVs also contain cells, and their corresponding masks and outlines. Cells are generally created through the use of a <a class="reference internal" href="segmentation.html"><span class="doc">segmentor class</span></a> (more about them on the next page). However, saved segmentation data can be used to load the cells on an FOV. Saved <a class="reference internal" href="../../dataset/seg.html"><span class="doc">seg files</span></a> are typically stored in a folder of similar format to <a class="reference internal" href="../../dataset/pipeline_output.html"><span class="doc">analyses output folders</span></a>. The specifics aren’t important. Just know the seg folder needs a file <code class="docutils literal notranslate"><span class="pre">&lt;fov_prefix&gt;_seg.npy</span></code> (<code class="docutils literal notranslate"><span class="pre">_seg.npz</span></code> is also valid), and the image folder needs a file <code class="docutils literal notranslate"><span class="pre">&lt;fov_prefix&gt;.tif</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fov</span> <span class="o">=</span> <span class="n">FOVManager</span><span class="o">.</span><span class="n">load_presegmented_fov</span><span class="p">(</span>
    <span class="s2">&quot;A2--W00002--P00064--Z00002--T00000&quot;</span><span class="p">,</span>
    <span class="n">RAW_IMAGE_DIR</span><span class="p">,</span>

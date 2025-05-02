@@ -1,7 +1,7 @@
 Paracell API
 ============
 
-This is the more technical documentation for the API. It's recommended you read the developer guide first.
+This section serves as a comprehensive technical reference for the API. We recommend using the search tool to locate specific classes, functions, and modules, instead of reading through the documentation. For step-by-step tutorials, please start with the :doc:`Developer Guide <../guides/developer/index>` and explore other introductory sections first.
 
 .. toctree::
    :maxdepth: 4

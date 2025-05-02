@@ -9,6 +9,7 @@ Dataset Formats
    pipeline_output
    training
    model
+   pseudolabel
    seg
 
 Paracell uses various dataset formats for each of its pipelines. This page will provide a brief description on each. A more detailed explanation can be found on the following pages.
@@ -28,6 +29,10 @@ Folder with pairs of ``.tif`` files and corresponding ``_seg.npy`` files, for Ce
 :doc:`Model Output <model>`
 ---------------------------
 Contains TensorBoard data, config, logs, and the models on every checkpoint.
+
+:doc:`Pseudolabel Output <pseudolabel>`
+---------------------------------------
+Pipeline output but with train, test, holdout folders. These contain the pseudolabelled segmentation data and merged images.
 
 :doc:`Seg Files <seg>`
 ----------------------

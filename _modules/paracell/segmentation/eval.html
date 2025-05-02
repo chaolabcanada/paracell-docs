@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -287,6 +288,9 @@
 <div class="viewcode-block" id="HiddenPrints">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.eval.HiddenPrints">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">HiddenPrints</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Context manager to suppress print statements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_original_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
@@ -325,10 +329,17 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_iou_properties</span><span class="p">(</span><span class="n">binary_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates iou specific properties for a binary mask.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates iou specific properties for a binary mask.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        binary_mask(np.ndarray): A binary mask.</span>
+<span class="sd">        iou_type(str): The type of iou to use. Only bbox and segm are supported.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The properties of the binary mask.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">props</span> <span class="o">=</span> <span class="p">{}</span>
-
     <span class="k">if</span> <span class="n">iou_type</span> <span class="o">==</span> <span class="s2">&quot;segm&quot;</span><span class="p">:</span>
         <span class="n">binary_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfortranarray</span><span class="p">(</span><span class="n">binary_mask</span><span class="p">)</span>
         <span class="n">rle</span> <span class="o">=</span> <span class="n">mask_utils</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">binary_mask</span><span class="p">)</span>
@@ -352,23 +363,26 @@
     <span class="k">return</span> <span class="n">props</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_binary_mask_to_annotation</span><span class="p">(</span>
-    <span class="n">binary_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a binary mask to a COCO annotation.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_binary_mask_to_annotation</span><span class="p">(</span><span class="n">binary_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a binary mask to a COCO annotation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        binary_mask(np.ndarray): A binary mask.</span>
+<span class="sd">        iou_type(str): The type of iou to use. Only bbox and segm are supported.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Dictionary with COCO annotation fields for a single object, including category,</span>
+<span class="sd">        area, segmentation or bounding box, and iscrowd flag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;category_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">_iou_properties</span><span class="p">(</span><span class="n">binary_mask</span><span class="p">,</span> <span class="n">iou_type</span><span class="p">),</span>
         <span class="s2">&quot;iscrowd&quot;</span><span class="p">:</span> <span class="mi">0</span>
     <span class="p">}</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_cellpose_masks_to_coco</span><span class="p">(</span>
-    <span class="n">masks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">image_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">annotation_start_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;segm&quot;</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_cellpose_masks_to_coco</span><span class="p">(</span><span class="n">masks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">image_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">annotation_start_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;segm&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert cellpose masks to the coco dataset format.</span>
 <span class="sd">    This includes the image and annotations.</span>
 
@@ -377,6 +391,7 @@
 <span class="sd">        image_id(int): Image id.</span>
 <span class="sd">        annotation_start_id(int): The id of the first annotation.</span>
 <span class="sd">        iou_type(str): The type of iou to use. Only bbox and segm are supported.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        Tuple[dict, dict]: coco image and annotation entry respectively.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -403,12 +418,8 @@
 
 <div class="viewcode-block" id="pred_masks_to_annotations">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.eval.pred_masks_to_annotations">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">pred_masks_to_annotations</span><span class="p">(</span>
-    <span class="n">pred_masks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">image_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">flows</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;segm&quot;</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pred_masks_to_annotations</span><span class="p">(</span> <span class="n">pred_masks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">image_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                              <span class="n">flows</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;segm&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert predicted masks to COCO annotations.</span>
 
 <span class="sd">    Args:</span>
@@ -546,12 +557,8 @@
 
 <div class="viewcode-block" id="evaluate">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.eval.evaluate">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
-    <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">CellposeDataset</span><span class="p">],</span>
-    <span class="n">get_predictions</span><span class="p">:</span> <span class="n">GetPredictionsType</span><span class="p">,</span>
-    <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">coco_ds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">COCO</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">COCOeval</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span> <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">CellposeDataset</span><span class="p">],</span> <span class="n">get_predictions</span><span class="p">:</span> <span class="n">GetPredictionsType</span><span class="p">,</span>
+             <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">coco_ds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">COCO</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">COCOeval</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a generic model on the cellpose dataset.</span>
 
 <span class="sd">    Args:</span>
@@ -600,23 +607,20 @@
 
 <div class="viewcode-block" id="evaluate_cellpose_model">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.eval.evaluate_cellpose_model">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_cellpose_model</span><span class="p">(</span>
-    <span class="n">model</span><span class="p">:</span> <span class="n">CellposeModel</span><span class="p">,</span>
-    <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">CellposeDataset</span><span class="p">],</span>
-    <span class="n">coco_ds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">COCO</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">img_diam</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-    <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;segm&quot;</span><span class="p">,</span>
-    <span class="n">include_loss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">COCOeval</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate the cellpose model on the cellpose dataset.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">evaluate_cellpose_model</span><span class="p">(</span> <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">CellposeDataset</span><span class="p">],</span> <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CellposeModel</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">model_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">coco_ds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">COCO</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">img_diam</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+                            <span class="n">iou_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;segm&quot;</span><span class="p">,</span> <span class="n">include_loss</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">COCOeval</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a Cellpose model, either using an existing instance or by</span>
+<span class="sd">    loading from disk.</span>
 
 <span class="sd">    Note: Due to tiling, the loss computed may be slightly different\</span>
 <span class="sd">        compared to that of the training loop.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model(CellposeModel): The cellpose model to evaluate.</span>
 <span class="sd">        dataloader(DataLoader[CellposeDataset]): The dataloader of the cellpose dataset.</span>
 <span class="sd">            The underlying dataset needs to be in test mode, without image transforms.</span>
+<span class="sd">        model: (optional) a pre-loaded CellposeModel instance.</span>
+<span class="sd">        model_path: (optional) path to a checkpoint to load if user wants to evaluate a pretrained model.</span>
 <span class="sd">        coco_ds(COCO, optional): COCO dataset loaded from dataloader.</span>
 <span class="sd">        img_diam(int): Median cell diamater of the cells in the images.</span>
 <span class="sd">        iou_type(str): The type of iou to use. Only bbox and segm are supported.</span>
@@ -626,6 +630,12 @@
 <span class="sd">        Tuple[COCOeval | dict, float]: The evaluator or dictionary, and the loss.\</span>
 <span class="sd">            Loss is nan if there are no predictions or if not requested.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide either a `model` instance or a `model_path` to load from.&quot;</span><span class="p">)</span>
+        <span class="c1"># load from checkpoint</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">CellposeModel</span><span class="p">(</span><span class="n">pretrained_model</span><span class="o">=</span><span class="n">model_path</span><span class="p">,</span> <span class="n">nchan</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
     <span class="n">test_loss_total</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">test_image_count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -651,12 +661,11 @@
             <span class="c1"># the same size.</span>
             <span class="k">for</span> <span class="n">flow</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">flows</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
                 <span class="n">gt_flows</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span>
+                <span class="c1"># Cellpose flows: [0]=Y flow, [1]=X flow, [2]=CellProb</span>
                 <span class="n">pred_flows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">([</span>
-                    <span class="c1"># TODO: figure out if the order is XY or YX.</span>
-                    <span class="c1"># Swapping them does not seem to make a large difference.</span>
-                    <span class="n">flow</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">flow</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
-                    <span class="n">flow</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">flow</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>  <span class="c1"># Y flow</span>
+                    <span class="n">flow</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>  <span class="c1"># X flow</span>
+                    <span class="n">flow</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>      <span class="c1"># CellProb</span>
                 <span class="p">])</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">pred_flows</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">pred_flows</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 

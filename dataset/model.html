@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Seg Files" href="seg.html" /><link rel="prev" title="Training Dataset" href="training.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Pseudolabel Output" href="pseudolabel.html" /><link rel="prev" title="Training Dataset" href="training.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>Model Output - Paracell v0.0.1</title>
@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="training.html">Training Dataset</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -309,7 +310,7 @@
 <section id="model-checkpoints">
 <h2>Model Checkpoints<a class="headerlink" href="#model-checkpoints" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">&lt;model_name&gt;.pt</span></code> file is the fully trained model, after all training epochs have passed.</p>
-<p>For every checkpoint epoch, a checkpoint model, <code class="docutils literal notranslate"><span class="pre">&lt;model_name&gt;_epoch_&lt;epoch&gt;.pt</span></code>, is saved.</p>
+<p>For every checkpoint epoch, a checkpoint model, <code class="docutils literal notranslate"><span class="pre">&lt;model_name&gt;_best_epoch_&lt;epoch&gt;.pt</span></code> or <code class="docutils literal notranslate"><span class="pre">&lt;model_name&gt;_worse_epoch_&lt;epoch&gt;.pt</span></code>, is saved.</p>
 </section>
 <section id="config">
 <h2>Config<a class="headerlink" href="#config" title="Link to this heading">¶</a></h2>
@@ -326,12 +327,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="seg.html">
+          <a class="next-page" href="pseudolabel.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Seg Files</div>
+                <div class="title">Pseudolabel Output</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

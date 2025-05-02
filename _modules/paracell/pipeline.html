@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -275,7 +276,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Literal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_start_method</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">FIRST_COMPLETED</span><span class="p">,</span> <span class="n">wait</span><span class="p">,</span> <span class="n">as_completed</span>
@@ -283,16 +284,19 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisPipelineConfig</span><span class="p">,</span> <span class="n">IlluminationCorrectionConfig</span><span class="p">,</span> <span class="n">SegmentationConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_config</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.improcess.illumination</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaSiCPyWrapper</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.segmentors</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultCellposeSegmentor</span><span class="p">,</span> <span class="n">ThreeChannelCellposeSegmentor</span><span class="p">,</span> <span class="n">CellposeLoadSegmentor</span><span class="p">,</span> <span class="n">SegmentationOutputGeneric</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paralog</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_paralogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paralog</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_paralogger</span><span class="p">,</span> <span class="n">add_default_paralog_handlers</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paracell_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlateDeserializer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlateFactory</span><span class="p">,</span> <span class="n">FOVManager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paradata</span><span class="w"> </span><span class="kn">import</span> <span class="n">Plate</span><span class="p">,</span> <span class="n">Well</span><span class="p">,</span> <span class="n">FOV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlateFactory</span><span class="p">,</span> <span class="n">FOVManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paracell_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">FOVDeserializer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.feature_extraction.analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cell_analysis_classes</span><span class="p">,</span> <span class="n">CellAnalysisMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.feature_extraction</span><span class="w"> </span><span class="kn">import</span> <span class="n">dfe</span><span class="p">,</span> <span class="n">vision</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.cell_painting</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_cell_painting_plate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.cell_painting</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_cell_painting_plate</span><span class="p">,</span> <span class="n">map_to_existing_plate</span>
 
 
 <div class="viewcode-block" id="create_plate">
@@ -301,10 +305,32 @@
     <span class="n">plate_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">image_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">is_new_plate</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-    <span class="n">plate_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">channels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">plate_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;chao_lab&quot;</span><span class="p">,</span> <span class="s2">&quot;cell_painting&quot;</span><span class="p">],</span>
+    <span class="n">channels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overwrite_analysis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a plate based on config options.</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        This immediately saves the plate.json to the disk. If\</span>
+<span class="sd">        overwrite_analysis is enabled, this will clear the\</span>
+<span class="sd">        old plate.json.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        plate_name (str): Name of the plate.</span>
+<span class="sd">        image_dir (str): Directory containing the raw microscopy images.</span>
+<span class="sd">        output_dir (str): Directory to save analyses and segs.</span>
+<span class="sd">        plate_type (&quot;chao_lab&quot; | &quot;cell_painting&quot;): Type of plate.</span>
+<span class="sd">        channels (List[str], optional): Channels to be loaded for\</span>
+<span class="sd">            the images. This is used only for cell_painting plate\</span>
+<span class="sd">            formats, to map w1, w2, ..., w5 to their channels.</span>
+<span class="sd">        overwrite_analysis (bool, optional): If we redo the analysis\</span>
+<span class="sd">            and want to overwrite the previous plate data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">plate_json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;plate.json&quot;</span><span class="p">)</span>
+    <span class="n">is_new_plate</span> <span class="o">=</span> <span class="n">overwrite_analysis</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">plate_json_path</span><span class="p">)</span>
+
     <span class="c1"># Channels is for cell painting only.</span>
     <span class="k">if</span> <span class="n">plate_type</span> <span class="o">==</span> <span class="s2">&quot;chao_lab&quot;</span><span class="p">:</span>
         <span class="c1"># Load plate, either from scratch (dir) or from specified JSON file</span>
@@ -313,19 +339,37 @@
                 <span class="n">plate_name</span><span class="p">,</span> <span class="n">image_dir</span><span class="p">,</span> <span class="n">divider</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;*3D Decon*.tif&quot;</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">plate</span> <span class="o">=</span> <span class="n">PlateDeserializer</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;plate.json&quot;</span><span class="p">))</span>
+            <span class="n">plate</span> <span class="o">=</span> <span class="n">PlateDeserializer</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">plate_json_path</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">plate_type</span> <span class="o">==</span> <span class="s2">&quot;cell_painting&quot;</span><span class="p">:</span>
-        <span class="c1"># The cellpainting project dir is actually the batch&#39;s dir.</span>
+        <span class="c1"># The cell painting project dir is actually the batch&#39;s dir.</span>
         <span class="n">plate</span> <span class="o">=</span> <span class="n">create_cell_painting_plate</span><span class="p">(</span>
             <span class="n">image_dir</span><span class="p">,</span>
             <span class="n">plate_name</span><span class="p">,</span>
             <span class="n">channels</span>
         <span class="p">)</span>
+
+        <span class="c1"># If it&#39;s an existing plate, remap the uuids on the wells/fovs.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_new_plate</span><span class="p">:</span>
+            <span class="n">map_to_existing_plate</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span> <span class="n">plate_json_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid plate type: </span><span class="si">{</span><span class="n">plate_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+    <span class="c1"># Add FOV metadata to wells for plate.json save.</span>
+    <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fov</span> <span class="ow">in</span> <span class="n">well</span><span class="o">.</span><span class="n">fovs</span><span class="p">:</span>
+            <span class="n">well</span><span class="o">.</span><span class="n">add_fov_metadata</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
     <span class="n">plate</span><span class="o">.</span><span class="n">set_output_dir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-    <span class="n">plate</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;plate.json&quot;</span><span class="p">))</span>
+    <span class="n">plate</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">plate_json_path</span><span class="p">)</span>
+
+    <span class="c1"># Clear all the FOV metadata, since they will be</span>
+    <span class="c1"># added back during analysis.</span>
+    <span class="c1"># There should only be two saves, this initial one</span>
+    <span class="c1"># and the one after the analysis ends.</span>
+    <span class="c1"># The analysis pipeline checks for the existence of</span>
+    <span class="c1"># files.</span>
+    <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">:</span>
+        <span class="n">well</span><span class="o">.</span><span class="n">_fov_dicts</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">return</span> <span class="n">plate</span></div>
 
@@ -337,7 +381,7 @@
     <span class="n">config</span><span class="p">:</span> <span class="n">SegmentationConfig</span><span class="p">,</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">DefaultCellposeSegmentor</span><span class="p">,</span> <span class="n">ThreeChannelCellposeSegmentor</span><span class="p">]:</span>
-    <span class="c1"># The 3ch model doesn&#39;t suppoort n chans and the 2ch model only supports cyto3.</span>
+    <span class="c1"># The 3ch model doesn&#39;t support n chans and the 2ch model only supports cyto3.</span>
     <span class="c1"># 3ch model if there is a model path provided.</span>
     <span class="n">n_chans</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">seg_model_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">3</span>
     <span class="n">channels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">channels</span><span class="p">[:</span><span class="n">n_chans</span><span class="p">]</span>
@@ -363,7 +407,7 @@
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_MockWell</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock well to simulate parent plate/well.</span>
-<span class="sd">    Used by FOVTorchDataset to prevent the neeed</span>
+<span class="sd">    Used by FOVTorchDataset to prevent the need</span>
 <span class="sd">    to pickle the entire plate/well, as they may</span>
 <span class="sd">    contain references to other FOVs.</span>
 <span class="sd">    FOV.get_metadata_dict uses this to get the</span>
@@ -377,7 +421,7 @@
         <span class="k">class</span><span class="w"> </span><span class="nc">MockPlate</span><span class="p">:</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plate_uuid</span><span class="p">:</span> <span class="n">UUID</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">plate_uuid</span>
-                
+
         <span class="k">return</span> <span class="n">MockPlate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plate_uuid</span><span class="p">)</span>
 
 
@@ -441,7 +485,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fov</span><span class="o">.</span><span class="n">load_channels</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">fov</span><span class="o">.</span><span class="n">load_channels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">)</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">load_channels</span><span class="p">(</span><span class="n">suffixes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fov</span><span class="p">,</span> <span class="p">{</span>
             <span class="s2">&quot;well_idx&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_well_idx</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="p">}</span>
@@ -477,26 +521,79 @@
     <span class="n">cell_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">well_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">deallocate_when_done</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">deallocate_when_done</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">overwrite_analyses</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;For analyzing a single FOV, as a multiprocess task.</span>
 
 <span class="sd">    It&#39;s assumed the FOVs has been segmented, but this will call create cells on FOVs.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        fov: The FOV to analyze.</span>
-<span class="sd">        analyses: The analyses to run.</span>
-<span class="sd">        output_dir: The directory to save the output files. None if not saving.</span>
-<span class="sd">        deallocate_when_done: Whether to deallocate the FOV when done.</span>
+<span class="sd">        fov (FOV): The FOV to analyze.</span>
+<span class="sd">        analyses (List[CellAnalysisMixin]): The analyses to run.</span>
+<span class="sd">        cell_probabilities (np.ndarray): List of segmentation probabilities for each cell.</span>
+<span class="sd">        well_idx (int): Index of the well. Exists for multiprocessed setups.</span>
+<span class="sd">        output_dir (str, optional): The directory to save the output files. None if not saving.</span>
+<span class="sd">        deallocate_when_done (bool): Whether to deallocate the FOV when done. Defaults to True.</span>
+<span class="sd">        overwrite_analyses (bool): If cell analyses should be overwritten. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[int, dict]: well_idx and the FOV metadata</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">FOVManager</span><span class="o">.</span><span class="n">construct_cells</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cell_probabilities</span><span class="p">)</span>
+    <span class="n">cell_save_path</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">csv_path</span>
+    <span class="c1"># Default the cell save path if needed.</span>
+    <span class="k">if</span> <span class="n">cell_save_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cell_save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fov</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_cells.csv&quot;</span><span class="p">)</span>
+        <span class="n">fov</span><span class="o">.</span><span class="n">set_csv_path</span><span class="p">(</span><span class="n">cell_save_path</span><span class="p">)</span>
+
+    <span class="c1"># If cells need to be constructed from scratch.</span>
+    <span class="n">from_scratch</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Only load if it&#39;s append mode and the file exists.</span>
+    <span class="c1"># If it&#39;s unsuccessful, warn and load from scratch.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">overwrite_analyses</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cell_save_path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">FOVDeserializer</span><span class="o">.</span><span class="n">cells_from_csv</span><span class="p">(</span><span class="n">fov</span><span class="p">):</span>
+            <span class="n">get_paralogger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to load FOV cells from csv file </span><span class="si">%s</span><span class="s2">. Recreating cells. Old data will be lost.&quot;</span><span class="p">,</span>
+                <span class="n">fov</span><span class="o">.</span><span class="n">csv_path</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">cells</span><span class="p">)</span> <span class="o">!=</span> <span class="n">fov</span><span class="o">.</span><span class="n">masks</span><span class="o">.</span><span class="n">max</span><span class="p">():</span>
+            <span class="c1"># This can also happen due to holes in the masks,</span>
+            <span class="c1"># but this doesn&#39;t happen from cellpose outputs.</span>
+            <span class="n">get_paralogger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Loaded csv cell count doesn&#39;t match FOV mask cell count. Csv path: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">fov</span><span class="o">.</span><span class="n">csv_path</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Loaded successfully.</span>
+            <span class="n">from_scratch</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">from_scratch</span><span class="p">:</span>
+        <span class="n">FOVManager</span><span class="o">.</span><span class="n">construct_cells</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">cell_probabilities</span><span class="p">)</span>
+
+    <span class="c1"># Only do analyses not done already when not overwriting.</span>
+    <span class="n">completed_analysis_prefixes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">overwrite_analyses</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">cells</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">cells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">unique_prefixes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span>
+            <span class="n">k</span><span class="p">[:</span><span class="n">k</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">)]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cell</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="p">])</span>
+        <span class="n">completed_analysis_prefixes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">unique_prefixes</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+    <span class="n">analyses</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">analysis</span> <span class="k">for</span> <span class="n">analysis</span> <span class="ow">in</span> <span class="n">analyses</span> <span class="k">if</span>
+        <span class="n">analysis</span><span class="o">.</span><span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">completed_analysis_prefixes</span>
+    <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">fov</span><span class="o">.</span><span class="n">cells</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">analysis</span> <span class="ow">in</span> <span class="n">analyses</span><span class="p">:</span>
             <span class="n">analysis</span><span class="o">.</span><span class="n">analyze_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">fov</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fov</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_cells.csv&quot;</span><span class="p">))</span>
+        <span class="c1"># Only save if stuff has been updated.</span>
+        <span class="k">if</span> <span class="n">analyses</span> <span class="ow">or</span> <span class="n">overwrite_analyses</span><span class="p">:</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">cell_save_path</span><span class="p">)</span>
         <span class="n">fov</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fov</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_imdata.json&quot;</span><span class="p">))</span>
 
     <span class="n">fov_metadata_dict</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">get_metadata_dict</span><span class="p">()</span>
@@ -526,9 +623,10 @@
     <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">FOVTorchDataset</span><span class="p">],</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">analysis_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">seg_override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">seg_override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">analysis_override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">):</span>
-    <span class="c1"># For comaptibility with cuda and deep feature extraction.</span>
+    <span class="c1"># For compatibility with cuda and deep feature extraction.</span>
     <span class="n">set_start_method</span><span class="p">(</span><span class="s2">&quot;spawn&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">load_segmentor</span> <span class="o">=</span> <span class="n">CellposeLoadSegmentor</span><span class="p">(</span><span class="n">segmentor</span><span class="o">.</span><span class="n">save_compressed</span><span class="p">)</span>
     <span class="n">load_segmentor</span><span class="o">.</span><span class="n">set_seg_dir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
@@ -575,9 +673,16 @@
                     <span class="n">process_count</span> <span class="o">=</span> <span class="mi">2</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">seg_override</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">seg_path</span><span class="p">):</span>
                         <span class="c1"># This could benefit from parallel loading in the future.</span>
-                        <span class="n">seg_out</span> <span class="o">=</span> <span class="n">load_segmentor</span><span class="o">.</span><span class="n">segment_fov</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
-                        <span class="n">seg_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg_out</span><span class="p">)</span>
-                        <span class="n">process_count</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">seg_out</span> <span class="o">=</span> <span class="n">load_segmentor</span><span class="o">.</span><span class="n">segment_fov</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+                            <span class="n">seg_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg_out</span><span class="p">)</span>
+                            <span class="n">process_count</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="k">except</span> <span class="p">(</span><span class="n">zipfile</span><span class="o">.</span><span class="n">BadZipFile</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+                            <span class="n">get_paralogger</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                                <span class="s2">&quot;Failed to load FOV segmentation. Possible corrupted file? </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                                <span class="n">seg_path</span>
+                            <span class="p">)</span>
+                            <span class="n">to_segment</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">to_segment</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
 
@@ -621,7 +726,7 @@
                     <span class="n">future</span> <span class="o">=</span> <span class="n">analysis_pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
                         <span class="n">analyze_fov</span><span class="p">,</span>
                         <span class="n">fov</span><span class="p">,</span> <span class="n">analyses</span><span class="p">,</span> <span class="n">seg_outs</span><span class="o">.</span><span class="n">mask_probabilities</span><span class="p">,</span> <span class="n">well_idx</span><span class="p">,</span>
-                        <span class="n">output_dir</span><span class="p">,</span> <span class="kc">True</span>
+                        <span class="n">output_dir</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">analysis_override</span>
                     <span class="p">)</span>
                     <span class="n">analysis_pool_futures</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
 
@@ -663,6 +768,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Path containing the images(corrected if illumcor runs).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">illumcor_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">illumcor_path</span>
+    <span class="n">illumcor_model_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">illumcor_model_path</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">illumcor_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">illumcor_path</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
         <span class="n">illumcor_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;illumcor&quot;</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">illumcor_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -774,14 +881,22 @@
     <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;.*xFormers is available.*&quot;</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;torch.hub&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
 
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="n">t_start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">get_paralogger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">add_default_paralog_handlers</span><span class="p">(</span>
+        <span class="n">logger</span><span class="p">,</span>
+        <span class="n">save_path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;pipeline.log&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DAPI&quot;</span><span class="p">,</span> <span class="s2">&quot;Cyan&quot;</span><span class="p">,</span> <span class="s2">&quot;Cy3&quot;</span><span class="p">,</span> <span class="s2">&quot;Cy5&quot;</span><span class="p">,</span> <span class="s2">&quot;FITC&quot;</span><span class="p">]</span>
     <span class="n">channels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">channels</span>
-    <span class="k">if</span> <span class="n">channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DAPI&quot;</span><span class="p">,</span> <span class="s2">&quot;Cyan&quot;</span><span class="p">,</span> <span class="s2">&quot;Cy3&quot;</span><span class="p">,</span> <span class="s2">&quot;Cy5&quot;</span><span class="p">,</span> <span class="s2">&quot;FITC&quot;</span><span class="p">]</span>
 
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Save a copy of the config.</span>
+    <span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;config.yaml&quot;</span><span class="p">))</span>
 
     <span class="n">image_path</span> <span class="o">=</span> <span class="n">run_illumcor</span><span class="p">(</span>
         <span class="n">config</span><span class="o">.</span><span class="n">illumination_correction_config</span><span class="p">,</span>
@@ -795,9 +910,9 @@
         <span class="n">config</span><span class="o">.</span><span class="n">plate_name</span><span class="p">,</span>
         <span class="n">image_path</span><span class="p">,</span>
         <span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">is_new_plate</span><span class="p">,</span>
         <span class="n">config</span><span class="o">.</span><span class="n">plate_type</span><span class="p">,</span>
-        <span class="n">channels</span>
+        <span class="n">channels</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save_analysis_mode</span> <span class="o">==</span> <span class="s2">&quot;overwrite&quot;</span>
     <span class="p">)</span>
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -811,13 +926,17 @@
         <span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">analyses</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">feature_extractor</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">feature_extractor</span> <span class="ow">in</span> <span class="n">get_cell_analysis_classes</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">vision</span><span class="p">,</span> <span class="n">dfe</span><span class="p">],</span>
-            <span class="n">config</span><span class="o">.</span><span class="n">analyses</span>
-        <span class="p">)</span>
-    <span class="p">]</span>
+    <span class="c1"># This is for pseudolabelling which passes in the</span>
+    <span class="c1"># constructed analyses classes.</span>
+    <span class="n">analyses</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">analyses</span>
+    <span class="k">if</span> <span class="n">analyses</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">analyses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">analyses</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">feature_extractor</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">feature_extractor</span> <span class="ow">in</span> <span class="n">get_cell_analysis_classes</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">vision</span><span class="p">,</span> <span class="n">dfe</span><span class="p">],</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">analyses</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
 
     <span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
         <span class="n">analysis_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">analysis</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">analysis</span> <span class="ow">in</span> <span class="n">analyses</span><span class="p">]</span>
@@ -826,6 +945,9 @@
     <span class="n">wells</span> <span class="o">=</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="o">*</span><span class="n">config</span><span class="o">.</span><span class="n">well_range</span><span class="p">)]</span>
     <span class="c1"># Autoload all channels as this is analysis.</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">FOVTorchDataset</span><span class="p">(</span><span class="n">wells</span><span class="p">)</span>
+    <span class="c1"># TODO: we need better FOV abstraction in the future.</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">plate_type</span> <span class="o">==</span> <span class="s2">&quot;chao_lab&quot;</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">channels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
     <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
         <span class="n">dataset</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">segmentation_config</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
@@ -841,7 +963,8 @@
         <span class="n">dataloader</span><span class="p">,</span>
         <span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
         <span class="n">config</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">segmentation_config</span><span class="o">.</span><span class="n">seg_override</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">seg_override</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">save_analysis_mode</span> <span class="o">==</span> <span class="s2">&quot;overwrite&quot;</span>
     <span class="p">)</span>
 
     <span class="n">plate</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;plate.json&quot;</span><span class="p">))</span>

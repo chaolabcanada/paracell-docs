@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -339,14 +340,7 @@
 
 <div class="viewcode-block" id="eval_checkpoint_model">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.engine.eval_checkpoint_model">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">eval_checkpoint_model</span><span class="p">(</span>
-    <span class="n">model</span><span class="p">:</span> <span class="n">CellposeModel</span><span class="p">,</span>
-    <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">CellposeDataset</span><span class="p">],</span>
-    <span class="n">coco_ds</span><span class="p">:</span> <span class="n">COCO</span><span class="p">,</span>
-    <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">writer</span><span class="p">:</span> <span class="n">SummaryWriter</span><span class="p">,</span>
-    <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_checkpoint_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">CellposeModel</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">[</span><span class="n">CellposeDataset</span><span class="p">],</span> <span class="n">coco_ds</span><span class="p">:</span> <span class="n">COCO</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">writer</span><span class="p">:</span> <span class="n">SummaryWriter</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs eval on the model and saves to tensorboard.</span>
 
 <span class="sd">    Args:</span>
@@ -358,10 +352,13 @@
 <span class="sd">            epoch.</span>
 <span class="sd">        writer (SummaryWriter): Writer for AP, AR, loss and LR.</span>
 <span class="sd">        epoch (int): One based epoch number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Evaluation results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Eval and save to tensorboard.</span>
     <span class="n">evaluator</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">evaluate_cellpose_model</span><span class="p">(</span>
-        <span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">coco_ds</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">diam_mean</span><span class="p">),</span> <span class="n">include_loss</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">dataloader</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">coco_ds</span><span class="o">=</span><span class="n">coco_ds</span><span class="p">,</span> <span class="n">img_diam</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">diam_mean</span><span class="p">),</span> <span class="n">include_loss</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">evaluator</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">eval_results</span> <span class="o">=</span> <span class="n">evaluator</span>
@@ -388,7 +385,9 @@
         <span class="n">STATS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AP&quot;</span><span class="p">,</span> <span class="s2">&quot;AP50&quot;</span><span class="p">,</span> <span class="s2">&quot;AP75&quot;</span><span class="p">,</span> <span class="s2">&quot;AR100&quot;</span><span class="p">,</span> <span class="s2">&quot;AR10&quot;</span><span class="p">]</span>
         <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Short eval summary:&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="n">STATS</span><span class="p">:</span>
-            <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2">: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stat</span><span class="p">,</span> <span class="n">eval_results</span><span class="p">[</span><span class="n">stat</span><span class="p">])</span></div>
+            <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2">: </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">stat</span><span class="p">,</span> <span class="n">eval_results</span><span class="p">[</span><span class="n">stat</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">eval_results</span></div>
 
 </pre></div>
         </article>

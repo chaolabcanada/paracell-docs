@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -277,15 +278,13 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">optim</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="c1"># Non-interactive backend so we can save plots over SSH</span>
+
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.optim.lr_scheduler</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearLR</span><span class="p">,</span> <span class="n">CosineAnnealingLR</span><span class="p">,</span> <span class="n">SequentialLR</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cellpose.transforms</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize99</span>
 
-<span class="c1">###############################################################################</span>
-<span class="c1"># Example Loss Function</span>
-<span class="c1">###############################################################################</span>
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_loss_fn_seg</span><span class="p">(</span><span class="n">lbl</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the loss function between true labels (lbl) and prediction (y).</span>
@@ -317,93 +316,14 @@
 
     <span class="k">return</span> <span class="n">loss_flows</span> <span class="o">+</span> <span class="n">loss_cellprob</span>
 
-<span class="c1"># def _loss_fn_seg(lbl, y, device):</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     Calculates the loss function between true labels lbl and prediction y.</span>
 
-<span class="c1">#     lbl: shape (B, 3, H, W) =&gt; [0]=cellprob, [1]=flowY, [2]=flowX</span>
-<span class="c1">#     y:   shape (B, 3, H, W) =&gt; we expect [0]=flowY, [1]=flowX, [2]=cellprob</span>
-
-<span class="c1">#     We&#39;ll do MSE on the flows, BCEWithLogits on the cellprob.</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-<span class="c1">#     criterion = nn.MSELoss(reduction=&quot;mean&quot;)</span>
-<span class="c1">#     criterion2 = nn.BCEWithLogitsLoss(reduction=&quot;mean&quot;)</span>
-
-<span class="c1">#     # flows in lbl[:, 1:] =&gt; shape (B, 2, H, W)</span>
-<span class="c1">#     flows_target = 5.0 * torch.from_numpy(lbl[:, 1:]).to(device)</span>
-<span class="c1">#     flows_pred = y[:, :2]  # predicted flowY, flowX</span>
-<span class="c1">#     loss_flows = criterion(flows_pred, flows_target) / 2.0</span>
-
-<span class="c1">#     # cellprob in lbl[:, 0]</span>
-<span class="c1">#     cellprob_target = (torch.from_numpy(lbl[:, 0]) &gt; 0.5).float().to(device)</span>
-<span class="c1">#     cellprob_pred = y[:, 2]  # predicted cellprob is channel 2</span>
-<span class="c1">#     loss_cellprob = criterion2(cellprob_pred, cellprob_target)</span>
-
-<span class="c1">#     return loss_flows + loss_cellprob</span>
-
-<span class="c1">###############################################################################</span>
-<span class="c1"># Helper to Build Ground Truth from the Dataset Targets</span>
-<span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="build_lbl_np">
-<a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.build_lbl_np">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">build_lbl_np</span><span class="p">(</span><span class="n">batch_targets</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    batch_targets is a list of length B, each entry is a dict with:</span>
-<span class="sd">        target[&quot;mask&quot;] =&gt; shape (H, W)</span>
-<span class="sd">        target[&quot;flows&quot;] =&gt; shape (3, H, W) =&gt; [flowY, flowX, ???]</span>
-
-<span class="sd">    We&#39;ll produce a NumPy array of shape (B, 3, H, W):</span>
-<span class="sd">      [0]=cellprob, [1]=flowY, [2]=flowX</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">all_lbl</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">batch_targets</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]</span>  <span class="c1"># shape (H, W), type Torch tensor</span>
-        <span class="n">flows</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span>  <span class="c1"># shape (3, H, W), Torch tensor</span>
-
-        <span class="n">mask_np</span> <span class="o">=</span> <span class="p">(</span><span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">flows_np</span> <span class="o">=</span> <span class="n">flows</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-
-        <span class="n">flowY</span> <span class="o">=</span> <span class="n">flows_np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">flowX</span> <span class="o">=</span> <span class="n">flows_np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">stacked</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">mask_np</span><span class="p">,</span> <span class="n">flowY</span><span class="p">,</span> <span class="n">flowX</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">all_lbl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stacked</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">all_lbl</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># shape =&gt; (B, 3, H, W)</span></div>
-
-
-
-<span class="c1">################################</span>
 <div class="viewcode-block" id="build_lbl_tensor">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.build_lbl_tensor">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_lbl_tensor</span><span class="p">(</span><span class="n">batch_targets</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;flows&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">batch_targets</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-    <span class="c1"># all_lbl = []</span>
-    <span class="c1"># for t in batch_targets:</span>
-    <span class="c1">#     mask = t[&quot;mask&quot;]       # torch.Tensor, shape (H, W)</span>
-    <span class="c1">#     flows = t[&quot;flows&quot;]     # torch.Tensor, shape (3, H, W)</span>
-    <span class="c1">#     # print(type(flows))</span>
-    <span class="c1">#     # Ensure float32</span>
-    <span class="c1">#     # mask = mask.float()</span>
-    <span class="c1">#     flows = flows.float()</span>
-
-    <span class="c1">#     # Binary mask → cellprob [0 or 1]</span>
-    <span class="c1">#     # mask_bin = (mask &gt; 0.5).float()</span>
-    <span class="c1">#     mask_np = (mask &gt; 0.5).astype(np.float32)</span>
-    <span class="c1">#     # Grab flowY = flows[1], flowX = flows[2]</span>
-    <span class="c1">#     flowY = flows[1]</span>
-    <span class="c1">#     flowX = flows[2]</span>
-
-    <span class="c1">#     stacked = torch.stack([flowY, flowX], dim=0)  # shape (3, H, W)</span>
-    <span class="c1">#     all_lbl.append(stacked)</span>
-
-    <span class="c1"># return torch.stack(all_lbl, dim=0)  # shape (B, 3, H, W)</span>
 
 
-
-<span class="c1">###############################################################################</span>
-<span class="c1"># Function to Save Sample Images from the DataLoader</span>
-<span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="save_sample_images">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.save_sample_images">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_sample_images</span><span class="p">(</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;sample_outputs&quot;</span><span class="p">,</span> <span class="n">max_samples</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
@@ -475,11 +395,7 @@
 
 <div class="viewcode-block" id="get_lr_scheduler">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.get_lr_scheduler">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_lr_scheduler</span><span class="p">(</span> <span class="c1">#issue is we cal it every time we finish a batch. the LR schedular gets reset</span>
-    <span class="n">optimizer</span><span class="p">:</span> <span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">,</span>
-    <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">steps_per_epoch</span><span class="p">:</span> <span class="nb">int</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequentialLR</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_lr_scheduler</span><span class="p">(</span> <span class="n">optimizer</span><span class="p">:</span> <span class="n">optim</span><span class="o">.</span><span class="n">Optimizer</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequentialLR</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a cosine annealing scheduler with linear warmup.</span>
 
 <span class="sd">    The warm up period is the first 10 epochs, or less if the total</span>
@@ -494,15 +410,6 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        SequentialLR: The scheduler.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># warmup_scheduler = LinearLR(optimizer, start_factor=0.05, total_iters=min(10, epochs))</span>
-    <span class="c1"># # warmup_scheduler = LinearLR(optimizer, start_factor=0.05, total_iters=min(10, epochs)*batch)</span>
-    <span class="c1"># if epochs &lt;= 10:</span>
-    <span class="c1">#     return warmup_scheduler</span>
-
-    <span class="c1"># main_scheduler = CosineAnnealingLR(optimizer, T_max=max(epochs - 10, 0))</span>
-    <span class="c1"># scheduler = SequentialLR(optimizer, [warmup_scheduler, main_scheduler], milestones=[10])</span>
-
-    <span class="c1"># return scheduler</span>
     <span class="n">total_steps</span> <span class="o">=</span> <span class="n">epochs</span> <span class="o">*</span> <span class="n">steps_per_epoch</span>
     <span class="n">warmup_steps</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span> <span class="o">*</span> <span class="n">steps_per_epoch</span>  <span class="c1"># warmup in steps</span>
     <span class="k">if</span> <span class="n">total_steps</span> <span class="o">&lt;=</span> <span class="n">warmup_steps</span><span class="p">:</span>
@@ -518,17 +425,9 @@
 
 
 
-<span class="c1">###############################################################################</span>
-<span class="c1"># Directory Scanning Utility</span>
-<span class="c1">###############################################################################</span>
 <div class="viewcode-block" id="gather_image_mask_paths">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.utils.gather_image_mask_paths">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gather_image_mask_paths</span><span class="p">(</span>
-    <span class="n">image_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">mask_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">image_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.tif&quot;</span><span class="p">,</span>
-    <span class="n">mask_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_seg.npy&quot;</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gather_image_mask_paths</span><span class="p">(</span> <span class="n">image_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mask_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">image_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.tif&quot;</span><span class="p">,</span> <span class="n">mask_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_seg.npy&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gathers all image paths in `image_dir` that match `image_ext`.</span>
 <span class="sd">    For each image named e.g. &quot;foo.tif&quot;, expects a corresponding mask</span>

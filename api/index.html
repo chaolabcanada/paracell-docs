@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -277,7 +278,7 @@
         <article role="main" id="furo-main-content">
           <section id="paracell-api">
 <h1>Paracell API<a class="headerlink" href="#paracell-api" title="Link to this heading">¶</a></h1>
-<p>This is the more technical documentation for the API. It’s recommended you read the developer guide first.</p>
+<p>This section serves as a comprehensive technical reference for the API. We recommend using the search tool to locate specific classes, functions, and modules, instead of reading through the documentation. For step-by-step tutorials, please start with the <a class="reference internal" href="../guides/developer/index.html"><span class="doc">Developer Guide</span></a> and explore other introductory sections first.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="paracell.html">paracell</a><ul>
@@ -288,7 +289,20 @@
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.CellPaintingFOV.load_channels"><code class="docutils literal notranslate"><span class="pre">CellPaintingFOV.load_channels()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath"><code class="docutils literal notranslate"><span class="pre">PlatePath</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath.analysis_dir"><code class="docutils literal notranslate"><span class="pre">PlatePath.analysis_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath.batch"><code class="docutils literal notranslate"><span class="pre">PlatePath.batch</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath.image_dir"><code class="docutils literal notranslate"><span class="pre">PlatePath.image_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath.metadata_dir"><code class="docutils literal notranslate"><span class="pre">PlatePath.metadata_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath.paracell_output_dir"><code class="docutils literal notranslate"><span class="pre">PlatePath.paracell_output_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.cell_painting.PlatePath.plate"><code class="docutils literal notranslate"><span class="pre">PlatePath.plate</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.analyzed_fov_to_profiler_output"><code class="docutils literal notranslate"><span class="pre">analyzed_fov_to_profiler_output()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.create_cell_painting_plate"><code class="docutils literal notranslate"><span class="pre">create_cell_painting_plate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.get_plate_paths"><code class="docutils literal notranslate"><span class="pre">get_plate_paths()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.map_to_existing_plate"><code class="docutils literal notranslate"><span class="pre">map_to_existing_plate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.cell_painting.plate_to_profiler_output"><code class="docutils literal notranslate"><span class="pre">plate_to_profiler_output()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="paracell.html#module-paracell.config">config</a><ul>
@@ -297,12 +311,13 @@
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.channels"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.channels</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.illumination_correction_config"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.illumination_correction_config</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.image_dir"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.image_dir</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.is_new_plate"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.is_new_plate</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.n_workers"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.n_workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.output_dir"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.output_dir</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.plate_name"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.plate_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.plate_type"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.plate_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.quality_control"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.quality_control</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.save_analysis_mode"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.save_analysis_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.seg_override"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.seg_override</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.segmentation_config"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.segmentation_config</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.AnalysisPipelineConfig.well_range"><code class="docutils literal notranslate"><span class="pre">AnalysisPipelineConfig.well_range</span></code></a></li>
 </ul>
@@ -320,9 +335,9 @@
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.load_workers"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.load_workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.save_compressed"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.save_compressed</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.seg_model_path"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.seg_model_path</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.config.SegmentationConfig.seg_override"><code class="docutils literal notranslate"><span class="pre">SegmentationConfig.seg_override</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.config.clean_dataclass_export"><code class="docutils literal notranslate"><span class="pre">clean_dataclass_export()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.config.load_analysis_config"><code class="docutils literal notranslate"><span class="pre">load_analysis_config()</span></code></a></li>
 </ul>
 </li>
@@ -363,6 +378,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.cells_from_csv"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.cells_from_csv()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.from_dict"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.from_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.from_json"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.from_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.html#paracell.paracell_io.FOVDeserializer.read_cells"><code class="docutils literal notranslate"><span class="pre">FOVDeserializer.read_cells()</span></code></a></li>
@@ -525,6 +541,7 @@
 <li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.analyze_cell"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.analyze_cell()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.analyze_image"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.analyze_image()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.extract_features"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.extract_features()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.get_transformed_batch"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.get_transformed_batch()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.name"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.prefix"><code class="docutils literal notranslate"><span class="pre">DINOV2FeatureExtractor.prefix</span></code></a></li>
 </ul>
@@ -709,16 +726,18 @@
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig"><code class="docutils literal notranslate"><span class="pre">TrainingConfig</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.batch_size"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.batch_size</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.device"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.device</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.early_stop"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.early_stop_metric"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop_metric</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.early_stop_min_delta"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop_min_delta</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.early_stop_patience"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stop_patience</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.eval_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.eval_every</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.learning_rate"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.learning_rate</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.n_epochs"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.n_epochs</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.n_workers"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.n_workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.normalize"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.normalize</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.resize"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.resize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.save_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.save_every</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.clean_dataclass_export"><code class="docutils literal notranslate"><span class="pre">clean_dataclass_export()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.get_training_config"><code class="docutils literal notranslate"><span class="pre">get_training_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.config.save_config"><code class="docutils literal notranslate"><span class="pre">save_config()</span></code></a></li>
 </ul>
@@ -823,7 +842,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="paracell.segmentation.html#module-paracell.segmentation.utils">paracell.segmentation.utils</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.add_file_number"><code class="docutils literal notranslate"><span class="pre">add_file_number()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.build_lbl_np"><code class="docutils literal notranslate"><span class="pre">build_lbl_np()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.build_lbl_tensor"><code class="docutils literal notranslate"><span class="pre">build_lbl_tensor()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.cellpose_flows_to_save_flows"><code class="docutils literal notranslate"><span class="pre">cellpose_flows_to_save_flows()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="paracell.segmentation.html#paracell.segmentation.utils.collate_fn"><code class="docutils literal notranslate"><span class="pre">collate_fn()</span></code></a></li>
@@ -844,6 +862,17 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="paracell.utils.html#module-paracell.utils.general">paracell.utils.general</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.general.safe_divide"><code class="docutils literal notranslate"><span class="pre">safe_divide()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.utils.html#module-paracell.utils.io">paracell.utils.io</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.io.load_seg"><code class="docutils literal notranslate"><span class="pre">load_seg()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="paracell.utils.html#module-paracell.utils.metadata_repair">paracell.utils.metadata_repair</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.metadata_repair.get_fov_uuid"><code class="docutils literal notranslate"><span class="pre">get_fov_uuid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.metadata_repair.regenerate_imdata_json"><code class="docutils literal notranslate"><span class="pre">regenerate_imdata_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.metadata_repair.regenerate_plate_json"><code class="docutils literal notranslate"><span class="pre">regenerate_plate_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="paracell.utils.html#paracell.utils.metadata_repair.well_from_fov_prefix"><code class="docutils literal notranslate"><span class="pre">well_from_fov_prefix()</span></code></a></li>
 </ul>
 </li>
 </ul>

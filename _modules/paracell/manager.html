@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -439,7 +440,7 @@
 <div class="viewcode-block" id="FOVManager.load_presegmented_fov">
 <a class="viewcode-back" href="../../api/paracell.html#paracell.manager.FOVManager.load_presegmented_fov">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_presegmented_fov</span><span class="p">(</span><span class="n">fov_prefix_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parent_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seg_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FOV</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_presegmented_fov</span><span class="p">(</span><span class="n">fov_prefix_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raw_image_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seg_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FOV</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads an FOV with its channels and cell masks presegmented. This</span>
 <span class="sd">        automatically detects if there is a compressed or uncompressed</span>
 <span class="sd">        segmentation file.</span>
@@ -448,8 +449,8 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            fov_prefix_name (str): Relative file name of FOV excluding channels.</span>
-<span class="sd">            parent_dir (str): Directory of the raw tif images. </span>
-<span class="sd">            seg_dir (str): Directory of the segmented cells.</span>
+<span class="sd">            raw_image_dir (str): Directory of the raw tif images.</span>
+<span class="sd">            seg_dir (str): Directory containing the seg files and FOV metadata.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            FOV: FOV with channels and cells loaded.</span>
@@ -467,7 +468,7 @@
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Segmentation file not found for </span><span class="si">{</span><span class="n">fov_prefix_name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">seg_dir</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
         <span class="n">fov</span> <span class="o">=</span> <span class="n">FOV</span><span class="p">(</span><span class="n">fov_prefix_name</span><span class="p">)</span>
-        <span class="n">fov</span><span class="o">.</span><span class="n">set_parent_path</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">)</span>
+        <span class="n">fov</span><span class="o">.</span><span class="n">set_parent_path</span><span class="p">(</span><span class="n">raw_image_dir</span><span class="p">)</span>
         <span class="n">fov</span><span class="o">.</span><span class="n">set_seg_path</span><span class="p">(</span><span class="n">seg_path</span><span class="p">)</span>
         <span class="n">fov</span><span class="o">.</span><span class="n">load_channels</span><span class="p">()</span>
 

@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -285,13 +286,20 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_transform</span><span class="p">(</span><span class="n">train</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the transformations to be applied to both image and target (mask/bboxes).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        train(bool): Whether to get the training or validation transforms.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        torchvision.transforms.Compose: The transformations to be applied.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">train</span><span class="p">:</span>
         <span class="n">transforms</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
-            <span class="n">RandomResize</span><span class="p">(</span><span class="n">scale_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.8</span><span class="p">),</span>
+            <span class="c1"># RandomResize(scale_range=(0.75, 1.25), p=0.8),</span>
+            <span class="n">RandomCrop</span><span class="p">(</span><span class="n">crop_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
             <span class="n">RandomRotate</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_angle</span><span class="o">=</span><span class="mf">180.0</span><span class="p">),</span>
             <span class="n">RandomFlip</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
-            <span class="n">RandomCrop</span><span class="p">(</span><span class="n">crop_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+            
         <span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">transforms</span> <span class="o">=</span> <span class="kc">None</span>
@@ -303,10 +311,10 @@
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.transforms.RandomRotate">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RandomRotate</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Randomly rotate the (image, mask, flows) by an angle in [0, max_angle).</span>
+<span class="sd">    Randomly rotate the (image, flows) by an angle in [0, max_angle).</span>
 <span class="sd">    Applies:</span>
-<span class="sd">    1) A spatial rotation to the image, mask, and flows.</span>
-<span class="sd">    2) A vector rotation to the flows&#39; (flowY, flowX).</span>
+<span class="sd">    1. A spatial rotation to the image and flows.</span>
+<span class="sd">    2. A vector rotation to the flows&#39; (flowY, flowX).</span>
 
 <span class="sd">    The mask is rotated with nearest-neighbor interpolation.</span>
 <span class="sd">    The image &amp; flows use bilinear interpolation.</span>
@@ -380,8 +388,6 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Randomly flips (image, flows) horizontally or vertically with probability `p`.</span>
 <span class="sd">    Updates the flow vector directions correctly.</span>
-
-<span class="sd">    Does NOT flip the mask (as per your requirements).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>

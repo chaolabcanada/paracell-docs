@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -296,6 +297,30 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">cl_computed_flows</span></code> are <a class="reference internal" href="../../dataset/seg.html#cl-computed-flows-description"><span class="std std-ref">Paracell’s format</span></a> used for training.</p></li>
 </ul>
 </section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>Paracell has some tests in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder. These can be run using <code class="docutils literal notranslate"><span class="pre">pytest</span></code>. After navigating into the root of the Paracell repository.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="mkl">
+<h2>MKL<a class="headerlink" href="#mkl" title="Link to this heading">¶</a></h2>
+<p>The default BLAS numpy uses, openblas, may not work properly on some Intel CPUs. If you see a large portion of the CPU being used by system calls (<code class="docutils literal notranslate"><span class="pre">sy</span></code> in the <code class="docutils literal notranslate"><span class="pre">top</span></code> command), while running Paracell feature extraction, try switching to <a class="reference external" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html">MKL</a>.</p>
+<p>When using MKL, make sure to import numpy first, before other packages. This avoids MKL related errors. This done automatically in the Paracell cli, but you will have to do this when using Paracell as a library.</p>
+</section>
+<section id="compiling-docs">
+<h2>Compiling Docs<a class="headerlink" href="#compiling-docs" title="Link to this heading">¶</a></h2>
+<p>The documentation can be compiled by running Sphinx inside the <code class="docutils literal notranslate"><span class="pre">paracell/docs</span></code> folder. On Linux the command is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>html
+</pre></div>
+</div>
+<p>The HTML for the documentation will be stored inside <code class="docutils literal notranslate"><span class="pre">paracell/docs/_build/html</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Make Sphinx is installed in the environment (install Paracell with the dev dependencies), and there is no Sphinx installed in the system Python environment. This may cause missing dependencies issues.</p>
+</div>
+</section>
 </section>
 
         </article>
@@ -357,6 +382,9 @@
 <li><a class="reference internal" href="#improcess">improcess</a></li>
 <li><a class="reference internal" href="#outlines">Outlines</a></li>
 <li><a class="reference internal" href="#flows">Flows</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#mkl">MKL</a></li>
+<li><a class="reference internal" href="#compiling-docs">Compiling Docs</a></li>
 </ul>
 </li>
 </ul>

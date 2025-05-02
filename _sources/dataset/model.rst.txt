@@ -37,7 +37,7 @@ Model Checkpoints
 
 The ``<model_name>.pt`` file is the fully trained model, after all training epochs have passed.
 
-For every checkpoint epoch, a checkpoint model, ``<model_name>_epoch_<epoch>.pt``, is saved.
+For every checkpoint epoch, a checkpoint model, ``<model_name>_best_epoch_<epoch>.pt`` or ``<model_name>_worse_epoch_<epoch>.pt``, is saved.
 
 Config
 ------

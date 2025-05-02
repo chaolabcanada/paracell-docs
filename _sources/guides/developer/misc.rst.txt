@@ -24,3 +24,33 @@ Cellpose doesn't have one format of flows.
 - The flows output of the ``CellposeModel`` are slightly different, which is listed in their `documentation <https://cellpose.readthedocs.io/en/latest/api.html#id0>`_.
 - ``cl_computed_flows`` are :reF:`Paracell's format <cl_computed_flows_description>` used for training.
 
+Testing
+-------
+
+Paracell has some tests in the ``tests`` folder. These can be run using ``pytest``. After navigating into the root of the Paracell repository.
+
+.. code-block:: bash
+
+  python -m pytest .
+
+MKL
+---
+
+The default BLAS numpy uses, openblas, may not work properly on some Intel CPUs. If you see a large portion of the CPU being used by system calls (``sy`` in the ``top`` command), while running Paracell feature extraction, try switching to `MKL <https://www.intel.com/content/www/us/en/developer/tools/oneapi/distribution-python-download.html>`_.
+
+When using MKL, make sure to import numpy first, before other packages. This avoids MKL related errors. This done automatically in the Paracell cli, but you will have to do this when using Paracell as a library.
+
+Compiling Docs
+--------------
+
+The documentation can be compiled by running Sphinx inside the ``paracell/docs`` folder. On Linux the command is:
+
+.. code-block:: bash
+
+  make html
+
+The HTML for the documentation will be stored inside ``paracell/docs/_build/html``.
+
+.. warning::
+
+  Make Sphinx is installed in the environment (install Paracell with the dev dependencies), and there is no Sphinx installed in the system Python environment. This may cause missing dependencies issues.

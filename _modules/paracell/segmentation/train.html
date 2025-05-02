@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -273,11 +274,10 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">asdict</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">typer</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">optim</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch.optim.lr_scheduler</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearLR</span><span class="p">,</span> <span class="n">CosineAnnealingLR</span><span class="p">,</span> <span class="n">SequentialLR</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.tensorboard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SummaryWriter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cellpose.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellposeModel</span>
 
@@ -295,6 +295,11 @@
 <div class="viewcode-block" id="train_pipeline">
 <a class="viewcode-back" href="../../../api/paracell.segmentation.html#paracell.segmentation.train.train_pipeline">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">train_pipeline</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">CellposeTrainConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train a Cellpose model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config(CellposeTrainConfig): The configuration for the training.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">train_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">TRAIN_LOGGER_NAME</span><span class="p">)</span>
 
     <span class="c1"># 1) Create the save directory.</span>
@@ -312,9 +317,6 @@
     <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
     <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># train_transforms = get_transform(train=True)</span>
-    <span class="c1"># val_transforms = get_transform(train=False)</span>
-
     <span class="c1"># 3) Create the training &amp; validation datasets</span>
     <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">CellposeDataset</span><span class="p">(</span>
         <span class="o">*</span><span class="n">gather_image_mask_paths</span><span class="p">(</span>
@@ -323,7 +325,6 @@
             <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">image_suffix</span><span class="p">,</span>
             <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">mask_suffix</span>
         <span class="p">),</span>
-        <span class="n">resize</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">resize</span><span class="p">,</span>
         <span class="n">transforms</span><span class="o">=</span><span class="n">get_transform</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="n">normalize</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">normalize</span><span class="p">,</span>
         <span class="n">test_mode</span><span class="o">=</span><span class="kc">False</span>
@@ -336,7 +337,6 @@
             <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">image_suffix</span><span class="p">,</span>
             <span class="n">config</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">mask_suffix</span>
         <span class="p">),</span>
-        <span class="n">resize</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">resize</span><span class="p">,</span>
         <span class="n">normalize</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">normalize</span><span class="p">,</span>
         <span class="n">test_mode</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
@@ -349,8 +349,8 @@
         <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_fn</span>
     <span class="p">)</span>
 
-    <span class="c1"># Below function is useful for debugging </span>
-    <span class="c1"># save_sample_images(train_loader, output_dir=&quot;/home/adrit/RoughOutputs&quot;, max_samples=6)</span>
+    <span class="c1"># Below function is useful for debugging and visualizing the training data.</span>
+    <span class="c1"># save_sample_images(train_loader, output_dir=&quot;/home/adrit/RoughOutputs&quot;, max_samples=10)</span>
 
     <span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
         <span class="n">val_dataset</span><span class="p">,</span>
@@ -391,36 +391,71 @@
     <span class="n">writer</span> <span class="o">=</span> <span class="n">SummaryWriter</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="s2">&quot;tensorboard&quot;</span><span class="p">))</span>
 
     <span class="c1"># 7) Train the model.</span>
+    <span class="n">best_metric</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;-inf&quot;</span><span class="p">)</span>
+    <span class="n">epochs_no_improve</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">metric_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">early_stop_metric</span>  <span class="c1"># e.g. &quot;AP&quot;</span>
+    <span class="n">patience</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">early_stop_patience</span>
+    <span class="n">min_delta</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">early_stop_min_delta</span>
+
     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Save the lr at the start of the epoch.</span>
         <span class="n">lr</span> <span class="o">=</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">get_last_lr</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">train_one_epoch</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">writer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+        <span class="n">train_one_epoch</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span>
+                        <span class="n">writer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
 
+        <span class="c1"># Checkpoint save</span>
         <span class="n">save_every</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">save_every</span>
-        <span class="c1"># Save the model on checkpoint epochs.</span>
         <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">save_every</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">epoch</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">:</span>
-            <span class="c1"># Name of model, with epoch for all but the final one.</span>
-            <span class="n">model_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">name</span>
             <span class="k">if</span> <span class="n">epoch</span> <span class="o">!=</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">:</span>
-                <span class="n">model_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_epoch_</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="n">model_name</span> <span class="o">+=</span> <span class="s2">&quot;.pt&quot;</span>
-
-            <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">save_dir</span><span class="p">,</span>
-                <span class="n">model_name</span>
-            <span class="p">)</span>
-
+                <span class="n">fname</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_epoch_</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">fname</span> <span class="o">+</span> <span class="s2">&quot;.pt&quot;</span><span class="p">)</span>
             <span class="n">cp_model</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
-        
+
+        <span class="c1"># Evaluation + early stopping</span>
         <span class="n">eval_every</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">eval_every</span>
-        <span class="c1"># Evaluate the model on eval epochs.</span>
-        <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="n">eval_every</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">epoch</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">:</span>
-            <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Evaluating model at the end of epoch </span><span class="si">%d</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
-            <span class="n">eval_checkpoint_model</span><span class="p">(</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">%</span> <span class="n">eval_every</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">==</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">n_epochs</span><span class="p">):</span>
+            <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Evaluating model at end of epoch </span><span class="si">%d</span><span class="s2">...&quot;</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+            <span class="n">eval_results</span> <span class="o">=</span> <span class="n">eval_checkpoint_model</span><span class="p">(</span>
                 <span class="n">cp_model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">coco_ds</span><span class="p">,</span>
                 <span class="n">lr</span><span class="p">,</span> <span class="n">writer</span><span class="p">,</span> <span class="n">epoch</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">eval_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">train_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Metric </span><span class="si">%s</span><span class="s2"> not found in eval results!&quot;</span><span class="p">,</span> <span class="n">metric_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">current</span> <span class="o">&gt;</span> <span class="n">best_metric</span> <span class="o">+</span> <span class="n">min_delta</span><span class="p">:</span>
+                    <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;  New best </span><span class="si">%s</span><span class="s2">: </span><span class="si">%.4f</span><span class="s2"> (was </span><span class="si">%.4f</span><span class="s2">). Saving best model.&quot;</span><span class="p">,</span>
+                        <span class="n">metric_name</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">best_metric</span>
+                    <span class="p">)</span>
+                    <span class="n">best_metric</span> <span class="o">=</span> <span class="n">current</span>
+                    <span class="n">epochs_no_improve</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="c1"># overwrite best‐model file each time we improve</span>
+                    <span class="n">best_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_best&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;_epoch_</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">.pt&quot;</span><span class="p">)</span>
+                    <span class="n">cp_model</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">best_path</span><span class="p">)</span>
 
+                    <span class="n">summary_path</span> <span class="o">=</span> <span class="n">best_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.pt&quot;</span><span class="p">,</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">summary_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span>
+                            <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">,</span>
+                            <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="n">metric_name</span><span class="p">,</span>
+                            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">current</span><span class="p">,</span>
+                            <span class="s2">&quot;all_metrics&quot;</span><span class="p">:</span> <span class="n">eval_results</span>
+                        <span class="p">},</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">epochs_no_improve</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;  No improvement in </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%d</span><span class="s2"> eval(s).&quot;</span><span class="p">,</span>
+                        <span class="n">metric_name</span><span class="p">,</span> <span class="n">epochs_no_improve</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">early_stop</span> <span class="ow">and</span> <span class="n">epochs_no_improve</span> <span class="o">&gt;=</span> <span class="n">patience</span><span class="p">:</span>
+                        <span class="n">train_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="s2">&quot;Early stopping triggered after </span><span class="si">%d</span><span class="s2"> evals with no&quot;</span>
+                            <span class="s2">&quot; improvement on </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">patience</span><span class="p">,</span> <span class="n">metric_name</span>
+                        <span class="p">)</span>
+                        <span class="k">break</span></div>
 
 </pre></div>
         </article>

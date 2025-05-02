@@ -12,17 +12,17 @@ Conventional Feature Extraction
 
 ``paracell.feature_extraction.vision`` uses computer vision to extract conventional features.
 
-For this tutorial, we will use ``BasicShapeAnalysis``, but all the other analysis classes (ones that extend ``CellAnalysisMixin``) work the same way. You call ``analyze_cell`` on the the class (or class instance).
+For this tutorial, we will use ``BasicShapeAnalysis``, but all the other analysis classes (ones that extend ``CellAnalysisMixin``) work the same way. You call ``analyze_cell`` on a class instance.
 
 .. code-block:: python
 
    from paracell.feature_extraction.vision import BasicShapeAnalysis
 
-   BasicShapeAnalysis.analyze_cell(cell, fov)
+   BasicShapeAnalysis().analyze_cell(cell, fov)
 
-This will add the analysis information into the cell statistics dictionary. The names of all features are prefixed by prefix property of the class and generally follows upper snake case.
+This will add the analysis information into the cell statistics dictionary. The names of all features are generally upper snake case, with the prefix being all uppercase with underscores.
 
-Format: ``<prefix>__<property>``
+Format: ``<PREFIX>__<Property>``
 
 One analysis added by BasicShapeAnalysis is the area of the cell, ``BASIC_SHAPE__Area``, which can be accessed using ``cell.get_statistic``
 
@@ -30,7 +30,7 @@ One analysis added by BasicShapeAnalysis is the area of the cell, ``BASIC_SHAPE_
 
    cell.get_statistic("BASIC_SHAPE__Area")
 
-You can also convert the cell into dictionary. This is useful for turning cells into Pandas DataFrames.
+You can also convert the cell into a dictionary. This is useful for turning cells into Pandas DataFrames.
 
 .. code-block:: python
 
@@ -41,4 +41,13 @@ Deep Feature Extraction
 
 ``paracell.feature_extraction.dfe`` provides classes for extracting deep features using DINOv2.
 
-The classes work the same way as conventional features.
+The classes work the same way as conventional features. Here's an example:
+
+.. code-block:: python
+
+   from paracell.feature_extraction.dfe import DINOv2FeatureExtractor
+
+   DINOv2FeatureExtractor().analyze_cell(cell, fov)
+
+   # Access a deep feature
+   cell.get_statistic("DINO__DAPI_feature_1")

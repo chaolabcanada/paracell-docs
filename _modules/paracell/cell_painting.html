@@ -223,6 +223,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -274,16 +275,34 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">uuid</span><span class="w"> </span><span class="kn">import</span> <span class="n">UUID</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span><span class="p">,</span> <span class="n">Connection</span><span class="p">,</span> <span class="n">text</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paradata</span><span class="w"> </span><span class="kn">import</span> <span class="n">FOV</span><span class="p">,</span> <span class="n">Plate</span><span class="p">,</span> <span class="n">Well</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paralog</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_paralogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.paracell_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">FOVDeserializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">paracell.segmentation.segmentors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellposeLoadSegmentor</span>
 
 
 <div class="viewcode-block" id="CellPaintingFOV">
 <a class="viewcode-back" href="../../api/paracell.html#paracell.cell_painting.CellPaintingFOV">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CellPaintingFOV</span><span class="p">(</span><span class="n">FOV</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cell painting compatible adapter for FOVs.&quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">channel_to_image_name</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            prefix (str): FOV prefix.</span>
+<span class="sd">            project_dir (str): Folder containing the images of the FOV.</span>
+<span class="sd">            channel_to_image_name (dict): Mapping from channel name to image file name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_project_dir</span> <span class="o">=</span> <span class="n">project_dir</span>
@@ -296,6 +315,10 @@
             <span class="k">return</span>
 
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channel_to_image_name</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># This should be warned about when the plate was made.</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
             <span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_project_dir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">channels</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span>
                 <span class="n">image_path</span><span class="p">,</span>
@@ -343,6 +366,7 @@
 <span class="sd">        plate_name(str): Name of the plate.</span>
 <span class="sd">        channel_order(list[str]): Order of the channel names corresponding to the\</span>
 <span class="sd">            w1, w2, ... ordering used by the cell painting pipeline.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        A CellPainting plate of CellPaintingFOVs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -384,10 +408,16 @@
         <span class="n">channels_list</span> <span class="o">=</span> <span class="n">wells</span><span class="p">[</span><span class="n">well_name</span><span class="p">][</span><span class="n">fov_name</span><span class="p">]</span>
         <span class="c1"># the name is w1, w2, ...</span>
         <span class="n">channel_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">channel_name</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">-</span><span class="mi">1</span>
-        <span class="n">channels_list</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
+
+        <span class="c1"># It seems like some datasets have a 6th channel, high density.</span>
+        <span class="k">if</span> <span class="n">channel_idx</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">continue</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">channel_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">channel_idx</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Possibly unexpected channel name </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">channel_name</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="n">channels_list</span><span class="p">[</span><span class="n">channel_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
 
     <span class="c1"># Sort wells lexographically.</span>
     <span class="n">wells</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">wells</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
@@ -407,13 +437,13 @@
             <span class="k">for</span> <span class="n">chan_name</span><span class="p">,</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">channel_order</span><span class="p">,</span> <span class="n">fov_images</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;Missing channel </span><span class="si">%s</span><span class="s2"> found for FOV </span><span class="si">%s</span><span class="s2"> in well </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span>
-                        <span class="n">chan_name</span><span class="p">,</span> <span class="n">fov_name</span><span class="p">,</span> <span class="n">well_name</span>
+                        <span class="s2">&quot;FOV </span><span class="si">%s</span><span class="s2"> in well </span><span class="si">%s</span><span class="s2"> has missing channel </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="p">,</span>
+                        <span class="n">fov_name</span><span class="p">,</span> <span class="n">well_name</span><span class="p">,</span> <span class="n">chan_name</span>
                     <span class="p">)</span>
 
                 <span class="n">channel_to_image_map</span><span class="p">[</span><span class="n">chan_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_name</span>
 
-            <span class="c1"># FOV prefix is the same as the analyis folder name</span>
+            <span class="c1"># FOV prefix is the same as the analysis folder name</span>
             <span class="c1"># that goes: &lt;plate&gt;-&lt;well&gt;-&lt;site&gt;</span>
             <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plate_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">well_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">fov_name</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">fov</span> <span class="o">=</span> <span class="n">CellPaintingFOV</span><span class="p">(</span>
@@ -421,10 +451,305 @@
                 <span class="n">project_dir</span><span class="o">=</span><span class="n">project_dir</span><span class="p">,</span>
                 <span class="n">channel_to_image_name</span><span class="o">=</span><span class="n">channel_to_image_map</span>
             <span class="p">)</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">set_parent_path</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
             <span class="n">fov</span><span class="o">.</span><span class="n">set_parent</span><span class="p">(</span><span class="n">well</span><span class="p">)</span>
             <span class="n">well</span><span class="o">.</span><span class="n">add_fov</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">plate</span></div>
+
+
+
+<div class="viewcode-block" id="map_to_existing_plate">
+<a class="viewcode-back" href="../../api/paracell.html#paracell.cell_painting.map_to_existing_plate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">map_to_existing_plate</span><span class="p">(</span><span class="n">plate</span><span class="p">:</span> <span class="n">Plate</span><span class="p">,</span> <span class="n">plate_json_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets plate, well, FOV uuid and other metadata</span>
+<span class="sd">    to match that of the plate.json.</span>
+
+<span class="sd">    Used for cell painting plates which can&#39;t be deserialized</span>
+<span class="sd">    directly by paracell_io.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        plate (Plate): Cell painting plate.</span>
+<span class="sd">        plate_json_path (str): Path to plate.json.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">get_paralogger</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">plate_json_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">plate_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+
+    <span class="n">plate</span><span class="o">.</span><span class="n">creation_time</span> <span class="o">=</span> <span class="n">plate_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__CreationTime&quot;</span><span class="p">]</span>
+    <span class="n">plate</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">plate_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__UUID&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Name and parent dir we&#39;ll just use the values in the config.</span>
+
+    <span class="k">if</span> <span class="n">plate_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__NumWells&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;plate.json well count </span><span class="si">%d</span><span class="s2"> doesn&#39;t match plate wells </span><span class="si">%d</span><span class="s2">.&quot;</span><span class="p">,</span>
+            <span class="n">plate_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__NumWells&quot;</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">well_dict</span> <span class="ow">in</span> <span class="n">plate_dict</span><span class="p">[</span><span class="s2">&quot;Wells&quot;</span><span class="p">]:</span>
+        <span class="c1"># Find the well in the plate.</span>
+        <span class="n">well</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="n">pw</span> <span class="k">for</span> <span class="n">pw</span> <span class="ow">in</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span> <span class="k">if</span>
+            <span class="n">pw</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">well_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__Name&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">well</span><span class="o">.</span><span class="n">loc</span> <span class="o">!=</span> <span class="n">well_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__Location&quot;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Well </span><span class="si">%s</span><span class="s2">&#39;s loc </span><span class="si">%d</span><span class="s2"> is different in config </span><span class="si">%d</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="n">well</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">well</span><span class="o">.</span><span class="n">loc</span><span class="p">,</span> <span class="n">well_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__Location&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Load the UUID.</span>
+        <span class="n">well</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">well_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__UUID&quot;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">fov_dict</span> <span class="ow">in</span> <span class="n">well_dict</span><span class="p">[</span><span class="s2">&quot;FOVs&quot;</span><span class="p">]:</span>
+            <span class="n">fov</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+                <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">well</span><span class="o">.</span><span class="n">fovs</span> <span class="k">if</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">prefix</span> <span class="o">==</span> <span class="n">fov_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__Prefix&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="n">fov</span><span class="o">.</span><span class="n">_uuid</span> <span class="o">=</span> <span class="n">UUID</span><span class="p">(</span><span class="n">fov_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__UUID&quot;</span><span class="p">])</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">set_csv_path</span><span class="p">(</span><span class="n">fov_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__CSVOutputPath&quot;</span><span class="p">])</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">set_seg_path</span><span class="p">(</span><span class="n">fov_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__SegOutputPath&quot;</span><span class="p">])</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">set_parent_path</span><span class="p">(</span><span class="n">fov_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__ParentPath&quot;</span><span class="p">])</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">_imdata_path</span> <span class="o">=</span> <span class="n">fov_dict</span><span class="p">[</span><span class="s2">&quot;METADATA__ImageLevelOutputPath&quot;</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="analyzed_fov_to_profiler_output">
+<a class="viewcode-back" href="../../api/paracell.html#paracell.cell_painting.analyzed_fov_to_profiler_output">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyzed_fov_to_profiler_output</span><span class="p">(</span>
+    <span class="n">fov</span><span class="p">:</span> <span class="n">FOV</span><span class="p">,</span>
+    <span class="n">image_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">con</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Connection</span><span class="p">]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts Paracell extracted features into cell profiler extracted features.</span>
+
+<span class="sd">    Note: This has limited support and only outputs:</span>
+<span class="sd">        - Analysis folder data, excluding most Image.csv metadata, Experiment.csv, and the outlines.</span>
+<span class="sd">        - Data into the SQL database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        fov (FOV): FOV with cells analyzed to convert.</span>
+<span class="sd">        image_number (int): Unique number of the FOV/Image.</span>
+<span class="sd">        save_dir (str): Path to analysis folder of the specific FOV.</span>
+<span class="sd">        con (Connection, optional): SQL connection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">fov_df</span> <span class="o">=</span> <span class="n">fov</span><span class="o">.</span><span class="n">cells_to_df</span><span class="p">()</span>
+    <span class="n">column_shape</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fov_df</span><span class="p">),)</span>
+
+    <span class="c1"># Add cell profiler expected metadata, expected accross all csvs</span>
+    <span class="n">outline_idx_column</span> <span class="o">=</span> <span class="n">fov_df</span><span class="p">[</span><span class="s2">&quot;METADATA__OutlineIdx&quot;</span><span class="p">]</span>
+
+    <span class="n">fov_df</span><span class="p">[</span><span class="s2">&quot;ImageNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">column_shape</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">image_number</span><span class="p">)</span>
+    <span class="n">fov_df</span><span class="p">[</span><span class="s2">&quot;ObjectNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outline_idx_column</span>
+    <span class="n">fov_df</span><span class="p">[</span><span class="s2">&quot;Number_Object_Number&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outline_idx_column</span>  <span class="c1"># TODO: double check the correctness of this</span>
+
+    <span class="n">fov_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">fov_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;METADATA__&quot;</span><span class="p">)</span>
+    <span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Only the cell painting metadata</span>
+    <span class="n">metadata_columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;ImageNumber&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ObjectNumber&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Number_Object_Number&quot;</span>
+    <span class="p">]</span>
+
+    <span class="n">cyto_df_columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">fov_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;Cytoplasm-localized&quot;</span> <span class="ow">in</span> <span class="n">col</span>
+    <span class="p">]</span>
+    <span class="n">nuclear_df_columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">fov_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;Nuclear-localized&quot;</span> <span class="ow">in</span> <span class="n">col</span>
+    <span class="p">]</span>
+
+    <span class="n">cyto_df</span> <span class="o">=</span> <span class="n">fov_df</span><span class="p">[</span><span class="n">cyto_df_columns</span> <span class="o">+</span> <span class="n">metadata_columns</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">nuclear_df</span> <span class="o">=</span> <span class="n">fov_df</span><span class="p">[</span><span class="n">nuclear_df_columns</span> <span class="o">+</span> <span class="n">metadata_columns</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">cells_df</span> <span class="o">=</span> <span class="n">fov_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cyto_df_columns</span> <span class="o">+</span> <span class="n">nuclear_df_columns</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Add the cell/cyto/nuclei relational metadata. They are lots of duplicate</span>
+    <span class="c1"># one columns and outline_idx due to the way our data is structured.</span>
+    <span class="n">one_column</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">column_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="c1"># Cells</span>
+    <span class="n">cells_df</span><span class="p">[</span><span class="s2">&quot;Children_Cytoplasm_Count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_column</span>
+    <span class="n">cells_df</span><span class="p">[</span><span class="s2">&quot;Parent_Nuclei&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outline_idx_column</span>
+
+    <span class="c1"># Nuclei</span>
+    <span class="n">nuclear_df</span><span class="p">[</span><span class="s2">&quot;Children_Cells_Count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_column</span>
+    <span class="n">nuclear_df</span><span class="p">[</span><span class="s2">&quot;Children_Cytoplasm_Count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_column</span>
+
+    <span class="c1"># Cytoplasm</span>
+    <span class="n">cyto_df</span><span class="p">[</span><span class="s2">&quot;Parent_Cells&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outline_idx_column</span>
+    <span class="n">cyto_df</span><span class="p">[</span><span class="s2">&quot;Parent_Nuclei&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outline_idx_column</span>
+
+    <span class="n">image_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="c1"># NOTE: this might need to be modified to the actual plate name.</span>
+        <span class="s2">&quot;Metadata_Plate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fov</span><span class="o">.</span><span class="n">get_parent</span><span class="p">()</span><span class="o">.</span><span class="n">get_parent</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+        <span class="s2">&quot;Metadata_Well&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">fov</span><span class="o">.</span><span class="n">get_parent</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">],</span>
+        <span class="s2">&quot;ImageNumber&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">image_number</span><span class="p">],</span>
+        <span class="s2">&quot;TableNumber&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">image_number</span><span class="p">]</span>
+    <span class="p">})</span>
+
+    <span class="n">cyto_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="s2">&quot;Cytoplasm.csv&quot;</span><span class="p">))</span>
+    <span class="n">nuclear_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="s2">&quot;Nuclei.csv&quot;</span><span class="p">))</span>
+    <span class="n">cells_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="s2">&quot;Cells.csv&quot;</span><span class="p">))</span>
+    <span class="n">image_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="s2">&quot;Image.csv&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Add entries to the db too.</span>
+    <span class="k">if</span> <span class="n">con</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;con&quot;</span><span class="p">:</span> <span class="n">con</span><span class="p">,</span>
+            <span class="s2">&quot;if_exists&quot;</span><span class="p">:</span> <span class="s2">&quot;append&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">}</span>
+
+        <span class="c1"># sql specific metadata</span>
+        <span class="n">metadata_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;TableNumber&quot;</span><span class="p">)</span>
+
+        <span class="n">tables</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;Cells&quot;</span><span class="p">,</span> <span class="n">cells_df</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Cytoplasm&quot;</span><span class="p">,</span> <span class="n">cyto_df</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Nuclei&quot;</span><span class="p">,</span> <span class="n">nuclear_df</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="c1"># Unique one per image number.</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;TableNumber&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">column_shape</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">image_number</span><span class="p">)</span>
+
+            <span class="n">col_renaming</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">col</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata_columns</span>
+            <span class="p">}</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">col_renaming</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="n">image_df</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cells_df</span><span class="p">,</span> <span class="n">cyto_df</span><span class="p">,</span> <span class="n">nuclear_df</span><span class="p">,</span> <span class="n">image_df</span></div>
+
+
+
+<div class="viewcode-block" id="plate_to_profiler_output">
+<a class="viewcode-back" href="../../api/paracell.html#paracell.cell_painting.plate_to_profiler_output">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">plate_to_profiler_output</span><span class="p">(</span>
+    <span class="n">plate</span><span class="p">:</span> <span class="n">Plate</span><span class="p">,</span>
+    <span class="n">analysis_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">backend_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">compressed</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a Cell Profiler styled output for a Paracell plate.</span>
+<span class="sd">    </span>
+<span class="sd">    Note: This has limited support and only outputs:</span>
+<span class="sd">        - Analysis folder data, excluding most Image.csv metadata, Experiment.csv, and the outlines.</span>
+<span class="sd">        - Backend folder containing only the SQL database.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        plate (Plate): Plate in a folder with features extracted.</span>
+<span class="sd">        analysis_dir (str): Analysis folder for the plate. Generally workspace/analysis/batch/plate/analysis/</span>
+<span class="sd">        backend_dir (str): Backend directory for the plate. Generally workspace/backend/batch/plate/</span>
+<span class="sd">        compressed (bool): If Paracell&#39;s analysis outputs have compressed seg files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">analysis_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">backend_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">fov_counter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">load_segmentor</span> <span class="o">=</span> <span class="n">CellposeLoadSegmentor</span><span class="p">(</span><span class="n">compressed</span><span class="p">)</span>
+
+    <span class="n">plate_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">backend_dir</span><span class="p">))</span>
+    <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">backend_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plate_name</span><span class="si">}</span><span class="s2">.sqlite&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">db_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
+
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sqlite:///</span><span class="si">{</span><span class="n">db_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">well</span> <span class="ow">in</span> <span class="n">plate</span><span class="o">.</span><span class="n">wells</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fov</span> <span class="ow">in</span> <span class="n">well</span><span class="o">.</span><span class="n">fovs</span><span class="p">:</span>
+            <span class="c1"># Load masks, and cells.</span>
+            <span class="n">load_segmentor</span><span class="o">.</span><span class="n">segment_fov</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+            <span class="n">FOVDeserializer</span><span class="o">.</span><span class="n">cells_from_csv</span><span class="p">(</span><span class="n">fov</span><span class="p">)</span>
+
+            <span class="c1"># Saves into a folder ./analysis/&lt;plate&gt;-&lt;well&gt;&lt;site&gt;</span>
+            <span class="c1"># Site is only a single number</span>
+
+            <span class="n">site</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">subfolder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plate</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">well</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">site</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">output_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">analysis_dir</span><span class="p">,</span> <span class="s2">&quot;analysis&quot;</span><span class="p">,</span> <span class="n">subfolder</span><span class="p">)</span>
+
+            <span class="n">analyzed_fov_to_profiler_output</span><span class="p">(</span><span class="n">fov</span><span class="p">,</span> <span class="n">fov_counter</span><span class="p">,</span> <span class="n">output_folder</span><span class="p">,</span> <span class="n">con</span><span class="p">)</span>
+            <span class="n">fov</span><span class="o">.</span><span class="n">deallocate</span><span class="p">()</span>
+            <span class="n">fov_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">CREATE_INDEX_INSTRUCTIONS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;CREATE INDEX plate_well_image_idx ON Image(Metadata_Plate, Metadata_Well)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CREATE INDEX table_image_idx ON Image(TableNumber, ImageNumber)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CREATE INDEX table_image_object_cells_idx ON Cells(TableNumber, ImageNumber, ObjectNumber)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CREATE INDEX table_image_object_cytoplasm_idx ON Cytoplasm(TableNumber, ImageNumber, ObjectNumber)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CREATE INDEX table_image_object_nuclei_idx ON Nuclei(TableNumber, ImageNumber, ObjectNumber)&quot;</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ins</span> <span class="ow">in</span> <span class="n">CREATE_INDEX_INSTRUCTIONS</span><span class="p">:</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">ins</span><span class="p">))</span>
+
+    <span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="PlatePath">
+<a class="viewcode-back" href="../../api/paracell.html#paracell.cell_painting.PlatePath">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlatePath</span><span class="p">:</span>
+    <span class="n">batch</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">plate</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">image_dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">analysis_dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">metadata_dir</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">paracell_output_dir</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="get_plate_paths">
+<a class="viewcode-back" href="../../api/paracell.html#paracell.cell_painting.get_plate_paths">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_plate_paths</span><span class="p">(</span><span class="n">images_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">workspace_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">paracell_analysis_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PlatePath</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get all the plates inside the image directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        images_path (str): Path to the images folder in the cell painting dataset.</span>
+<span class="sd">        workspace_path (str): Path to the workspace folder in the cell painting dataset.</span>
+<span class="sd">        paracell_analysis_dir (str): Path for the Paracell analyses to be saved to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[PlatePath]: plates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">plates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">batch_dir</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">images_path</span><span class="p">)):</span>
+        <span class="n">batch_dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="n">batch_dir</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">batch_dir_path</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">plate_dirs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch_dir_path</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">plate</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">plate_dirs</span><span class="p">):</span>
+            <span class="n">plate_dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch_dir_path</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">,</span> <span class="n">plate</span><span class="p">)</span>
+
+            <span class="n">paracell_subdirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">batch_dir</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">plate_dirs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">paracell_subdirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plate</span><span class="p">)</span>
+
+            <span class="n">plates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PlatePath</span><span class="p">(</span>
+                <span class="n">batch</span><span class="o">=</span><span class="n">batch_dir</span><span class="p">,</span>
+                <span class="n">plate</span><span class="o">=</span><span class="n">plate</span><span class="p">,</span>
+                <span class="n">image_dir</span><span class="o">=</span><span class="n">plate_dir_path</span><span class="p">,</span>
+                <span class="n">analysis_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace_path</span><span class="p">,</span> <span class="s2">&quot;analysis&quot;</span><span class="p">,</span> <span class="n">batch_dir</span><span class="p">,</span> <span class="n">plate</span><span class="p">,</span> <span class="s2">&quot;analysis&quot;</span><span class="p">),</span>
+                <span class="n">metadata_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace_path</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="n">batch_dir</span><span class="p">),</span>
+                <span class="n">paracell_output_dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">paracell_analysis_dir</span><span class="p">,</span> <span class="o">*</span><span class="n">paracell_subdirs</span><span class="p">)</span>
+            <span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">plates</span></div>
 
 </pre></div>
         </article>

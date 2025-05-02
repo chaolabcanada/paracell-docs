@@ -1,0 +1,39 @@
+Pseudolabel Output
+==================
+
+The pseudolabelling pipeline's output is the same as the :doc:`analysis pipeline output <pipeline_output>`, except with a few extra folders.
+
+Structure:
+
+.. code-block:: text
+
+   <output folder>
+   ├── merged/
+   ├── train/
+   ├── test/
+   ├── holdout/
+   └── analysis pipeline outputs
+
+Train/Test/Holdout
+------------------
+
+These folders all contain image, seg pairs. These folders are of the :doc:`training pipeline format <training>`. Each folder contains a non-overlapping subset of the images. The percentage each folder contains, depends on the parameters set in config.
+
+.. note::
+
+   The inclusion of ``cl_computed_flows`` in the :doc:`seg <seg>` files, depends on the config. There may also be other pseudolabelling related properties.
+
+Temporary Files/Folders
+-----------------------
+
+While running analysis, there are temporary files and folders created.
+
+Merged
+^^^^^^
+
+This folder initial1ly contains all the stacked coloured images of FOVs, which will later be moved to the train, test, and holdout folders.
+
+Filtered Seg Files
+^^^^^^^^^^^^^^^^^^
+
+These are files ending with ``_filtered_seg.npy`` or ``_filtered_seg.npz``. These are generated while the normal seg files get filtered for GFP+ cells. They are moved into the train, test, and holdout folders.

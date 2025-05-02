@@ -224,6 +224,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -283,19 +284,19 @@
 <section id="conventional-feature-extraction">
 <h2>Conventional Feature Extraction<a class="headerlink" href="#conventional-feature-extraction" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">paracell.feature_extraction.vision</span></code> uses computer vision to extract conventional features.</p>
-<p>For this tutorial, we will use <code class="docutils literal notranslate"><span class="pre">BasicShapeAnalysis</span></code>, but all the other analysis classes (ones that extend <code class="docutils literal notranslate"><span class="pre">CellAnalysisMixin</span></code>) work the same way. You call <code class="docutils literal notranslate"><span class="pre">analyze_cell</span></code> on the the class (or class instance).</p>
+<p>For this tutorial, we will use <code class="docutils literal notranslate"><span class="pre">BasicShapeAnalysis</span></code>, but all the other analysis classes (ones that extend <code class="docutils literal notranslate"><span class="pre">CellAnalysisMixin</span></code>) work the same way. You call <code class="docutils literal notranslate"><span class="pre">analyze_cell</span></code> on a class instance.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">paracell.feature_extraction.vision</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasicShapeAnalysis</span>
 
-<span class="n">BasicShapeAnalysis</span><span class="o">.</span><span class="n">analyze_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">)</span>
+<span class="n">BasicShapeAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">analyze_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This will add the analysis information into the cell statistics dictionary. The names of all features are prefixed by prefix property of the class and generally follows upper snake case.</p>
-<p>Format: <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;__&lt;property&gt;</span></code></p>
+<p>This will add the analysis information into the cell statistics dictionary. The names of all features are generally upper snake case, with the prefix being all uppercase with underscores.</p>
+<p>Format: <code class="docutils literal notranslate"><span class="pre">&lt;PREFIX&gt;__&lt;Property&gt;</span></code></p>
 <p>One analysis added by BasicShapeAnalysis is the area of the cell, <code class="docutils literal notranslate"><span class="pre">BASIC_SHAPE__Area</span></code>, which can be accessed using <code class="docutils literal notranslate"><span class="pre">cell.get_statistic</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cell</span><span class="o">.</span><span class="n">get_statistic</span><span class="p">(</span><span class="s2">&quot;BASIC_SHAPE__Area&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>You can also convert the cell into dictionary. This is useful for turning cells into Pandas DataFrames.</p>
+<p>You can also convert the cell into a dictionary. This is useful for turning cells into Pandas DataFrames.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cell</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -303,7 +304,15 @@
 <section id="deep-feature-extraction">
 <h2>Deep Feature Extraction<a class="headerlink" href="#deep-feature-extraction" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">paracell.feature_extraction.dfe</span></code> provides classes for extracting deep features using DINOv2.</p>
-<p>The classes work the same way as conventional features.</p>
+<p>The classes work the same way as conventional features. Here’s an example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">paracell.feature_extraction.dfe</span><span class="w"> </span><span class="kn">import</span> <span class="n">DINOv2FeatureExtractor</span>
+
+<span class="n">DINOv2FeatureExtractor</span><span class="p">()</span><span class="o">.</span><span class="n">analyze_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">fov</span><span class="p">)</span>
+
+<span class="c1"># Access a deep feature</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">get_statistic</span><span class="p">(</span><span class="s2">&quot;DINO__DAPI_feature_1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 
