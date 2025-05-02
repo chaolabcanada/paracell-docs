@@ -224,7 +224,6 @@
 <li class="toctree-l2"><a class="reference internal" href="dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -280,14 +279,10 @@
 <h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Link to this heading">¶</a></h1>
 <p>After installing, Paracell can be run directly through the terminal with the <code class="docutils literal notranslate"><span class="pre">paracell</span></code> command. This runs the <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> file in the Paracell module.</p>
 <p>Paracell will list its commands when running <code class="docutils literal notranslate"><span class="pre">paracell</span></code> or the help command (<code class="docutils literal notranslate"><span class="pre">paracell</span> <span class="pre">--help</span></code>).</p>
-<p>Run <code class="docutils literal notranslate"><span class="pre">paracell</span> <span class="pre">&lt;command&gt;</span> <span class="pre">--help</span></code> to get more information on a command.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Inside the commands, arguments in square brackets are optional and arguments inside angle brackets are required.</p>
-</div>
+<p>Run <code class="docutils literal notranslate"><span class="pre">paracell</span> <span class="pre">--help</span> <span class="pre">&lt;command&gt;</span></code> to get more information on a command.</p>
 <section id="pipeline">
 <span id="pipeline-cli"></span><h2>Pipeline<a class="headerlink" href="#pipeline" title="Link to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>analyze<span class="w"> </span><span class="o">[</span>path_to_config<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>analyze<span class="w"> </span><span class="o">[</span>path-to-config<span class="o">]</span>
 </pre></div>
 </div>
 <div class="table-wrapper colwidths-given align-left docutils container">
@@ -302,7 +297,7 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path_to_config</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path-to-config</span></code></p></td>
 <td><div class="line-block">
 <div class="line">Optional path to the feature extraction/analysis yaml config file.</div>
 <div class="line">Defaults to the <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code> inside Paracell’s code directory.</div>
@@ -318,48 +313,14 @@
 <div><p>This command does illumination correction, segmentation, and feature extraction.</p>
 <ol class="arabic simple">
 <li><p>It begins by illumination correcting all images, if enabled.</p></li>
-<li><p>It performs segmentation, with specified Cellpose model and channels.</p></li>
+<li><p>It preforms segmentation, with specified Cellpose model and channels.</p></li>
 <li><p>Runs specified analyses on every segmented cell.</p></li>
 </ol>
 </div></blockquote>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If rerunning analysis after modifying the files inside the raw image directory, it’s recommended to delete the analysis output folder first.</p>
-</div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>As analysis takes a lot of time and compute power, if you need to pause the compute, on Linux, press <code class="docutils literal notranslate"><span class="pre">ctrl</span> <span class="pre">+</span> <span class="pre">Z</span></code> to stop the process. Then run <code class="docutils literal notranslate"><span class="pre">fg</span></code> to continue running the process. Note it will still remain in memory, and the computer needs to remain on.</p>
-</div>
-<section id="append-vs-overwrite-mode">
-<span id="append-vs-overwrite"></span><h3>Append vs Overwrite Mode<a class="headerlink" href="#append-vs-overwrite-mode" title="Link to this heading">¶</a></h3>
-<p>When running analysis, there are two modes which determine how the extracted feature csvs are saved.</p>
-<section id="overwrite-mode">
-<h4>Overwrite Mode<a class="headerlink" href="#overwrite-mode" title="Link to this heading">¶</a></h4>
-<p>In overwrite mode, the <code class="docutils literal notranslate"><span class="pre">_cells.csv</span></code> files (if they exist) will be replaced with new ones. This will overwrite any previously extracted features. This is the recommended option, unless you are adding analyses.</p>
-</section>
-<section id="append-mode">
-<h4>Append Mode<a class="headerlink" href="#append-mode" title="Link to this heading">¶</a></h4>
-<p>In this mode, the <code class="docutils literal notranslate"><span class="pre">_cells.csv</span></code> files are loaded into the FOVs as cells, and new features are added to them.</p>
-<p>This will add all the analysis specified in the config, which are not already present on the cells. If any of the cell features start with the analysis prefix, that analysis will be skipped.</p>
-<p>When loading <code class="docutils literal notranslate"><span class="pre">_cells.csv</span></code>, if the cell count doesn’t match the segmentation or the CSV could not be loaded, new cells will be generated, overwriting the existing cells.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>It’s recommended to keep the old analyses in the config, when adding new analyses. This helps ensure all the analyses are there incase of missing/corrupt files.</p>
-</div>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p><code class="docutils literal notranslate"><span class="pre">plate.json</span></code> typically uses absolute paths. If using <code class="docutils literal notranslate"><span class="pre">append</span></code> mode, and the folder <code class="docutils literal notranslate"><span class="pre">out_dir</span></code> has been moved, you should run the <a class="reference internal" href="#regenerate-cli"><span class="std std-ref">regenerate plate json command</span></a> after moving.</p>
-</div>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>It’s recommended to turn off <code class="docutils literal notranslate"><span class="pre">quality_control</span></code> when running in append mode, as the <code class="docutils literal notranslate"><span class="pre">all_cells.parquet</span></code> is not used to extend the features.</p>
-</div>
-</section>
-</section>
 </section>
 <section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Link to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>train<span class="w"> </span>&lt;path_to_config&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>train<span class="w"> </span>&lt;path-to-config&gt;
 </pre></div>
 </div>
 <div class="table-wrapper colwidths-given align-left docutils container">
@@ -374,7 +335,7 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path_to_config</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path-to-config</span></code></p></td>
 <td><div class="line-block">
 <div class="line">Path to the training yaml config.</div>
 <div class="line">This is a <strong>different</strong> from the analysis pipeline config.</div>
@@ -392,161 +353,7 @@
 </section>
 <section id="pseudolabelling">
 <h2>Pseudolabelling<a class="headerlink" href="#pseudolabelling" title="Link to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>pseudolabel<span class="w"> </span>&lt;path_to_config&gt;
-</pre></div>
-</div>
-<div class="table-wrapper colwidths-given align-left docutils container">
-<table class="align-left docutils align-default">
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 75.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><strong>Argument</strong></p></th>
-<th class="head"><p><strong>Description</strong></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path_to_config</span></code></p></td>
-<td><div class="line-block">
-<div class="line">Path to the pseudolabelling yaml config.</div>
-<div class="line">This is <strong>different</strong> from the other configs.</div>
-<div class="line">See <a class="reference internal" href="config.html#pseudolabelling-config"><span class="std std-ref">config</span></a> for format.</div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Description</strong>:</p>
-<blockquote>
-<div><p>This command creates training data for the training loop.
-1. Paracell analysis is run, using a custom analysis mixin for extracting pseudolabel related features.
-2. The images are filtered for only GFP cells, using these features and the threshold specified in the config.
-3. After filtering, this becomes the training seg data. The training data, along with stacked coloured images, are moved into the train, test, and holdout folder.</p>
-</div></blockquote>
-</section>
-<section id="clearing-temp-files">
-<h2>Clearing Temp Files<a class="headerlink" href="#clearing-temp-files" title="Link to this heading">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>clear-analysis-intermediates<span class="w"> </span>&lt;path_to_config&gt;<span class="w"> </span><span class="o">[</span>illumcor<span class="o">]</span><span class="w"> </span><span class="o">[</span>seg<span class="o">]</span><span class="w"> </span><span class="o">[</span>outputs<span class="o">]</span>
-</pre></div>
-</div>
-<div class="table-wrapper colwidths-given align-left docutils container">
-<table class="align-left docutils align-default">
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 75.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><strong>Argument</strong></p></th>
-<th class="head"><p><strong>Description</strong></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path_to_config</span></code></p></td>
-<td><div class="line-block">
-<div class="line">Path to the analysis pipeline yaml config.</div>
-<div class="line">See <a class="reference internal" href="config.html#analysis-pipeline-config"><span class="std std-ref">config</span></a> for format.</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">illumcor</span></code></p></td>
-<td><p>If the illumination correction files should be deleted (<code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seg</span></code></p></td>
-<td><p>If the segmentation files should be deleted (<code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">outputs</span></code></p></td>
-<td><p>If the cell analysis data (csvs) and the image data (json) files should be deleted (<code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>).</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Description</strong>:</p>
-<blockquote>
-<div><p>This command clears the analysis <em>folder</em> of intermediate files, depending on which you choose to delete.</p>
-</div></blockquote>
-</section>
-<section id="regenerate">
-<span id="regenerate-cli"></span><h2>Regenerate<a class="headerlink" href="#regenerate" title="Link to this heading">¶</a></h2>
-<section id="regenerate-plate-json">
-<h3>Regenerate Plate JSON<a class="headerlink" href="#regenerate-plate-json" title="Link to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>regenerate<span class="w"> </span>plate_json<span class="w"> </span><span class="o">[</span>--force<span class="o">]</span><span class="w"> </span>&lt;parent_dir&gt;<span class="w"> </span>&lt;plate_type&gt;
-</pre></div>
-</div>
-<div class="table-wrapper colwidths-given align-left docutils container">
-<table class="align-left docutils align-default">
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 75.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><strong>Argument</strong></p></th>
-<th class="head"><p><strong>Description</strong></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p></td>
-<td><p>Add a <code class="docutils literal notranslate"><span class="pre">--force</span></code> to skip the confirmation. This is a destructive command as it overwrites the existing <code class="docutils literal notranslate"><span class="pre">plate.json</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parent_dir</span></code></p></td>
-<td><p>Folder of the <a class="reference internal" href="dataset/pipeline_output.html"><span class="doc">analysis pipeline output</span></a> format, containing the <code class="docutils literal notranslate"><span class="pre">plate.json</span></code> file.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plate_type</span></code></p></td>
-<td><p>Type of the plate. Should be either “chao_lab” or “cell_painting”.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Description</strong>:</p>
-<blockquote>
-<div><p>This command regenerates the <code class="docutils literal notranslate"><span class="pre">plate.json</span></code> file based on the contents of the <code class="docutils literal notranslate"><span class="pre">parent_dir</span></code> folder. It takes a few metadata properties from the old <code class="docutils literal notranslate"><span class="pre">plate.json</span></code>. Warnings will be logged if UUID mismatch is detected.</p>
-<p>This command is designed for correcting the paths inside <code class="docutils literal notranslate"><span class="pre">plate.json</span></code> after the directory has been moved. This ensures append mode of feature extraction works properly.</p>
-</div></blockquote>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Certain metadata properties, such as plate name, will be missing if there is no old <code class="docutils literal notranslate"><span class="pre">plate.json</span></code>.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It’s highly recommended to run the regenerate imdata command after this to ensure the <code class="docutils literal notranslate"><span class="pre">_imdata.json</span></code> have matching FOV metadata as the <code class="docutils literal notranslate"><span class="pre">plate.json</span></code>.</p>
-</div>
-</section>
-<section id="regenerate-imdata">
-<h3>Regenerate Imdata<a class="headerlink" href="#regenerate-imdata" title="Link to this heading">¶</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>paracell<span class="w"> </span>regenerate<span class="w"> </span>imdata<span class="w"> </span><span class="o">[</span>--force<span class="o">]</span><span class="w"> </span>&lt;parent_dir&gt;
-</pre></div>
-</div>
-<div class="table-wrapper colwidths-given align-left docutils container">
-<table class="align-left docutils align-default">
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 75.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><strong>Argument</strong></p></th>
-<th class="head"><p><strong>Description</strong></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p></td>
-<td><p>Add a <code class="docutils literal notranslate"><span class="pre">--force</span></code> to skip the confirmation. This is a destructive command as it overwrites existing <code class="docutils literal notranslate"><span class="pre">_imdata.json</span></code> files.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parent_dir</span></code></p></td>
-<td><p>Folder of the <a class="reference internal" href="dataset/pipeline_output.html"><span class="doc">analysis pipeline output</span></a> format, containing the <code class="docutils literal notranslate"><span class="pre">plate.json</span></code> file.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Description</strong>:</p>
-<blockquote>
-<div><p>This command extracts the FOV metadata from the <code class="docutils literal notranslate"><span class="pre">plate.json</span></code> file and saves them to the corresponding <code class="docutils literal notranslate"><span class="pre">_imdata.json</span></code> files for each FOV.</p>
-</div></blockquote>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>A <code class="docutils literal notranslate"><span class="pre">plate.json</span></code> file must exist before running this command. It’s recommended to run the regenerate plate json command first!</p>
-</div>
-</section>
+<p>To be added in the future.</p>
 </section>
 </section>
 
@@ -606,22 +413,9 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Command Line Interface</a><ul>
-<li><a class="reference internal" href="#pipeline">Pipeline</a><ul>
-<li><a class="reference internal" href="#append-vs-overwrite-mode">Append vs Overwrite Mode</a><ul>
-<li><a class="reference internal" href="#overwrite-mode">Overwrite Mode</a></li>
-<li><a class="reference internal" href="#append-mode">Append Mode</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#pipeline">Pipeline</a></li>
 <li><a class="reference internal" href="#training">Training</a></li>
 <li><a class="reference internal" href="#pseudolabelling">Pseudolabelling</a></li>
-<li><a class="reference internal" href="#clearing-temp-files">Clearing Temp Files</a></li>
-<li><a class="reference internal" href="#regenerate">Regenerate</a><ul>
-<li><a class="reference internal" href="#regenerate-plate-json">Regenerate Plate JSON</a></li>
-<li><a class="reference internal" href="#regenerate-imdata">Regenerate Imdata</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>

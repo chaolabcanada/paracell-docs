@@ -15,8 +15,7 @@ First, a ``config.yaml`` file is needed. Create a file named ``config.yaml``. Th
    image_dir: /path/to/raw/images
    output_dir: /path/to/save/analysis
    channels: [DAPI, Cyan, Cy3, Cy5, FITC]
-   save_analysis_mode: overwrite
-   seg_override: false
+   is_new_plate: true
    quality_control: true
    well_range: [0, null]
    n_workers: 5
@@ -27,6 +26,7 @@ First, a ``config.yaml`` file is needed. Create a file named ``config.yaml``. Th
    segmentation_config:
       channels: [DAPI, Cyan, FITC]
       seg_model_path: "/mnt/FNX/paracell2_outputs/three_channel_models/3ch_gfp_fs_v3/3ch_gfp_fs_v3.pt"
+      seg_override: false
       save_compressed: true
       batch_size: 5
       load_workers: 2
@@ -80,7 +80,7 @@ With the Paracell environment activated, run the Paracell CLI to analyze the ima
 
 .. caution::
 
-   Make sure to replace ``/path/to/config.yaml`` with the path to your yaml file. Quotes around the path are required when there are spaces in the file path. For more info, see the :doc:`CLI documentation <../../cli>`.
+   Make sure to replace ``/path/to/config.yaml`` with the path to your yaml file. For more info, see the :doc:`CLI documentation <../../cli>`.
 
 .. note::
 

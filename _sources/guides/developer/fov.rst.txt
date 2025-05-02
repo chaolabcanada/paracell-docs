@@ -17,12 +17,12 @@ FOVs can be created directly using the class constructor.
 
    fov = FOV("A2--W00002--P00064--Z00002--T00000")
 
-The argument passed in is the FOV prefix. This encodes the well and position information of the FOV, and follows :ref:`this <chao_lab_image_name_format>` format. FOV prefixes are also generally used at the start of file names. Eg: ``<prefix_name>_seg.npy`` is the naming convention for seg files.
+The argument passed in is the FOV prefix. This encodes the well and position information of the FOV, and follows :ref:`this <chao_lab_image_name_format>` format.
 
 FOV Channels
 ------------
 
-The ``channels`` property is a dictionary, with the keys being the name of the channel, and the value being the grayscale images (numpy array). Channels represent raw images from the microscope with cells fluorescing with different stains. They can be manually added, typically from loading grayscale images. For the following example, we will just create a random numpy image.
+The ``channels`` property is a dictionary, with the keys being the name of the channel, and the value being the grayscale images (numpy array). Channels can be manually added, typically from loading grayscale images. For the following example, we will just create a random numpy image.
 
 .. code-block:: python
 
@@ -30,7 +30,7 @@ The ``channels`` property is a dictionary, with the keys being the name of the c
       0, 65535, (40, 40), dtype=np.uint16
    )
 
-FOVs also contain a processed channel property, used for storing processed variations of channels. For example, you may have a thresholded version of the FITC channel, in the processed channels.
+FOVs also contain a processed channel property. Typically, channels are raw images from the microscope, and processed channels are the processed versions of those raw images. For example, you may have a thresholded version of the FITC channel, in the processed channels.
 
 .. code-block:: python
 
@@ -38,7 +38,7 @@ FOVs also contain a processed channel property, used for storing processed varia
    thresh_fitc = thresh_img(fitc_channel)
    fov.add_processed_channel("thresh", "FITC", thresh_fitc)
 
-``thresh_img`` is from the ``paracell.improcess.ops`` module. It performs `OTSU thresholding <https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html#autotoc_md1435>`_. The exact specifics aren't relevant for this tutorial.
+``thresh_img`` is from the ``paracell.improcess.ops`` module. It preforms `OTSU thresholding <https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html#autotoc_md1435>`_. The exact specifics aren't relevant for this tutorial.
 
 FOVManager
 ----------
@@ -87,7 +87,7 @@ FOVs can be loaded with the FOV prefix and the path to the raw image directory.
 Pre-segmented FOVs
 ^^^^^^^^^^^^^^^^^^
 
-So far, only FOVs with channels have been created. FOVs also contain cells, and their corresponding masks and outlines. Cells are generally created through the use of a :doc:`segmentor class <segmentation>` (more about them on the next page). However, saved segmentation data can be used to load the cells on an FOV. Saved :doc:`seg files <../../dataset/seg>` are typically stored in a folder of similar format to :doc:`analyses output folders <../../dataset/pipeline_output>`. The specifics aren't important. Just know the seg folder needs a file ``<fov_prefix>_seg.npy`` (``_seg.npz`` is also valid), and the image folder needs a file ``<fov_prefix>.tif``.
+So far, only FOVs with channels have been created. FOVs also contain cells, and their corresponding masks and outlines. Cells are generally created through the use of a :doc:`segmentor <segmentation>` (more about them on the next page). However, saved segmentation data can be used to load the cells on an FOV. Saved :doc:`seg files <../../dataset/seg>` are typically stored in a folder of similar format to :doc:`analyses output folders <../../dataset/pipeline_output>`. The specifics aren't important. Just know the seg folder needs a file ``<fov_prefix>_seg.npy`` (``_seg.npz`` is also valid), and the image folder needs a file ``<fov_prefix>.tif``.
 
 .. code-block:: python
 

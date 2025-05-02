@@ -1,6 +1,6 @@
 Raw Images Directory
 ====================
-This consists of raw microscopy images, ``.tif`` files, for each channel. There are two formats, depending on the ``plate_type`` listed in the :ref:`config <analysis_pipeline_config>`.
+This consists of raw microscopy images, ``.tif`` files, for each channel. There are two formats, depending on the ``plate_type`` listed in the :ref:`config <analysis-pipeline-config>`.
 
 Naming Convention
 -----------------
@@ -53,4 +53,4 @@ As we only support the Broad Institute dataset, for more information, see `their
 
 .. note::
 
-   The channel is w1, w2, ..., w5. Paracell will load these channels, with the names specified in the :ref:`config <analysis_pipeline_config>`, in that order.
+   The channel is w1, w2, ..., w5. Paracell will load these channels, with the names specified in the :ref:`config <analysis-pipeline-config>`, in that order.

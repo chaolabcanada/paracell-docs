@@ -9,9 +9,7 @@ Below is the folder structure for the ``output_dir`` of the :ref:`feature extrac
    │   └── illumcor images
    ├── analysis files
    ├── aggregate files
-   ├── metadata files
-   ├── config.yaml
-   └── pipeline.log
+   └── metadata files
 
 Illumcor Folder
 ---------------
@@ -96,10 +94,3 @@ Metadata Files
          "METADATA__Well": "4b86efc63a2d4d7d9656b2d6daa15dae",
          "METADATA__Plate": "88f9974b746c4332b2e91b0730b40f25"
       }
-
-Config and Log
---------------
-
-A copy of the config used will be stored to ``config.yaml``. Please note comments aren't stored here.
-
-The ``pipeline.log`` file contains all the log data, and warnings, through out the run.

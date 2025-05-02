@@ -223,7 +223,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -306,8 +305,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Randomly rotate the (image, mask, flows) by an angle in [0, max_angle).</span>
 <span class="sd">    Applies:</span>
-<span class="sd">    1. A spatial rotation to the image, mask, and flows.</span>
-<span class="sd">    2. A vector rotation to the flows&#39; (flowY, flowX).</span>
+<span class="sd">    1) A spatial rotation to the image, mask, and flows.</span>
+<span class="sd">    2) A vector rotation to the flows&#39; (flowY, flowX).</span>
 
 <span class="sd">    The mask is rotated with nearest-neighbor interpolation.</span>
 <span class="sd">    The image &amp; flows use bilinear interpolation.</span>

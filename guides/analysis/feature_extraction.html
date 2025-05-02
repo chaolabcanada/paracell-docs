@@ -224,7 +224,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -287,8 +286,7 @@
 <span class="nt">image_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/raw/images</span>
 <span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/save/analysis</span>
 <span class="nt">channels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">DAPI</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cyan</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cy3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cy5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">FITC</span><span class="p p-Indicator">]</span>
-<span class="nt">save_analysis_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">overwrite</span>
-<span class="nt">seg_override</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">is_new_plate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">quality_control</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">well_range</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">null</span><span class="p p-Indicator">]</span>
 <span class="nt">n_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
@@ -299,6 +297,7 @@
 <span class="nt">segmentation_config</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">channels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">DAPI</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Cyan</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">FITC</span><span class="p p-Indicator">]</span>
 <span class="w">   </span><span class="nt">seg_model_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/mnt/FNX/paracell2_outputs/three_channel_models/3ch_gfp_fs_v3/3ch_gfp_fs_v3.pt&quot;</span>
+<span class="w">   </span><span class="nt">seg_override</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">   </span><span class="nt">save_compressed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">   </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 <span class="w">   </span><span class="nt">load_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
@@ -350,7 +349,7 @@
 </div>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>Make sure to replace <code class="docutils literal notranslate"><span class="pre">/path/to/config.yaml</span></code> with the path to your yaml file. Quotes around the path are required when there are spaces in the file path. For more info, see the <a class="reference internal" href="../../cli.html"><span class="doc">CLI documentation</span></a>.</p>
+<p>Make sure to replace <code class="docutils literal notranslate"><span class="pre">/path/to/config.yaml</span></code> with the path to your yaml file. For more info, see the <a class="reference internal" href="../../cli.html"><span class="doc">CLI documentation</span></a>.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

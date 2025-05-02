@@ -224,7 +224,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -322,118 +321,6 @@ and mask_probabilities (or calculated from flows).</p>
 </dd></dl>
 
 </section>
-<section id="module-paracell.utils.io">
-<span id="paracell-utils-io"></span><h2>paracell.utils.io<a class="headerlink" href="#module-paracell.utils.io" title="Link to this heading">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.utils.io.load_seg">
-<span class="sig-prename descclassname"><span class="pre">paracell.utils.io.</span></span><span class="sig-name descname"><span class="pre">load_seg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seg_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/paracell/utils/io.html#load_seg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.utils.io.load_seg" title="Link to this definition">¶</a></dt>
-<dd><p>Loads a Cellpose or Paracell modified seg file.</p>
-<p>This works on both compressed npz and not compressed npy.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>seg_path</strong> (<em>str</em>) – Path to the seg file.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Cellpose segmentation data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-paracell.utils.metadata_repair">
-<span id="paracell-utils-metadata-repair"></span><h2>paracell.utils.metadata_repair<a class="headerlink" href="#module-paracell.utils.metadata_repair" title="Link to this heading">¶</a></h2>
-<p>Utilities for regenerating analysis metadata such as plate.json and _imdata.json.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.utils.metadata_repair.get_fov_uuid">
-<span class="sig-prename descclassname"><span class="pre">paracell.utils.metadata_repair.</span></span><span class="sig-name descname"><span class="pre">get_fov_uuid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells_csv_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov_prefix_to_uuid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fov_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/paracell/utils/metadata_repair.html#get_fov_uuid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.utils.metadata_repair.get_fov_uuid" title="Link to this definition">¶</a></dt>
-<dd><p>Gets the FOV UUID.</p>
-<p>This prioritizes that inside the _cells.csv file. If that file
-doesn’t exist, it will search the fov_prefix_to_uuid mapping. If
-that also doesn’t contain the UUID, a random one will be generated.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>A warning will be raised if the UUID of the cells and the        mapping does not match, or a random one needs to be generated,</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cells_csv_path</strong> (<em>str</em>) – Path to the _cells.csv file.</p></li>
-<li><p><strong>fov_prefix_to_uuid</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – Mapping of FOV prefixes            to UUIDs.</p></li>
-<li><p><strong>fov_prefix</strong> (<em>str</em>) – FOV prefix.</p></li>
-<li><p><strong>cells_df</strong> (<em>pd.DataFrame</em><em>, </em><em>optional</em>) – Dataframe of all cells. This            is used if the _cells.csv is not found.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>String representation of a UUID.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.utils.metadata_repair.regenerate_imdata_json">
-<span class="sig-prename descclassname"><span class="pre">paracell.utils.metadata_repair.</span></span><span class="sig-name descname"><span class="pre">regenerate_imdata_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plate_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/paracell/utils/metadata_repair.html#regenerate_imdata_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.utils.metadata_repair.regenerate_imdata_json" title="Link to this definition">¶</a></dt>
-<dd><p>Regenerates all the imdata.json files using the plate.json
-dict. plate.json is modified in place and returned.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.utils.metadata_repair.regenerate_plate_json">
-<span class="sig-prename descclassname"><span class="pre">paracell.utils.metadata_repair.</span></span><span class="sig-name descname"><span class="pre">regenerate_plate_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plate_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'chao_lab'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'cell_painting'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/paracell/utils/metadata_repair.html#regenerate_plate_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.utils.metadata_repair.regenerate_plate_json" title="Link to this definition">¶</a></dt>
-<dd><p>Regenerate a plate.json dict.</p>
-<dl class="simple">
-<dt>Assumptions:</dt><dd><ul class="simple">
-<li><p>The parent_dir is in the structure of Paracell analysis        outputs and the seg files exist.</p></li>
-<li><p>Analysis has been COMPLETED. FOVs/wells may be lost if        analysis isn’t done.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It’s recommended to have the old plate.json, some metadata        will be lost otherwise.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parent_dir</strong> (<em>str</em>) – Folder containing the seg files.</p></li>
-<li><p><strong>plate_type</strong> (<em>&quot;chao_lab&quot;</em><em> | </em><em>&quot;cell_painting&quot;</em>) – Type of plate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>New plate.json as a dict.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="paracell.utils.metadata_repair.well_from_fov_prefix">
-<span class="sig-prename descclassname"><span class="pre">paracell.utils.metadata_repair.</span></span><span class="sig-name descname"><span class="pre">well_from_fov_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plate_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/paracell/utils/metadata_repair.html#well_from_fov_prefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#paracell.utils.metadata_repair.well_from_fov_prefix" title="Link to this definition">¶</a></dt>
-<dd><p>Get the well name from an FOV prefix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fov_prefix</strong> (<em>str</em>)</p></li>
-<li><p><strong>plate_type</strong> (<em>str</em>) – Either a chao_lab or cell_painting plate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Well name.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 </section>
 
         </article>
@@ -491,17 +378,6 @@ dict. plate.json is modified in place and returned.</p>
 </li>
 <li><a class="reference internal" href="#module-paracell.utils.general">paracell.utils.general</a><ul>
 <li><a class="reference internal" href="#paracell.utils.general.safe_divide"><code class="docutils literal notranslate"><span class="pre">safe_divide()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-paracell.utils.io">paracell.utils.io</a><ul>
-<li><a class="reference internal" href="#paracell.utils.io.load_seg"><code class="docutils literal notranslate"><span class="pre">load_seg()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-paracell.utils.metadata_repair">paracell.utils.metadata_repair</a><ul>
-<li><a class="reference internal" href="#paracell.utils.metadata_repair.get_fov_uuid"><code class="docutils literal notranslate"><span class="pre">get_fov_uuid()</span></code></a></li>
-<li><a class="reference internal" href="#paracell.utils.metadata_repair.regenerate_imdata_json"><code class="docutils literal notranslate"><span class="pre">regenerate_imdata_json()</span></code></a></li>
-<li><a class="reference internal" href="#paracell.utils.metadata_repair.regenerate_plate_json"><code class="docutils literal notranslate"><span class="pre">regenerate_plate_json()</span></code></a></li>
-<li><a class="reference internal" href="#paracell.utils.metadata_repair.well_from_fov_prefix"><code class="docutils literal notranslate"><span class="pre">well_from_fov_prefix()</span></code></a></li>
 </ul>
 </li>
 </ul>

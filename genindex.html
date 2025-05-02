@@ -222,7 +222,6 @@
 <li class="toctree-l2"><a class="reference internal" href="dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -319,24 +318,24 @@
 </li>
         <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig">AnalysisPipelineConfig (class in paracell.config)</a>
 </li>
-        <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.analysis.CellAnalysisMixin.analyze_cell">analyze_cell() (paracell.feature_extraction.analysis.CellAnalysisMixin method)</a>
+        <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.analysis.CellAnalysisMixin.analyze_cell">analyze_cell() (paracell.feature_extraction.analysis.CellAnalysisMixin class method)</a>
 
         <ul>
           <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.analyze_cell">(paracell.feature_extraction.dfe.DINOV2FeatureExtractor method)</a>
 </li>
           <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.dfe.RGBDINOv2FeatureExtractor.analyze_cell">(paracell.feature_extraction.dfe.RGBDINOv2FeatureExtractor method)</a>
 </li>
-          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis.analyze_cell">(paracell.feature_extraction.vision.BasicShapeAnalysis method)</a>
+          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.BasicShapeAnalysis.analyze_cell">(paracell.feature_extraction.vision.BasicShapeAnalysis class method)</a>
 </li>
-          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis.analyze_cell">(paracell.feature_extraction.vision.ColocalizationAnalysis method)</a>
+          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis.analyze_cell">(paracell.feature_extraction.vision.ColocalizationAnalysis class method)</a>
 </li>
-          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.analyze_cell">(paracell.feature_extraction.vision.CompartmentAnalysis method)</a>
+          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.CompartmentAnalysis.analyze_cell">(paracell.feature_extraction.vision.CompartmentAnalysis class method)</a>
 </li>
-          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis.analyze_cell">(paracell.feature_extraction.vision.IntensityAnalysis method)</a>
+          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis.analyze_cell">(paracell.feature_extraction.vision.IntensityAnalysis class method)</a>
 </li>
-          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis.analyze_cell">(paracell.feature_extraction.vision.ObjectAnalysis method)</a>
+          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ObjectAnalysis.analyze_cell">(paracell.feature_extraction.vision.ObjectAnalysis class method)</a>
 </li>
-          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis.analyze_cell">(paracell.feature_extraction.vision.TextureAnalysis method)</a>
+          <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.TextureAnalysis.analyze_cell">(paracell.feature_extraction.vision.TextureAnalysis class method)</a>
 </li>
         </ul></li>
         <li><a href="api/paracell.html#paracell.pipeline.analyze_fov">analyze_fov() (in module paracell.pipeline)</a>
@@ -351,8 +350,6 @@
           <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.analyze_image">(paracell.feature_extraction.dfe.DINOV2FeatureExtractor method)</a>
 </li>
         </ul></li>
-        <li><a href="api/paracell.html#paracell.cell_painting.analyzed_fov_to_profiler_output">analyzed_fov_to_profiler_output() (in module paracell.cell_painting)</a>
-</li>
     </ul></td>
   </tr></table>
 </section>
@@ -427,8 +424,6 @@
 </li>
         <li><a href="api/paracell.html#paracell.paradata.FOV.cells">cells (paracell.paradata.FOV property)</a>
 </li>
-        <li><a href="api/paracell.html#paracell.paracell_io.FOVDeserializer.cells_from_csv">cells_from_csv() (paracell.paracell_io.FOVDeserializer static method)</a>
-</li>
         <li><a href="api/paracell.html#paracell.paradata.FOV.cells_to_df">cells_to_df() (paracell.paradata.FOV method)</a>
 </li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.ops.centre_paste">centre_paste() (in module paracell.improcess.ops)</a>
@@ -441,7 +436,7 @@
           <li><a href="api/paracell.html#paracell.config.SegmentationConfig.channels">(paracell.config.SegmentationConfig attribute)</a>
 </li>
         </ul></li>
-        <li><a href="api/paracell.html#paracell.config.clean_dataclass_export">clean_dataclass_export() (in module paracell.config)</a>
+        <li><a href="api/paracell.segmentation.html#paracell.segmentation.config.clean_dataclass_export">clean_dataclass_export() (in module paracell.segmentation.config)</a>
 </li>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.eval.coco_eval_to_results">coco_eval_to_results() (in module paracell.segmentation.eval)</a>
 </li>
@@ -449,10 +444,10 @@
 </li>
         <li><a href="api/paracell.html#paracell.pipeline.collate_fovs">collate_fovs() (in module paracell.pipeline)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.ColocalizationAnalysis">ColocalizationAnalysis (class in paracell.feature_extraction.vision)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.improcess.html#paracell.improcess.ops.colour_image">colour_image() (in module paracell.improcess.ops)</a>
 </li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.plotting.colour_mapping_to_list">colour_mapping_to_list() (in module paracell.improcess.plotting)</a>
@@ -705,8 +700,6 @@
 </li>
         <li><a href="api/paracell.html#paracell.paradata.Well.get_fov">get_fov() (paracell.paradata.Well method)</a>
 </li>
-        <li><a href="api/paracell.utils.html#paracell.utils.metadata_repair.get_fov_uuid">get_fov_uuid() (in module paracell.utils.metadata_repair)</a>
-</li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.get_illumcorf">get_illumcorf() (paracell.improcess.illumination.BaSiCPyWrapper method)</a>
 </li>
         <li><a href="api/paracell.html#paracell.cell_painting.CellPaintingFOV.get_image_folder_path">get_image_folder_path() (paracell.cell_painting.CellPaintingFOV static method)</a>
@@ -771,8 +764,6 @@
 </li>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.transforms.get_transform">get_transform() (in module paracell.segmentation.transforms)</a>
 </li>
-        <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.dfe.DINOV2FeatureExtractor.get_transformed_batch">get_transformed_batch() (paracell.feature_extraction.dfe.DINOV2FeatureExtractor method)</a>
-</li>
         <li><a href="api/paracell.html#paracell.paradata.Plate.get_well">get_well() (paracell.paradata.Plate method)</a>
 </li>
         <li><a href="api/paracell.html#paracell.pipeline.FOVTorchDataset.get_well_idx">get_well_idx() (paracell.pipeline.FOVTorchDataset method)</a>
@@ -817,10 +808,10 @@
 </li>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.config.PathsConfig.image_suffix">image_suffix (paracell.segmentation.config.PathsConfig attribute)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.analysis.ImageAnalysisMixin">ImageAnalysisMixin (class in paracell.feature_extraction.analysis)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.initialize">initialize() (paracell.segmentation.segmentors.FOVSegmentor method)</a>
 </li>
         <li><a href="api/paracell.feature_extraction.html#paracell.feature_extraction.vision.IntensityAnalysis">IntensityAnalysis (class in paracell.feature_extraction.vision)</a>
@@ -837,6 +828,8 @@
           <li><a href="api/paracell.segmentation.html#paracell.segmentation.segmentors.FOVSegmentor.is_loaded">(paracell.segmentation.segmentors.FOVSegmentor method)</a>
 </li>
         </ul></li>
+        <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig.is_new_plate">is_new_plate (paracell.config.AnalysisPipelineConfig attribute)</a>
+</li>
         <li><a href="api/paracell.html#paracell.paradata.FOV.is_processed_channel">is_processed_channel() (paracell.paradata.FOV method)</a>
 </li>
     </ul></td>
@@ -855,22 +848,18 @@
 </li>
         <li><a href="api/paracell.html#paracell.config.load_analysis_config">load_analysis_config() (in module paracell.config)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.html#paracell.cell_painting.CellPaintingFOV.load_channels">load_channels() (paracell.cell_painting.CellPaintingFOV method)</a>
 
         <ul>
           <li><a href="api/paracell.html#paracell.paradata.FOV.load_channels">(paracell.paradata.FOV method)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.html#paracell.manager.FOVManager.load_presegmented_fov">load_presegmented_fov() (paracell.manager.FOVManager static method)</a>
 </li>
-        <li><a href="api/paracell.utils.html#paracell.utils.io.load_seg">load_seg() (in module paracell.utils.io)</a>
-
-        <ul>
-          <li><a href="api/paracell.html#paracell.manager.FOVManager.load_seg">(paracell.manager.FOVManager static method)</a>
+        <li><a href="api/paracell.html#paracell.manager.FOVManager.load_seg">load_seg() (paracell.manager.FOVManager static method)</a>
 </li>
-        </ul></li>
         <li><a href="api/paracell.html#paracell.config.SegmentationConfig.load_workers">load_workers (paracell.config.SegmentationConfig attribute)</a>
 </li>
     </ul></td>
@@ -882,8 +871,6 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/paracell.improcess.html#paracell.improcess.ops.RGBColor.MAGENTA">MAGENTA (paracell.improcess.ops.RGBColor attribute)</a>
-</li>
-        <li><a href="api/paracell.html#paracell.cell_painting.map_to_existing_plate">map_to_existing_plate() (in module paracell.cell_painting)</a>
 </li>
         <li><a href="api/paracell.html#paracell.paradata.Cell.mask">mask (paracell.paradata.Cell property)</a>
 </li>
@@ -960,10 +947,6 @@
           <li><a href="api/paracell.utils.html#module-paracell.utils.compression">paracell.utils.compression</a>
 </li>
           <li><a href="api/paracell.utils.html#module-paracell.utils.general">paracell.utils.general</a>
-</li>
-          <li><a href="api/paracell.utils.html#module-paracell.utils.io">paracell.utils.io</a>
-</li>
-          <li><a href="api/paracell.utils.html#module-paracell.utils.metadata_repair">paracell.utils.metadata_repair</a>
 </li>
         </ul></li>
     </ul></td>
@@ -1184,6 +1167,8 @@
           <li><a href="api/paracell.segmentation.html#module-paracell.segmentation.conversions">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     paracell.segmentation.dataset
 
@@ -1191,8 +1176,6 @@
           <li><a href="api/paracell.segmentation.html#module-paracell.segmentation.dataset">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     paracell.segmentation.engine
 
@@ -1249,20 +1232,6 @@
           <li><a href="api/paracell.utils.html#module-paracell.utils.general">module</a>
 </li>
         </ul></li>
-        <li>
-    paracell.utils.io
-
-        <ul>
-          <li><a href="api/paracell.utils.html#module-paracell.utils.io">module</a>
-</li>
-        </ul></li>
-        <li>
-    paracell.utils.metadata_repair
-
-        <ul>
-          <li><a href="api/paracell.utils.html#module-paracell.utils.metadata_repair">module</a>
-</li>
-        </ul></li>
         <li><a href="api/paracell.html#paracell.paradata.FOV.parent_path">parent_path (paracell.paradata.FOV property)</a>
 </li>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.config.CellposeTrainConfig.paths">paths (paracell.segmentation.config.CellposeTrainConfig attribute)</a>
@@ -1272,8 +1241,6 @@
         <li><a href="api/paracell.html#paracell.paradata.Plate">Plate (class in paracell.paradata)</a>
 </li>
         <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig.plate_name">plate_name (paracell.config.AnalysisPipelineConfig attribute)</a>
-</li>
-        <li><a href="api/paracell.html#paracell.cell_painting.plate_to_profiler_output">plate_to_profiler_output() (in module paracell.cell_painting)</a>
 </li>
         <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig.plate_type">plate_type (paracell.config.AnalysisPipelineConfig attribute)</a>
 </li>
@@ -1337,14 +1304,10 @@
 </li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.ops.RGBColor.RED">RED (paracell.improcess.ops.RGBColor attribute)</a>
 </li>
-        <li><a href="api/paracell.utils.html#paracell.utils.metadata_repair.regenerate_imdata_json">regenerate_imdata_json() (in module paracell.utils.metadata_repair)</a>
-</li>
-        <li><a href="api/paracell.utils.html#paracell.utils.metadata_repair.regenerate_plate_json">regenerate_plate_json() (in module paracell.utils.metadata_repair)</a>
+        <li><a href="api/paracell.html#paracell.paradata.Plate.remove_well">remove_well() (paracell.paradata.Plate method)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/paracell.html#paracell.paradata.Plate.remove_well">remove_well() (paracell.paradata.Plate method)</a>
-</li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.maskremover.reorder_image_idx">reorder_image_idx() (in module paracell.improcess.maskremover)</a>
 </li>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.config.TrainingConfig.resize">resize (paracell.segmentation.config.TrainingConfig attribute)</a>
@@ -1371,8 +1334,6 @@
 </li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.illumination.BaSiCPyWrapper.save">save() (paracell.improcess.illumination.BaSiCPyWrapper method)</a>
 </li>
-        <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig.save_analysis_mode">save_analysis_mode (paracell.config.AnalysisPipelineConfig attribute)</a>
-</li>
         <li><a href="api/paracell.html#paracell.config.SegmentationConfig.save_compressed">save_compressed (paracell.config.SegmentationConfig attribute)</a>
 </li>
         <li><a href="api/paracell.segmentation.html#paracell.segmentation.config.save_config">save_config() (in module paracell.segmentation.config)</a>
@@ -1393,7 +1354,7 @@
 </li>
         <li><a href="api/paracell.html#paracell.config.SegmentationConfig.seg_model_path">seg_model_path (paracell.config.SegmentationConfig attribute)</a>
 </li>
-        <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig.seg_override">seg_override (paracell.config.AnalysisPipelineConfig attribute)</a>
+        <li><a href="api/paracell.html#paracell.config.SegmentationConfig.seg_override">seg_override (paracell.config.SegmentationConfig attribute)</a>
 </li>
         <li><a href="api/paracell.html#paracell.paradata.FOV.seg_path">seg_path (paracell.paradata.FOV property)</a>
 </li>
@@ -1553,14 +1514,12 @@
 </li>
         <li><a href="api/paracell.improcess.html#paracell.improcess.plotting.well_cell_heat_map">well_cell_heat_map() (in module paracell.improcess.plotting)</a>
 </li>
-        <li><a href="api/paracell.utils.html#paracell.utils.metadata_repair.well_from_fov_prefix">well_from_fov_prefix() (in module paracell.utils.metadata_repair)</a>
-</li>
         <li><a href="api/paracell.html#paracell.config.AnalysisPipelineConfig.well_range">well_range (paracell.config.AnalysisPipelineConfig attribute)</a>
+</li>
+        <li><a href="api/paracell.html#paracell.pipeline.FOVTorchDataset.well_start_ids">well_start_ids (paracell.pipeline.FOVTorchDataset attribute)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/paracell.html#paracell.pipeline.FOVTorchDataset.well_start_ids">well_start_ids (paracell.pipeline.FOVTorchDataset attribute)</a>
-</li>
         <li><a href="api/paracell.html#paracell.paracell_io.WellDeserializer">WellDeserializer (class in paracell.paracell_io)</a>
 </li>
         <li><a href="api/paracell.html#paracell.manager.WellManager">WellManager (class in paracell.manager)</a>

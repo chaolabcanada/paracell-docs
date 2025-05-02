@@ -48,8 +48,6 @@ Cells can be created from masks, present on the FOV, using the following code.
 
 You can view individual cells inside ``fov.cells``. Right now the cells only have positing and mask information, and metadata.
 
-.. _three_channel_model_guide:
-
 Three Channel Models
 --------------------
 
@@ -135,10 +133,6 @@ If needed, these parameters can be toggled during the construction of the segmen
    segmentor = DefaultCellposeSegmentor(
       save_flows=True, save_compressed=False
    )
-
-.. warning::
-
-   Make sure that the compression setting is set properly and matches the seg path on the FOVs, if set.
 
 .. note::
 

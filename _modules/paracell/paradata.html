@@ -223,7 +223,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/pipeline_output.html">Pipeline Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/training.html">Training Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/model.html">Model Output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../dataset/pseudolabel.html">Pseudolabel Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../dataset/seg.html">Seg Files</a></li>
 </ul>
 </li>
@@ -609,8 +608,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deallocate all channels and cells from memory.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">processed_channels</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_masks</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_outlines</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cells</span>
 
@@ -739,7 +736,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parent_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># infer from imdata_path if not set</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent_path</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_imdata_path</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parent path not set for FOV </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_uuid</span><span class="si">}</span><span class="s2">). Inferring from imdata path.&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imdata_path</span><span class="p">)</span>
